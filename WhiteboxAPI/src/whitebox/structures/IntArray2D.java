@@ -27,10 +27,32 @@ public class IntArray2D {
     private int numCells = 0;
     private int noData = -32768;
     
+    /**
+     * Initializes a new IntArray2D with a specified number of rows, columns,
+     * and a user-specified NoData value.
+     * @param rows The number of rows.
+     * @param columns The number of columns.
+     * @param noData The user-specified NoData value.
+     */
     public IntArray2D(int rows, int columns, int noData) {
         this.rows = rows;
         this.columns = columns;
         this.noData = noData;
+        numCells = rows * columns;
+        data = new int[numCells];
+        for (int i = 0; i < numCells; i++) {
+            data[i] = noData;
+        }
+    }
+    
+    /**
+     * Initializes a new IntArray2D with a specified number of rows and columns.
+     * @param rows The number of rows.
+     * @param columns The number of columns.
+     */
+    public IntArray2D(int rows, int columns) {
+        this.rows = rows;
+        this.columns = columns;
         numCells = rows * columns;
         data = new int[numCells];
         for (int i = 0; i < numCells; i++) {
@@ -84,6 +106,10 @@ public class IntArray2D {
         }
         int cellNum = row * columns + column;
         return data[cellNum];
+    }
+    
+    public int getNoDataValue() {
+        return noData;
     }
     
     public static void main(String[] arg) {
