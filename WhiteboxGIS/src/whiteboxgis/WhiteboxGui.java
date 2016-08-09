@@ -2657,7 +2657,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             viewMenu = new JMenu(bundle.getString("View"));
 
             selectMenuItem = new JCheckBoxMenuItem(bundle.getString("SelectMapElement"),
-                    new ImageIcon(graphicsDirectory + "select.png"));
+                    new ImageIcon(graphicsDirectory + "selectMap.png"));
             viewMenu.add(selectMenuItem);
             selectMenuItem.addActionListener(this);
             selectMenuItem.setActionCommand("select");
@@ -3432,7 +3432,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             toolbar.add(attributeTable);
 
             toolbar.addSeparator();
-            select = makeToggleToolBarButton("select.png", "select",
+            select = makeToggleToolBarButton("selectMap.png", "select",
                     bundle.getString("SelectMapElement"), "Select");
             toolbar.add(select);
             selectFeature = makeToggleToolBarButton("SelectFeature.png", "selectFeature",

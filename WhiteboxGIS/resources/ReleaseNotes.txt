@@ -20,6 +20,11 @@ greatly increased performance.
 
 RELEASE NOTES:
 
+Version 3.3.1 (June 2016)
+- Fixed bug that falsely reported the use of 32-bit Java on 64-bit computers.
+- Fixed bug that removed line feeds when copying code snippets from help 
+  documentation into the Scripter.
+
 Version 3.3.0 (May 2016)
 -Altered the 'Update Script From Code Repository' function to retrieve updates 
  from the new GitHub Whitebox repo rather than Google Code.
