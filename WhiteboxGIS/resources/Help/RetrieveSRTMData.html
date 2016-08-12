@@ -51,9 +51,10 @@
                 startingLon = "-81"&#10;<br>
                 endingLon = "-77"&#10;<br>
                 fillHoles = "true"&#10;<br>
+                fixElevations = "true"&#10;<br>
                 mosaicTiles = "true"&#10;<br>
                 masaicName = pluginHost.getWorkingDirectory() + "output.dep"&#10;<br>
-                args = [dataset, startingLat, endingLat, startingLon, endingLon, fillHoles, mosaicTiles, mosaicName]&#10;<br>
+                args = [dataset, startingLat, endingLat, startingLon, endingLon, fillHoles, fixElevations, mosaicTiles, mosaicName]&#10;<br>
                 pluginHost.runPlugin("RetrieveSRTMData", args, False)&#10;<br>
             </code>
         </p>
@@ -66,8 +67,9 @@
                 def startingLon = "16"&#10;<br>
                 def endingLon = "17"&#10;<br>
                 def fillHoles = "true"&#10;<br>
+                def fixElevations = "true"&#10;<br>
                 def mosaicTiles = "false"&#10;<br>
-                String[] args = [dataset, startingLat, endingLat, startingLon, endingLon, fillHoles, mosaicTiles]&#10;<br>
+                String[] args = [dataset, startingLat, endingLat, startingLon, endingLon, fillHoles, fixElevations, mosaicTiles]&#10;<br>
                 pluginHost.runPlugin("RetrieveSRTMData", args, false)&#10;<br>
             </code>
         </p>
