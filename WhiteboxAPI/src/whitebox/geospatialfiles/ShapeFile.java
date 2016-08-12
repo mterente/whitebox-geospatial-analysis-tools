@@ -1665,12 +1665,13 @@ public class ShapeFile {
             nodes += points.length;
         }
         KdTree<Integer> kdTree = new KdTree.SqrEuclid<>(2, new Integer(nodes));
-
+        int recNum;
         for (ShapeFileRecord rec : records) {
+            recNum = rec.getRecordNumber() - 1;
             double[][] points = rec.getGeometry().getPoints();
             for (int p = 0; p < points.length; p++) {
                 double[] entry = {points[p][0], points[p][1]};
-                kdTree.addPoint(entry, (int) (rec.getRecordNumber() - 1));
+                kdTree.addPoint(entry, recNum);
             }
 
         }

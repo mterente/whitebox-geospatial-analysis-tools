@@ -11,3 +11,4 @@ plugins.StreamLinkLength
 plugins.StreamLinkSlope
 plugins.StreamMagnitude
 plugins.StreamOrder
+plugins.VectorStreamNetworkAnalysis
