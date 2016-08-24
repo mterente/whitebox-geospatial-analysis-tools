@@ -161,7 +161,9 @@ public class IsolateGroundPoints implements ActionListener {
 				maxSlope = Double.parseDouble(args[5]);
 		        slopeThreshold = Math.tan(Math.toRadians(maxSlope));
 		        minElevDiff = Double.parseDouble(args[6]);
-		        minElev = Double.parseDouble(args[7]);
+		        if (!args[7].toLowerCase().contains("not specified")) {
+		        	minElev = Double.parseDouble(args[7]);
+		        }
 		        displayOutput = Boolean.parseBoolean(args[8])
 			} else if (args.length == 8) {
 				outputFile = args[1]
@@ -170,7 +172,9 @@ public class IsolateGroundPoints implements ActionListener {
 				maxSlope = Double.parseDouble(args[4]);
 		        slopeThreshold = Math.tan(Math.toRadians(maxSlope));
 		        minElevDiff = Double.parseDouble(args[5]);
-		        minElev = Double.parseDouble(args[6]);
+		        if (!args[6].toLowerCase().contains("not specified")) {
+		        	minElev = Double.parseDouble(args[6]);
+		        }
 		        displayOutput = Boolean.parseBoolean(args[7])
 			} else {
 				pluginHost.showFeedback("Incorrect number of arguments given to tool.")
