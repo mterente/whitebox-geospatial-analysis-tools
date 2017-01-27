@@ -25,23 +25,23 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "input.dep"<br>
-                outputFile = wd + "output.shp"<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "input.dep"&#10;<br>
+                outputFile = wd + "output.shp"&#10;<br>
                 mode = "highest"
-                args = [inputFile, outputFile, mode]<br>
-                pluginHost.runPlugin("FindLowestHighestLocations", args, False)<br>
+                args = [inputFile, outputFile, mode]&#10;<br>
+                pluginHost.runPlugin("FindLowestHighestLocations", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "input.dep"<br>
-                def outputFile = wd + "output.shp"<br>
-                def mode = "both"<br>
-                String[] args = [inputFile, outputFile, mode]<br>
-                pluginHost.runPlugin("FindLowestHighestLocations", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "input.dep"&#10;<br>
+                def outputFile = wd + "output.shp"&#10;<br>
+                def mode = "both"&#10;<br>
+                String[] args = [inputFile, outputFile, mode]&#10;<br>
+                pluginHost.runPlugin("FindLowestHighestLocations", args, false)&#10;<br>
             </code>
         </p>
 

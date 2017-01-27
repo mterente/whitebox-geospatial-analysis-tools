@@ -33,37 +33,37 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                outputFile = wd + "output.dep"<br>
-                maxNumIterations = "25"<br>
-                changeThreshold = "2.0"<br>
-                mergerDist = "5.0"<br>
-                maxAllowableDist = "not specified"<br>
-                minClassSize = "5"<br>
-                initialize = "randomly"<br>
-                args = [inputFiles, outputFile, maxNumIterations, changeThreshold, mergerDist, maxAllowableDist, minClassSize, initialize]<br>
-                pluginHost.runPlugin("ModifiedKMeans", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                maxNumIterations = "25"&#10;<br>
+                changeThreshold = "2.0"&#10;<br>
+                mergerDist = "5.0"&#10;<br>
+                maxAllowableDist = "not specified"&#10;<br>
+                minClassSize = "5"&#10;<br>
+                initialize = "randomly"&#10;<br>
+                args = [inputFiles, outputFile, maxNumIterations, changeThreshold, mergerDist, maxAllowableDist, minClassSize, initialize]&#10;<br>
+                pluginHost.runPlugin("ModifiedKMeans", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                def maxNumIterations = "25"<br>
-                def changeThreshold = "2.0"<br>
-                def mergerDist = "5.0"<br>
-                def maxAllowableDist = "not specified"<br>
-                def minClassSize = "5"<br>
-                def initialize = "with max dispersion along diagonal"<br>
-                String[] args = [inputFiles, outputFile, maxNumIterations, changeThreshold, mergerDist, maxAllowableDist, minClassSize, initialize]<br>
-                pluginHost.runPlugin("ModifiedKMeans", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def maxNumIterations = "25"&#10;<br>
+                def changeThreshold = "2.0"&#10;<br>
+                def mergerDist = "5.0"&#10;<br>
+                def maxAllowableDist = "not specified"&#10;<br>
+                def minClassSize = "5"&#10;<br>
+                def initialize = "with max dispersion along diagonal"&#10;<br>
+                String[] args = [inputFiles, outputFile, maxNumIterations, changeThreshold, mergerDist, maxAllowableDist, minClassSize, initialize]&#10;<br>
+                pluginHost.runPlugin("ModifiedKMeans", args, false)&#10;<br>
             </code>
         </p>
 

@@ -53,35 +53,35 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                leftInputFile = wd + "leftImage.dep"<br>
-                rightinputFile = wd + "rightImage.dep"<br>
-                leftOutputFile = wd + "leftPoints.shp"<br>
-                rightOutputFile = wd + "rightPoints.shp"<br>
-                threshold = "4.0"<br>
-                octaves = "4"<br>
-                matchingValue = "0.6"<br>
-                removalThreshold = "2.0"<br>
-                polyOrder = "1"<br>
-                args = [leftInputFile, rightinputFile, leftOutputFile, rightOutputFile, threshold, octaves, matchingValue, removalThreshold, polyOrder]<br>
-                pluginHost.runPlugin("FindTiePoints", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                leftInputFile = wd + "leftImage.dep"&#10;<br>
+                rightinputFile = wd + "rightImage.dep"&#10;<br>
+                leftOutputFile = wd + "leftPoints.shp"&#10;<br>
+                rightOutputFile = wd + "rightPoints.shp"&#10;<br>
+                threshold = "4.0"&#10;<br>
+                octaves = "4"&#10;<br>
+                matchingValue = "0.6"&#10;<br>
+                removalThreshold = "2.0"&#10;<br>
+                polyOrder = "1"&#10;<br>
+                args = [leftInputFile, rightinputFile, leftOutputFile, rightOutputFile, threshold, octaves, matchingValue, removalThreshold, polyOrder]&#10;<br>
+                pluginHost.runPlugin("FindTiePoints", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def leftInputFile = wd + "leftImage.dep"<br>
-                def rightinputFile = wd + "rightImage.dep"<br>
-                def leftOutputFile = wd + "leftPoints.shp"<br>
-                def rightOutputFile = wd + "rightPoints.shp"<br>
-                def threshold = "5.0"<br>
-                def octaves = "4"<br>
-                def matchingValue = "0.6"<br>
-                def removalThreshold = "2.0"<br>
-                def polyOrder = "1"<br>
-                args = [leftInputFile, rightinputFile, leftOutputFile, rightOutputFile, threshold, octaves, matchingValue, removalThreshold, polyOrder]<br>
-                pluginHost.runPlugin("FindTiePoints", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def leftInputFile = wd + "leftImage.dep"&#10;<br>
+                def rightinputFile = wd + "rightImage.dep"&#10;<br>
+                def leftOutputFile = wd + "leftPoints.shp"&#10;<br>
+                def rightOutputFile = wd + "rightPoints.shp"&#10;<br>
+                def threshold = "5.0"&#10;<br>
+                def octaves = "4"&#10;<br>
+                def matchingValue = "0.6"&#10;<br>
+                def removalThreshold = "2.0"&#10;<br>
+                def polyOrder = "1"&#10;<br>
+                args = [leftInputFile, rightinputFile, leftOutputFile, rightOutputFile, threshold, octaves, matchingValue, removalThreshold, polyOrder]&#10;<br>
+                pluginHost.runPlugin("FindTiePoints", args, false)&#10;<br>
             </code>
         </p>
         

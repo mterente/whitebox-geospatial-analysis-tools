@@ -43,33 +43,33 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                demFile = wd + "DEM.dep"<br>
-                # Input data has the shapefile name followed <br>
-                # by the attribute, separated by a semicolon. <br>
-                pointsData = wd + "points.shp" + ";" + "FID"<br>
-                outputText = "not specified"<br>
-                minNeighbourhood = "3"<br>
-                maxNeighbourhood = "1000"<br>
-                stepSize = "10"<br>
-                args = [demFile, pointsData, outputText, minNeighbourhood, maxNeighbourhood, stepSize]<br>
-                pluginHost.runPlugin("LocalTopographicPositionScaleSignature", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                demFile = wd + "DEM.dep"&#10;<br>
+                # Input data has the shapefile name followed &#10;<br>
+                # by the attribute, separated by a semicolon. &#10;<br>
+                pointsData = wd + "points.shp" + ";" + "FID"&#10;<br>
+                outputText = "not specified"&#10;<br>
+                minNeighbourhood = "3"&#10;<br>
+                maxNeighbourhood = "1000"&#10;<br>
+                stepSize = "10"&#10;<br>
+                args = [demFile, pointsData, outputText, minNeighbourhood, maxNeighbourhood, stepSize]&#10;<br>
+                pluginHost.runPlugin("LocalTopographicPositionScaleSignature", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def demFile = wd + "DEM.dep"<br>
-                // Input data has the shapefile name followed <br>
-                // by the attribute, separated by a semicolon. <br>
-                def pointsData = wd + "points.shp" + ";" + "FID"<br>
-                def outputText = "signature.csv"<br>
-                def minNeighbourhood = "3"<br>
-                def maxNeighbourhood = "1000"<br>
-                def stepSize = "10"<br>
-                String[]args = [demFile, pointsData, outputText, minNeighbourhood, maxNeighbourhood, stepSize]<br>
-                <br>pluginHost.runPlugin("LocalTopographicPositionScaleSignature", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def demFile = wd + "DEM.dep"&#10;<br>
+                // Input data has the shapefile name followed &#10;<br>
+                // by the attribute, separated by a semicolon. &#10;<br>
+                def pointsData = wd + "points.shp" + ";" + "FID"&#10;<br>
+                def outputText = "signature.csv"&#10;<br>
+                def minNeighbourhood = "3"&#10;<br>
+                def maxNeighbourhood = "1000"&#10;<br>
+                def stepSize = "10"&#10;<br>
+                String[]args = [demFile, pointsData, outputText, minNeighbourhood, maxNeighbourhood, stepSize]&#10;<br>
+                &#10;<br>pluginHost.runPlugin("LocalTopographicPositionScaleSignature", args, false)&#10;<br>
             </code>
         </p>
 

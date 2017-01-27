@@ -111,8 +111,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
     private static PluginService pluginService = null;
     private StatusBar status;
     // common variables
-    private static final String versionName = "3.3 'Glasgow'";
-    public static final String versionNumber = "3.3.1";
+    private static final String versionName = "3.4 'Montreal'";
+    public static final String versionNumber = "3.4.0";
     public static String currentVersionNumber;
     private String skipVersionNumber = versionNumber;
     private ArrayList<PluginInfo> plugInfo = null;
@@ -682,7 +682,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             userName = System.getProperty("user.name");
 
             final JDialog dialog = new JDialog(this, "", true);
-
+            dialog.setAlwaysOnTop(true);
+            
             Box mainBox = Box.createVerticalBox();
             mainBox.add(Box.createVerticalStrut(15));
 
@@ -1460,6 +1461,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                             addLayer(retStr);
                         }
                     } else if (retStr.endsWith(".shp") && retStr.contains(pathSep)) {
+                        if (automaticallyDisplayReturns) {
+                            addLayer(retStr);
+                        }
+                    } else if (retStr.endsWith(".las") && retStr.contains(pathSep)) {
                         if (automaticallyDisplayReturns) {
                             addLayer(retStr);
                         }
@@ -2656,12 +2661,6 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             // View menu
             viewMenu = new JMenu(bundle.getString("View"));
 
-            selectMenuItem = new JCheckBoxMenuItem(bundle.getString("SelectMapElement"),
-                    new ImageIcon(graphicsDirectory + "selectMap.png"));
-            viewMenu.add(selectMenuItem);
-            selectMenuItem.addActionListener(this);
-            selectMenuItem.setActionCommand("select");
-
             selectFeatureMenuItem = new JCheckBoxMenuItem(bundle.getString("SelectFeature"),
                     new ImageIcon(graphicsDirectory + "SelectFeature.png"));
             viewMenu.add(selectFeatureMenuItem);
@@ -2695,18 +2694,11 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             zoomToFullExtent.addActionListener(this);
             zoomToFullExtent.setActionCommand("zoomToFullExtent");
 
-            JMenuItem zoomToPage = new JMenuItem(bundle.getString("ZoomToPage"),
-                    new ImageIcon(graphicsDirectory + "ZoomToPage.png"));
-            viewMenu.add(zoomToPage);
-            zoomToPage.addActionListener(this);
-            zoomToPage.setActionCommand("zoomToPage");
-
             mi = new JMenuItem(bundle.getString("ZoomToSelection"));
             mi.addActionListener(this);
             mi.setActionCommand("zoomToSelection");
             viewMenu.add(mi);
 
-            selectMenuItem.setState(false);
             selectFeatureMenuItem.setState(false);
             zoomMenuItem.setState(false);
             zoomOutMenuItem.setState(false);
@@ -2747,6 +2739,20 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             viewMenu.add(nextExtent);
             nextExtent.addActionListener(this);
             nextExtent.setActionCommand("nextExtent");
+            
+            selectMenuItem = new JCheckBoxMenuItem(bundle.getString("SelectMapElement"),
+                    new ImageIcon(graphicsDirectory + "selectMap.png"));            
+            viewMenu.add(selectMenuItem);
+            selectMenuItem.addActionListener(this);
+            selectMenuItem.setActionCommand("select");
+            selectMenuItem.setState(false);
+            
+            
+            JMenuItem zoomToPage = new JMenuItem(bundle.getString("ZoomToPage"),
+                    new ImageIcon(graphicsDirectory + "ZoomToPage.png"));
+            viewMenu.add(zoomToPage);
+            zoomToPage.addActionListener(this);
+            zoomToPage.setActionCommand("zoomToPage");
 
             viewMenu.addSeparator();
             JMenuItem refresh = new JMenuItem(bundle.getString("RefreshMap"));
@@ -3432,9 +3438,6 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             toolbar.add(attributeTable);
 
             toolbar.addSeparator();
-            select = makeToggleToolBarButton("selectMap.png", "select",
-                    bundle.getString("SelectMapElement"), "Select");
-            toolbar.add(select);
             selectFeature = makeToggleToolBarButton("SelectFeature.png", "selectFeature",
                     bundle.getString("SelectFeature"), "Select Feature");
             toolbar.add(selectFeature);
@@ -3451,18 +3454,23 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             JButton zoomToFullExtent = makeToolBarButton("Globe.png", "zoomToFullExtent",
                     bundle.getString("ZoomToFullExtent"), "Zoom To Full Extent");
             toolbar.add(zoomToFullExtent);
+            
+            JButton previousExtent = makeToolBarButton("back.png", "previousExtent",
+                    bundle.getString("PreviousExtent"), "Prev Extent");
+            toolbar.add(previousExtent);
+            JButton nextExtent = makeToolBarButton("forward.png", "nextExtent",
+                    bundle.getString("NextExtent"), "Next Extent");
+            nextExtent.setActionCommand("nextExtent");
+            toolbar.add(nextExtent);
+            
+            select = makeToggleToolBarButton("selectMap.png", "select",
+                    bundle.getString("SelectMapElement"), "Select");
+            toolbar.add(select);
+            
             JButton zoomToPage = makeToolBarButton("ZoomFullExtent3.png", "zoomToPage",
                     bundle.getString("ZoomToPage"), "Zoom To Page");
             toolbar.add(zoomToPage);
-
-            ButtonGroup viewButtonGroup = new ButtonGroup();
-            viewButtonGroup.add(select);
-            viewButtonGroup.add(selectFeature);
-            viewButtonGroup.add(pan);
-            viewButtonGroup.add(zoomOut);
-            viewButtonGroup.add(zoomIntoBox);
-            //select.setSelected(true);
-            //zoomIntoBox.setSelected(true);
+            
             pan.setSelected(true);
             //openMaps.get(activeMap).deslectAllCartographicElements();
             //refreshMap(false);
@@ -3472,14 +3480,17 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             zoomMenuItem.setState(true);
             zoomOutMenuItem.setState(false);
             panMenuItem.setState(false);
+            
+            ButtonGroup viewButtonGroup = new ButtonGroup();
+            viewButtonGroup.add(select);
+            viewButtonGroup.add(selectFeature);
+            viewButtonGroup.add(pan);
+            viewButtonGroup.add(zoomOut);
+            viewButtonGroup.add(zoomIntoBox);
+            //select.setSelected(true);
+            //zoomIntoBox.setSelected(true);
 
-            JButton previousExtent = makeToolBarButton("back.png", "previousExtent",
-                    bundle.getString("PreviousExtent"), "Prev Extent");
-            toolbar.add(previousExtent);
-            JButton nextExtent = makeToolBarButton("forward.png", "nextExtent",
-                    bundle.getString("NextExtent"), "Next Extent");
-            nextExtent.setActionCommand("nextExtent");
-            toolbar.add(nextExtent);
+
 
             toolbar.addSeparator();
 

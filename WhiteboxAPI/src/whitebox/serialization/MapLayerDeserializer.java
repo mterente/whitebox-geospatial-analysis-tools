@@ -121,6 +121,12 @@ public class MapLayerDeserializer implements JsonDeserializer<MapLayer> {
                 rli.setPaletteReversed(isPaletteReversed);
                 rli.setVisible(isVisible);
                 rli.setVisibleInLegend(isVisibleInLegend);
+                if (jo.has("cartographicGeneralization")) {
+                    rli.setCartographicGeneralizationLevel(jo.getAsJsonPrimitive("cartographicGeneralization").getAsDouble());
+                }
+                if (jo.has("hillshadeSource")) {
+                    rli.setHillshadeSource(jo.getAsJsonPrimitive("hillshadeSource").getAsString());
+                }
                 return rli;
             case "VECTOR":
                 // find the header file
@@ -192,7 +198,9 @@ public class MapLayerDeserializer implements JsonDeserializer<MapLayer> {
                 vli.setFillColour(clr);
                 clr = gson.fromJson(jo.get("lineColour"), clrType);
                 vli.setLineColour(clr);
-                
+                if (jo.has("cartographicGeneralization")) {
+                    vli.setCartographicGeneralizationLevel(jo.getAsJsonPrimitive("cartographicGeneralization").getAsDouble());
+                }
                 
                 return vli;
             default:

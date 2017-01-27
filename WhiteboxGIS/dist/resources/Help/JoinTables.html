@@ -43,31 +43,31 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # Input data has the shapefile name followed<br>
-                # by the attribute (primary key), separated by <br>
-                # a semicolon.<br>
-                inputData = wd + "coutries.shp" + ";" + "NAME"<br>
-                secondFile = wd + "populationData.shp"<br>
-                foreignKey = "COUNTRY"<br>
-                includeFields = "POPULATION;AREA"<br>
-                args = [inputData, secondFile, foreignKey, includeFields]<br>
-                pluginHost.runPlugin("MergeTables", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # Input data has the shapefile name followed&#10;<br>
+                # by the attribute (primary key), separated by &#10;<br>
+                # a semicolon.&#10;<br>
+                inputData = wd + "coutries.shp" + ";" + "NAME"&#10;<br>
+                secondFile = wd + "populationData.shp"&#10;<br>
+                foreignKey = "COUNTRY"&#10;<br>
+                includeFields = "POPULATION;AREA"&#10;<br>
+                args = [inputData, secondFile, foreignKey, includeFields]&#10;<br>
+                pluginHost.runPlugin("MergeTables", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // Input data has the shapefile name followed <br>
-                // by the attribute (primary key), separated by <br>
-                // a semicolon.<br>
-                def inputData = wd + "coutries.shp" + ";" + "NAME"<br>
-                def secondFile = wd + "populationData.csv"<br>
-                def foreignKey = "COUNTRY"<br>
-                def includeFields = "POPULATION;AREA"<br>
-                String[] args = [inputData, secondFile, foreignKey, includeFields]<br>
-                pluginHost.runPlugin("MergeTables", args, False)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // Input data has the shapefile name followed &#10;<br>
+                // by the attribute (primary key), separated by &#10;<br>
+                // a semicolon.&#10;<br>
+                def inputData = wd + "coutries.shp" + ";" + "NAME"&#10;<br>
+                def secondFile = wd + "populationData.csv"&#10;<br>
+                def foreignKey = "COUNTRY"&#10;<br>
+                def includeFields = "POPULATION;AREA"&#10;<br>
+                String[] args = [inputData, secondFile, foreignKey, includeFields]&#10;<br>
+                pluginHost.runPlugin("MergeTables", args, False)&#10;<br>
             </code>
         </p>
 

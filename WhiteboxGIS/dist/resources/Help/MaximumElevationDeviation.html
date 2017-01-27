@@ -44,29 +44,29 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                demFile = wd + "DEM.dep"<br>
-                outputMagnitudeFile = wd + "outputMagnitude.dep"<br>
-                outputScaleFile = wd + "outputScale.dep"<br>
-                minNeighbourhood = "3"<br>
-                maxNeighbourhood = "1000"<br>
-                stepSize = "10"<br>
-                args = [demFile, outputMagnitudeFile, outputScaleFile, minNeighbourhood, maxNeighbourhood, stepSize]<br>
-                pluginHost.runPlugin("MaximumElevationDeviation", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                demFile = wd + "DEM.dep"&#10;<br>
+                outputMagnitudeFile = wd + "outputMagnitude.dep"&#10;<br>
+                outputScaleFile = wd + "outputScale.dep"&#10;<br>
+                minNeighbourhood = "3"&#10;<br>
+                maxNeighbourhood = "1000"&#10;<br>
+                stepSize = "10"&#10;<br>
+                args = [demFile, outputMagnitudeFile, outputScaleFile, minNeighbourhood, maxNeighbourhood, stepSize]&#10;<br>
+                pluginHost.runPlugin("MaximumElevationDeviation", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def demFile = wd + "DEM.dep"<br>
-                def outputMagnitudeFile = wd + "outputMagnitude.dep"<br>
-                def outputScaleFile = wd + "outputScale.dep"<br>
-                def minNeighbourhood = "3"<br>
-                def maxNeighbourhood = "1000"<br>
-                def stepSize = "10"<br>
-                String[] args = [demFile, outputMagnitudeFile, outputScaleFile, minNeighbourhood, maxNeighbourhood, stepSize]<br>
-                <br>pluginHost.runPlugin("MaximumElevationDeviation", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def demFile = wd + "DEM.dep"&#10;<br>
+                def outputMagnitudeFile = wd + "outputMagnitude.dep"&#10;<br>
+                def outputScaleFile = wd + "outputScale.dep"&#10;<br>
+                def minNeighbourhood = "3"&#10;<br>
+                def maxNeighbourhood = "1000"&#10;<br>
+                def stepSize = "10"&#10;<br>
+                String[] args = [demFile, outputMagnitudeFile, outputScaleFile, minNeighbourhood, maxNeighbourhood, stepSize]&#10;<br>
+                &#10;<br>pluginHost.runPlugin("MaximumElevationDeviation", args, false)&#10;<br>
             </code>
         </p>
 

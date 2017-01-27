@@ -22,24 +22,24 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()&#10;<br>
-                inputFile1 = wd + "input1.dep"&#10;<br>
-                inputFile2 = wd + "input2.dep"&#10;<br>
-                outputFile = wd + "output.dep"&#10;<br>
-                args = [inputFile1, inputFile2, outputFile]&#10;<br>
-                pluginHost.runPlugin("Add", args, False)&#10;<br>
+                wd = pluginHost.getWorkingDirectory()&#10;&#10;<br>
+                inputFile1 = wd + "input1.dep"&#10;&#10;<br>
+                inputFile2 = wd + "input2.dep"&#10;&#10;<br>
+                outputFile = wd + "output.dep"&#10;&#10;<br>
+                args = [inputFile1, inputFile2, outputFile]&#10;&#10;<br>
+                pluginHost.runPlugin("Add", args, False)&#10;&#10;<br>
             </code>
         </p>
 
         <p>This is a Groovy script also using the tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()&#10;<br>
-                def inputFile = wd + "input.dep"&#10;<br>
-                def constant = "5"&#10;<br>
-                def outputFile = wd + "output.dep"&#10;<br>
-                String[] args = [inputFile, constant, outputFile]&#10;<br>
-                pluginHost.runPlugin("Add", args, false)&#10;<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;&#10;<br>
+                def inputFile = wd + "input.dep"&#10;&#10;<br>
+                def constant = "5"&#10;&#10;<br>
+                def outputFile = wd + "output.dep"&#10;&#10;<br>
+                String[] args = [inputFile, constant, outputFile]&#10;&#10;<br>
+                pluginHost.runPlugin("Add", args, false)&#10;&#10;<br>
             </code>
         </p>
 

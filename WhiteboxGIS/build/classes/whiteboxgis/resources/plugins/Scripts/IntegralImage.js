@@ -91,7 +91,7 @@ function execute(args) {
         var i;
 
         // read in the arguments
-        if (args.length < 3) {
+        if (args.length < 2) {
             pluginHost.showFeedback("The tool is being run without the correct number of parameters");
             return;
         }

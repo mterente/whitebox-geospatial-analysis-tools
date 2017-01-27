@@ -213,11 +213,12 @@ public class DeleteFiles implements WhiteboxPlugin {
 
         try {
             updateProgress("Deleting files:", 0);
+            boolean[] successes = new boolean[numFiles];
             for (a = 0; a < numFiles; a++) {
                 fileName = imageFiles[a];
                 file = new File(fileName);
                 if (file.exists()) {
-                    file.delete();
+                    successes[a] = file.delete();
                 }
                 if (fileName.toLowerCase().endsWith(".dep")) { // it's a raster file
                     file = new File(fileName.replace(".dep", ".tas"));
@@ -260,6 +261,12 @@ public class DeleteFiles implements WhiteboxPlugin {
                 }
                 progress = (int) (100f * a / (numFiles - 1));
                 updateProgress(progress);
+            }
+            
+            for (a = 0; a < numFiles; a++) {
+                if (!successes[a]) {
+                    showFeedback("At least one of the input files could not be successfully deleted.\nYou may have inadequate permission to the data directory for this operation.");
+                }
             }
             showFeedback("Operation complete.");
         } catch (OutOfMemoryError oe) {

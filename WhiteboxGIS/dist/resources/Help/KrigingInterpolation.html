@@ -73,53 +73,53 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # Input data has the shapefile name followed <br>
-                # by the attribute, separated by a semicolon. <br>
-                inputData = wd + "spotHeights.shp" + ";" + "HEIGHT"<br>
-                outputFile = wd + "surface.dep"<br>
-                outputErrorFile = wd + "error surface.dep"<br>
-                cellSize = "10.0"<br>
-                baseFile = "not specified"<br>
-                numNeighbours = "15"<br>
-                modelType = "Gaussian"<br>
-                numLags = "12"<br>
-                lagSize = "1000.0"<br>
-                applyNugget = "true"<br>
-                anisotropic = "false"<br>
-                angle = "not specified"<br>
-                tolerance = "not specified"<br>
-                bandWidth = "not specified"<br>
-                showVariogram = "true"<br>
-                showVariogramMap = "true"<br>
-                args = [inputData, outputFile, outputErrorFile, cellSize, numNeighbours, modelType, numLags, lagSize, applyNugget, anisotropic, angle, tolerance, bandWidth, showVariogram, showVariogramMap]<br>
-                pluginHost.runPlugin("KrigingInterpolation", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # Input data has the shapefile name followed &#10;<br>
+                # by the attribute, separated by a semicolon. &#10;<br>
+                inputData = wd + "spotHeights.shp" + ";" + "HEIGHT"&#10;<br>
+                outputFile = wd + "surface.dep"&#10;<br>
+                outputErrorFile = wd + "error surface.dep"&#10;<br>
+                cellSize = "10.0"&#10;<br>
+                baseFile = "not specified"&#10;<br>
+                numNeighbours = "15"&#10;<br>
+                modelType = "Gaussian"&#10;<br>
+                numLags = "12"&#10;<br>
+                lagSize = "1000.0"&#10;<br>
+                applyNugget = "true"&#10;<br>
+                anisotropic = "false"&#10;<br>
+                angle = "not specified"&#10;<br>
+                tolerance = "not specified"&#10;<br>
+                bandWidth = "not specified"&#10;<br>
+                showVariogram = "true"&#10;<br>
+                showVariogramMap = "true"&#10;<br>
+                args = [inputData, outputFile, outputErrorFile, cellSize, numNeighbours, modelType, numLags, lagSize, applyNugget, anisotropic, angle, tolerance, bandWidth, showVariogram, showVariogramMap]&#10;<br>
+                pluginHost.runPlugin("KrigingInterpolation", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // Input data has the shapefile name followed <br>
-                // by the attribute, separated by a semicolon. <br>
-                def inputData = wd + "spotHeights.shp" + ";" + "HEIGHT"<br>
-                def outputFile = wd + "surface.dep"<br>
-                def outputErrorFile = wd + "error surface.dep"<br>
-                def cellSize = "10.0"<br>
-                def baseFile = "not specified"<br>
-                def numNeighbours = "15"<br>
-                def modelType = "Gaussian"<br>
-                def numLags = "12"<br>
-                def lagSize = "1000.0"<br>
-                def applyNugget = "true"<br>
-                def anisotropic = "false"<br>
-                def angle = "not specified"<br>
-                def tolerance = "not specified"<br>
-                def bandWidth = "not specified"<br>
-                def showVariogram = "true"<br>
-                def showVariogramMap = "true"<br>
-                String[] args = [inputData, outputFile, outputErrorFile, cellSize, numNeighbours, modelType, numLags, lagSize, applyNugget, anisotropic, angle, tolerance, bandWidth, showVariogram, showVariogramMap]<br>
-                pluginHost.runPlugin("KrigingInterpolation", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // Input data has the shapefile name followed &#10;<br>
+                // by the attribute, separated by a semicolon. &#10;<br>
+                def inputData = wd + "spotHeights.shp" + ";" + "HEIGHT"&#10;<br>
+                def outputFile = wd + "surface.dep"&#10;<br>
+                def outputErrorFile = wd + "error surface.dep"&#10;<br>
+                def cellSize = "10.0"&#10;<br>
+                def baseFile = "not specified"&#10;<br>
+                def numNeighbours = "15"&#10;<br>
+                def modelType = "Gaussian"&#10;<br>
+                def numLags = "12"&#10;<br>
+                def lagSize = "1000.0"&#10;<br>
+                def applyNugget = "true"&#10;<br>
+                def anisotropic = "false"&#10;<br>
+                def angle = "not specified"&#10;<br>
+                def tolerance = "not specified"&#10;<br>
+                def bandWidth = "not specified"&#10;<br>
+                def showVariogram = "true"&#10;<br>
+                def showVariogramMap = "true"&#10;<br>
+                String[] args = [inputData, outputFile, outputErrorFile, cellSize, numNeighbours, modelType, numLags, lagSize, applyNugget, anisotropic, angle, tolerance, bandWidth, showVariogram, showVariogramMap]&#10;<br>
+                pluginHost.runPlugin("KrigingInterpolation", args, false)&#10;<br>
             </code>
         </p>
 

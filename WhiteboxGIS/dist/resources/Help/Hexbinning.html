@@ -40,27 +40,27 @@ of horizontal (pointy side up) and vertical (flat side up).</p>
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
                 # The tool accepts both SHP and LAS files
-                inputFile = wd + "input.shp"<br>
-                outputFile = wd + "output.shp"<br>
-                hexWidth = "10.0"<br>
-                gridDirection = "horizontal"<br>
-                args = [inputFile, outputFile, hexWidth, gridDirection]<br>
-                pluginHost.runPlugin("Hexbinning", args, False)<br>
+                inputFile = wd + "input.shp"&#10;<br>
+                outputFile = wd + "output.shp"&#10;<br>
+                hexWidth = "10.0"&#10;<br>
+                gridDirection = "horizontal"&#10;<br>
+                args = [inputFile, outputFile, hexWidth, gridDirection]&#10;<br>
+                pluginHost.runPlugin("Hexbinning", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
                 // The tool accepts both SHP and LAS files
-                def inputFile = wd + "input.las"<br>
-                def outputFile = wd + "output.shp"<br>
-                def hexWidth = "10.0"<br>
-                def gridDirection = "vertical"<br>
-                String[] args = [inputFile, outputFile, hexWidth, gridDirection]<br>
-                pluginHost.runPlugin("Hexbinning", args, false)<br>
+                def inputFile = wd + "input.las"&#10;<br>
+                def outputFile = wd + "output.shp"&#10;<br>
+                def hexWidth = "10.0"&#10;<br>
+                def gridDirection = "vertical"&#10;<br>
+                String[] args = [inputFile, outputFile, hexWidth, gridDirection]&#10;<br>
+                pluginHost.runPlugin("Hexbinning", args, false)&#10;<br>
             </code>
         </p>
 

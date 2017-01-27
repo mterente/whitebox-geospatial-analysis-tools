@@ -51,33 +51,33 @@ raster is of the <i>float</i> data type and <i>continuous</i> data scale.</p>
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                inputFiles = wd + "input1.shp" + ";" + wd + "input2.shp" + ";" + wd + "input3.shp"<br>
-                attribute = "INCOME"<br>
-                firstLineHeader = "false" # text input only<br>
-                outputFile = wd + "output.dep"<br>
-                gridRes = "10.0"<br>
-                searchDist = "100.0"<br>
-                args = [inputFiles, attribute, firstLineHeader, outputFile, gridRes, searchDist]<br>
-                pluginHost.runPlugin("InterpolateNN", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputFiles = wd + "input1.shp" + ";" + wd + "input2.shp" + ";" + wd + "input3.shp"&#10;<br>
+                attribute = "INCOME"&#10;<br>
+                firstLineHeader = "false" # text input only&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                gridRes = "10.0"&#10;<br>
+                searchDist = "100.0"&#10;<br>
+                args = [inputFiles, attribute, firstLineHeader, outputFile, gridRes, searchDist]&#10;<br>
+                pluginHost.runPlugin("InterpolateNN", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def inputFiles = wd + "input1.txt" + ";" + wd + "input2.txt" + ";" + wd + "input3.txt"<br>
-                def attribute = "not specified" // only for shapefile input<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputFiles = wd + "input1.txt" + ";" + wd + "input2.txt" + ";" + wd + "input3.txt"&#10;<br>
+                def attribute = "not specified" // only for shapefile input&#10;<br>
                 def firstLineHeader = "false"
-                def outputFile = wd + "output.dep"<br>
-                def gridRes = "10.0"<br>
-                def searchDist = "100.0"<br>
-                String[] args = [inputFiles, attribute, firstLineHeader, outputFile, gridRes, searchDist]<br>
-                pluginHost.runPlugin("InterpolateNN", args, false)<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def gridRes = "10.0"&#10;<br>
+                def searchDist = "100.0"&#10;<br>
+                String[] args = [inputFiles, attribute, firstLineHeader, outputFile, gridRes, searchDist]&#10;<br>
+                pluginHost.runPlugin("InterpolateNN", args, false)&#10;<br>
             </code>
         </p>
         

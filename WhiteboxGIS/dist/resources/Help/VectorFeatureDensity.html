@@ -32,27 +32,27 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "input.shp"<br>
-                cellSize = "10.0"<br>
-                baseFile = "not specified"<br>
-                searchDistance = "100.0"<br>
-                outputFile = wd + "output.dep"<br>
-                args = [inputFile, cellSize, baseFile, searchDistance, outputFile]<br>
-                pluginHost.runPlugin("VectorFeatureDensity", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "input.shp"&#10;<br>
+                cellSize = "10.0"&#10;<br>
+                baseFile = "not specified"&#10;<br>
+                searchDistance = "100.0"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                args = [inputFile, cellSize, baseFile, searchDistance, outputFile]&#10;<br>
+                pluginHost.runPlugin("VectorFeatureDensity", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "input.shp"<br>
-                def cellSize = "not specified"<br>
-                def baseFile = wd + "basefile.dep"<br>
-                def searchDistance = "100.0"<br>
-                def outputFile = wd + "output.dep"<br>
-                String[] args = [inputFile, cellSize, baseFile, searchDistance, outputFile]<br>
-                pluginHost.runPlugin("VectorFeatureDensity", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "input.shp"&#10;<br>
+                def cellSize = "not specified"&#10;<br>
+                def baseFile = wd + "basefile.dep"&#10;<br>
+                def searchDistance = "100.0"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                String[] args = [inputFile, cellSize, baseFile, searchDistance, outputFile]&#10;<br>
+                pluginHost.runPlugin("VectorFeatureDensity", args, false)&#10;<br>
             </code>
         </p>
 

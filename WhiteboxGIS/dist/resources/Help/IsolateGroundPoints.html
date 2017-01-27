@@ -42,30 +42,30 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "input.las"<br>
-                outputFile = wd + "output.shp"<br>
-                searchDistance = "1.0"<br>
-                minNeighbours = "0"<br>
-                maxSlope = "20.0"<br>
-                displayOutput = "false"<br>
-                args = [inputFile, outputFile, searchDistance, minNeighbours, maxSlope, displayOutput]<br>
-                pluginHost.runPlugin("IsolateGroundPoints", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "input.las"&#10;<br>
+                outputFile = wd + "output.shp"&#10;<br>
+                searchDistance = "1.0"&#10;<br>
+                minNeighbours = "0"&#10;<br>
+                maxSlope = "20.0"&#10;<br>
+                displayOutput = "false"&#10;<br>
+                args = [inputFile, outputFile, searchDistance, minNeighbours, maxSlope, displayOutput]&#10;<br>
+                pluginHost.runPlugin("IsolateGroundPoints", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "input.shp"<br>
-                def elevField = "ELEV"<br>
-                def outputFile = wd + "output.shp"<br>
-                def searchDistance = "1.0"<br>
-                def minNeighbours = "0"<br>
-                def maxSlope = "20.0"<br>
-                def displayOutput = "false"<br>
-                String[] args = [inputFile, elevField, outputFile, searchDistance, minNeighbours, maxSlope, displayOutput]<br>
-                pluginHost.runPlugin("IsolateGroundPoints", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "input.shp"&#10;<br>
+                def elevField = "ELEV"&#10;<br>
+                def outputFile = wd + "output.shp"&#10;<br>
+                def searchDistance = "1.0"&#10;<br>
+                def minNeighbours = "0"&#10;<br>
+                def maxSlope = "20.0"&#10;<br>
+                def displayOutput = "false"&#10;<br>
+                String[] args = [inputFile, elevField, outputFile, searchDistance, minNeighbours, maxSlope, displayOutput]&#10;<br>
+                pluginHost.runPlugin("IsolateGroundPoints", args, false)&#10;<br>
             </code>
         </p>
 

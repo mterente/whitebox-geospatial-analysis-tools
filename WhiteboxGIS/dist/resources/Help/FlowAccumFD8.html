@@ -72,29 +72,29 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                demFile = wd + "DEM.dep"<br>
-                outputFile = wd + "output.dep"<br>
-                exponent = "1.0"<br>
-                outputType = "specific catchment area (sca)"<br>
-                logTransformOutput = "false"<br>
-                threshold = "1000"<br>
-                args = [demFile, outputFile, exponent, outputType, logTransformOutput, threshold]<br>
-                pluginHost.runPlugin("FlowAccumFD8", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                demFile = wd + "DEM.dep"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                exponent = "1.0"&#10;<br>
+                outputType = "specific catchment area (sca)"&#10;<br>
+                logTransformOutput = "false"&#10;<br>
+                threshold = "1000"&#10;<br>
+                args = [demFile, outputFile, exponent, outputType, logTransformOutput, threshold]&#10;<br>
+                pluginHost.runPlugin("FlowAccumFD8", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def demFile = wd + "DEM.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                def exponent = "1.0"<br>
-                def outputType = "number of upslope grid cells"<br>
-                def logTransformOutput = "true"<br>
-                def threshold = "not specified"<br>
-                String[] args = [demFile, outputFile, exponent, outputType, logTransformOutput, threshold]<br>
-                pluginHost.runPlugin("FlowAccumFD8", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def demFile = wd + "DEM.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def exponent = "1.0"&#10;<br>
+                def outputType = "number of upslope grid cells"&#10;<br>
+                def logTransformOutput = "true"&#10;<br>
+                def threshold = "not specified"&#10;<br>
+                String[] args = [demFile, outputFile, exponent, outputType, logTransformOutput, threshold]&#10;<br>
+                pluginHost.runPlugin("FlowAccumFD8", args, false)&#10;<br>
             </code>
         </p>
 

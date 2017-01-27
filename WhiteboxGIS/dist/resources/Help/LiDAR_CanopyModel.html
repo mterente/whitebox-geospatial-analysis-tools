@@ -36,31 +36,31 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                inputs = wd + "input1.las" + ";" + wd + "input2.las" + ";" + wd + "input3.las"<br>
-                suffix = "canopy"<br>
-                resolution = "1.0"<br>
-                minHeight = "2.0"<br>
-                maxSlope = "20.0"<br>
-                args = [inputs, suffix, resolution, minHeight, maxSlope]<br>
-                pluginHost.runPlugin("LiDAR_CanopyModel", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputs = wd + "input1.las" + ";" + wd + "input2.las" + ";" + wd + "input3.las"&#10;<br>
+                suffix = "canopy"&#10;<br>
+                resolution = "1.0"&#10;<br>
+                minHeight = "2.0"&#10;<br>
+                maxSlope = "20.0"&#10;<br>
+                args = [inputs, suffix, resolution, minHeight, maxSlope]&#10;<br>
+                pluginHost.runPlugin("LiDAR_CanopyModel", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def inputs = wd + "input1.las" + ";" + wd + "input2.las" + ";" + wd + "input3.las"<br>
-                def suffix = "canopy"<br>
-                def resolution = "1.0"<br>
-                def minHeight = "2.0"<br>
-                def maxSlope = "20.0"<br>
-                def args = [inputs, suffix, resolution, minHeight, maxSlope]<br>
-                pluginHost.runPlugin("LiDAR_CanopyModel", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputs = wd + "input1.las" + ";" + wd + "input2.las" + ";" + wd + "input3.las"&#10;<br>
+                def suffix = "canopy"&#10;<br>
+                def resolution = "1.0"&#10;<br>
+                def minHeight = "2.0"&#10;<br>
+                def maxSlope = "20.0"&#10;<br>
+                def args = [inputs, suffix, resolution, minHeight, maxSlope]&#10;<br>
+                pluginHost.runPlugin("LiDAR_CanopyModel", args, false)&#10;<br>
             </code>
         </p>
 

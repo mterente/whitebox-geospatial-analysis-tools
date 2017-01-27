@@ -33,29 +33,29 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputImageFile = wd + "input.dep"<br>
-                inputPPFile = wd + "inputPP.shp"<br>
-                outputFile = wd + "output.dep"<br>
-                focalLength = "304.8" # in mm<br>
-                imageWidth = "228.6" # in mm<br>
-                n = "4.0"<br>
-                args = [inputImageFile, inputPPFile, outputFile, focalLength, imageWidth, n]<br>
-                pluginHost.runPlugin("CorrectVignetting", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputImageFile = wd + "input.dep"&#10;<br>
+                inputPPFile = wd + "inputPP.shp"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                focalLength = "304.8" # in mm&#10;<br>
+                imageWidth = "228.6" # in mm&#10;<br>
+                n = "4.0"&#10;<br>
+                args = [inputImageFile, inputPPFile, outputFile, focalLength, imageWidth, n]&#10;<br>
+                pluginHost.runPlugin("CorrectVignetting", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputImageFile = wd + "input.dep"<br>
-                def inputPPFile = wd + "inputPP.shp"<br>
-                def outputFile = wd + "output.dep"<br>
-                def focalLength = "304.8" // in mm<br>
-                def imageWidth = "228.6" // in mm<br>
-                def n = "4.0"<br>
-                args = [inputImageFile, inputPPFile, outputFile, focalLength, imageWidth, n]<br>
-                pluginHost.runPlugin("CorrectVignetting", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputImageFile = wd + "input.dep"&#10;<br>
+                def inputPPFile = wd + "inputPP.shp"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def focalLength = "304.8" // in mm&#10;<br>
+                def imageWidth = "228.6" // in mm&#10;<br>
+                def n = "4.0"&#10;<br>
+                args = [inputImageFile, inputPPFile, outputFile, focalLength, imageWidth, n]&#10;<br>
+                pluginHost.runPlugin("CorrectVignetting", args, false)&#10;<br>
             </code>
         </p>
         

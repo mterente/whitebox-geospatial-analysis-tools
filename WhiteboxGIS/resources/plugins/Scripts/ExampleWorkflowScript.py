@@ -93,7 +93,7 @@ try:
 	'''
 	Note that in each of the examples above, I have created new variables
 	to hold each of the input parameters for the plugin tools. I've done
-	this more for clarity than anything else. The script could be
+	this more for clarity more than anything else. The script could be
 	substantially shorted if the shorter variables were directly entered 
 	into the args array. For instance, I could have easily used:
 	

@@ -27,23 +27,23 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                streamsFile = wd + "streams.dep"<br>
-                pointerFile = wd + "D8 pointer.dep"<br>
-                outputFile = wd + "streams.shp"<br>
-                args = [streamsFile, pointerFile, outputFile]<br>
-                pluginHost.runPlugin("RasterStreamsToVector", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                streamsFile = wd + "streams.dep"&#10;<br>
+                pointerFile = wd + "D8 pointer.dep"&#10;<br>
+                outputFile = wd + "streams.shp"&#10;<br>
+                args = [streamsFile, pointerFile, outputFile]&#10;<br>
+                pluginHost.runPlugin("RasterStreamsToVector", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def streamsFile = wd + "streams.dep"<br>
-                def pointerFile = wd + "D8 pointer.dep"<br>
-                def outputFile = wd + "streams.shp"<br>
-                Streams[] args = [streamsFile, pointerFile, outputFile]<br>
-                pluginHost.runPlugin("RasterStreamsToVector", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def streamsFile = wd + "streams.dep"&#10;<br>
+                def pointerFile = wd + "D8 pointer.dep"&#10;<br>
+                def outputFile = wd + "streams.shp"&#10;<br>
+                Streams[] args = [streamsFile, pointerFile, outputFile]&#10;<br>
+                pluginHost.runPlugin("RasterStreamsToVector", args, false)&#10;<br>
             </code>
         </p>
 

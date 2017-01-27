@@ -33,33 +33,33 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
                 # Specify the input file name and attribute 
                 # separated by a semicolon 
-                inputData = wd + "input.shp";"HEIGHT"<br>
-                useZValues="false" # Only used with 'Z' ShapeType<br>
-                outputFile = wd + "output.shp"<br>
-                gridRes = "1.5"<br>
-                baseFile = "not specified"<br>
-                maxDistance = "1.5"<br>
-                args = [inputData, useZValues, outputFile, gridRes, baseFile, maxDistance]<br>
-                pluginHost.runPlugin("MinimumInterpolation", args, False)<br>
+                inputData = wd + "input.shp";"HEIGHT"&#10;<br>
+                useZValues="false" # Only used with 'Z' ShapeType&#10;<br>
+                outputFile = wd + "output.shp"&#10;<br>
+                gridRes = "1.5"&#10;<br>
+                baseFile = "not specified"&#10;<br>
+                maxDistance = "1.5"&#10;<br>
+                args = [inputData, useZValues, outputFile, gridRes, baseFile, maxDistance]&#10;<br>
+                pluginHost.runPlugin("MinimumInterpolation", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
                 // Specify the input file name and attribute 
                 // separated by a semicolon 
-                def inputData = wd + "input.shp";""<br>
-                def useZValues="true" // Used with 'Z' ShapeType<br>
-                def outputFile = wd + "output.shp"<br>
-                def gridRes = "not specified"<br>
-                def baseFile = wd + "existingRaster.dep"<br>
-                def maxDistance = "1.5"<br>
-                String[] args = [inputData, useZValues, outputFile, gridRes, baseFile, maxDistance]<br>
-                pluginHost.runPlugin("MinimumInterpolation", args, false)<br>
+                def inputData = wd + "input.shp";""&#10;<br>
+                def useZValues="true" // Used with 'Z' ShapeType&#10;<br>
+                def outputFile = wd + "output.shp"&#10;<br>
+                def gridRes = "not specified"&#10;<br>
+                def baseFile = wd + "existingRaster.dep"&#10;<br>
+                def maxDistance = "1.5"&#10;<br>
+                String[] args = [inputData, useZValues, outputFile, gridRes, baseFile, maxDistance]&#10;<br>
+                pluginHost.runPlugin("MinimumInterpolation", args, false)&#10;<br>
             </code>
         </p>
 

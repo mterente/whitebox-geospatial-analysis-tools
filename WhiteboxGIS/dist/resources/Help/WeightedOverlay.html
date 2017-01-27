@@ -44,31 +44,31 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
                 # image1;weight1;image2;weight2;...
-                inputData = wd + "input1.dep" + ";" + "0.2" + ";" + wd + "input2.dep" + ";" + "0.8"<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                constraintsFiles = wd + "constraint1.dep" + ";" + wd + "constraint2.dep" + ";" + wd + "constraint3.dep"<br>
-                outputFile = wd + "output.dep"<br>
-                commonScale = "0-1" # must be 0-1, 0-100, or 0-255<br>
-                args = [inputData, constraintsFiles, outputFile, commonScale]<br>
-                pluginHost.runPlugin("WeightedOverlay", args, False)<br>
+                inputData = wd + "input1.dep" + ";" + "0.2" + ";" + wd + "input2.dep" + ";" + "0.8"&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                constraintsFiles = wd + "constraint1.dep" + ";" + wd + "constraint2.dep" + ";" + wd + "constraint3.dep"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                commonScale = "0-1" # must be 0-1, 0-100, or 0-255&#10;<br>
+                args = [inputData, constraintsFiles, outputFile, commonScale]&#10;<br>
+                pluginHost.runPlugin("WeightedOverlay", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
                 // image1;weight1;image2;weight2;...
-                def inputData = wd + "input1.dep" + ";" + "0.2" + ";" + wd + "input2.dep" + ";" + "0.8"<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def constraintsFiles = wd + "constraint1.dep" + ";" + wd + "constraint2.dep" + ";" + wd + "constraint3.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                def commonScale = "0-255" // must be 0-1, 0-100, or 0-255<br>
-                String[] args = [inputData, constraintsFiles, outputFile, commonScale]<br>
-                pluginHost.runPlugin("WeightedOverlay", args, false)<br>
+                def inputData = wd + "input1.dep" + ";" + "0.2" + ";" + wd + "input2.dep" + ";" + "0.8"&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def constraintsFiles = wd + "constraint1.dep" + ";" + wd + "constraint2.dep" + ";" + wd + "constraint3.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def commonScale = "0-255" // must be 0-1, 0-100, or 0-255&#10;<br>
+                String[] args = [inputData, constraintsFiles, outputFile, commonScale]&#10;<br>
+                pluginHost.runPlugin("WeightedOverlay", args, false)&#10;<br>
             </code>
         </p>
 

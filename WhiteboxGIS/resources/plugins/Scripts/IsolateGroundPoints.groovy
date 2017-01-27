@@ -39,6 +39,8 @@ import whitebox.geospatialfiles.shapefile.attributes.DBFField;
 import whitebox.geospatialfiles.shapefile.attributes.*;
 import whitebox.ui.plugin_dialog.*
 import groovy.transform.CompileStatic
+import groovy.time.TimeDuration
+import groovy.time.TimeCategory
 
 // The following four variables are required for this 
 // script to be integrated into the tool tree panel. 
@@ -131,7 +133,8 @@ public class IsolateGroundPoints implements ActionListener {
 	// that of native Java code.
 	@CompileStatic
 	private void execute(String[] args) {
-		long start = System.currentTimeMillis()
+//		long start = System.currentTimeMillis()
+		Date start = new Date();
 		int progress = 0
 	    int oldProgress = -1
 	    double x, y, z, zN, dist, slope, maxDist, maxSlope
@@ -683,6 +686,10 @@ public class IsolateGroundPoints implements ActionListener {
 		            output.write()
 				}
 			}
+
+			Date stop = new Date()
+			TimeDuration td = TimeCategory.minus(stop, start)
+			pluginHost.showFeedback("Elapsed time: $td")
 
 			if (displayOutput) {
 				pluginHost.returnData(outputFile)

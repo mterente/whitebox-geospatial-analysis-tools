@@ -31,22 +31,22 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "input1.dep"<br>
-                decrementFile = wd + "input2.dep"<br>
-                args = [inputFile, decrementFile]<br>
-                pluginHost.runPlugin("Decrement", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "input1.dep"&#10;<br>
+                decrementFile = wd + "input2.dep"&#10;<br>
+                args = [inputFile, decrementFile]&#10;<br>
+                pluginHost.runPlugin("Decrement", args, False)&#10;<br>
             </code>
         </p>
 
         <p>This is a Groovy script also using the tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "input.dep"<br>
-                def decrementValue = "5"<br>
-                String[] args = [inputFile, decrementValue]<br>
-                pluginHost.runPlugin("Decrement", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "input.dep"&#10;<br>
+                def decrementValue = "5"&#10;<br>
+                String[] args = [inputFile, decrementValue]&#10;<br>
+                pluginHost.runPlugin("Decrement", args, false)&#10;<br>
             </code>
         </p>
 

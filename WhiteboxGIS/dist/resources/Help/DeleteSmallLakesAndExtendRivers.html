@@ -34,29 +34,29 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                lakesFileIn = wd + "inLakes.shp"<br>
-                streamsFileIn = wd + "inStreams.shp"<br>
-                lakesFileOut = wd + "outLakes.shp"<br>
-                streamsFileOut = wd + "outStreams.shp"<br>
-                areaThreshold = "100.0"<br>
-                distThreshold = "50.0"<br>
-                args = [lakesFileIn, streamsFileIn, lakesFileOut, streamsFileOut, areaThreshold, distThreshold]<br>
-                pluginHost.runPlugin("DeleteSmallLakesAndExtendRivers", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                lakesFileIn = wd + "inLakes.shp"&#10;<br>
+                streamsFileIn = wd + "inStreams.shp"&#10;<br>
+                lakesFileOut = wd + "outLakes.shp"&#10;<br>
+                streamsFileOut = wd + "outStreams.shp"&#10;<br>
+                areaThreshold = "100.0"&#10;<br>
+                distThreshold = "50.0"&#10;<br>
+                args = [lakesFileIn, streamsFileIn, lakesFileOut, streamsFileOut, areaThreshold, distThreshold]&#10;<br>
+                pluginHost.runPlugin("DeleteSmallLakesAndExtendRivers", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def lakesFileIn = wd + "inLakes.shp"<br>
-                def streamsFileIn = wd + "inStreams.shp"<br>
-                def lakesFileOut = wd + "outLakes.shp"<br>
-                def streamsFileOut = wd + "outStreams.shp"<br>
-                def areaThreshold = "100.0"<br>
-                def distThreshold = "50.0"<br>
-                String[] args = [lakesFileIn, streamsFileIn, lakesFileOut, streamsFileOut, areaThreshold, distThreshold]<br>
-                pluginHost.runPlugin("DeleteSmallLakesAndExtendRivers", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def lakesFileIn = wd + "inLakes.shp"&#10;<br>
+                def streamsFileIn = wd + "inStreams.shp"&#10;<br>
+                def lakesFileOut = wd + "outLakes.shp"&#10;<br>
+                def streamsFileOut = wd + "outStreams.shp"&#10;<br>
+                def areaThreshold = "100.0"&#10;<br>
+                def distThreshold = "50.0"&#10;<br>
+                String[] args = [lakesFileIn, streamsFileIn, lakesFileOut, streamsFileOut, areaThreshold, distThreshold]&#10;<br>
+                pluginHost.runPlugin("DeleteSmallLakesAndExtendRivers", args, false)&#10;<br>
             </code>
         </p>
 

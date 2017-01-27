@@ -64,41 +64,41 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
                 # Input data has the shapefile name followed 
                 # by the attribute, separated by a semicolon. 
-                inputData = wd + "spotHeights.shp" + ";" + "HEIGHT"<br>
-                modelType = "Gaussian"<br>
-                numLags = "12"<br>
-                lagSize = "1000.0"<br>
-                applyNugget = "true"<br>
-                anisotropic = "false"<br>
-                angle = "not specified"<br>
-                tolerance = "not specified"<br>
-                bandWidth = "not specified"<br>
-                showVariogramMap = "true"<br>
-                args = [inputData, modelType, numLags, lagSize, applyNugget, anisotropic, angle, tolerance, bandWidth, showVariogramMap]<br>
-                pluginHost.runPlugin("PlotVariogram", args, False)<br>
+                inputData = wd + "spotHeights.shp" + ";" + "HEIGHT"&#10;<br>
+                modelType = "Gaussian"&#10;<br>
+                numLags = "12"&#10;<br>
+                lagSize = "1000.0"&#10;<br>
+                applyNugget = "true"&#10;<br>
+                anisotropic = "false"&#10;<br>
+                angle = "not specified"&#10;<br>
+                tolerance = "not specified"&#10;<br>
+                bandWidth = "not specified"&#10;<br>
+                showVariogramMap = "true"&#10;<br>
+                args = [inputData, modelType, numLags, lagSize, applyNugget, anisotropic, angle, tolerance, bandWidth, showVariogramMap]&#10;<br>
+                pluginHost.runPlugin("PlotVariogram", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
                 // Input data has the shapefile name followed 
                 // by the attribute, separated by a semicolon. 
-                def inputData = wd + "spotHeights.shp" + ";" + "HEIGHT"<br>
-                def modelType = "Gaussian"<br>
-                def numLags = "12"<br>
-                def lagSize = "1000.0"<br>
-                def applyNugget = "true"<br>
-                def anisotropic = "false"<br>
-                def angle = "not specified"<br>
-                def tolerance = "not specified"<br>
-                def bandWidth = "not specified"<br>
-                def showVariogramMap = "true"<br>
-                String[] args = [inputData, modelType, numLags, lagSize, applyNugget, anisotropic, angle, tolerance, bandWidth, showVariogramMap]<br>
-                pluginHost.runPlugin("PlotVariogram", args, false)<br>
+                def inputData = wd + "spotHeights.shp" + ";" + "HEIGHT"&#10;<br>
+                def modelType = "Gaussian"&#10;<br>
+                def numLags = "12"&#10;<br>
+                def lagSize = "1000.0"&#10;<br>
+                def applyNugget = "true"&#10;<br>
+                def anisotropic = "false"&#10;<br>
+                def angle = "not specified"&#10;<br>
+                def tolerance = "not specified"&#10;<br>
+                def bandWidth = "not specified"&#10;<br>
+                def showVariogramMap = "true"&#10;<br>
+                String[] args = [inputData, modelType, numLags, lagSize, applyNugget, anisotropic, angle, tolerance, bandWidth, showVariogramMap]&#10;<br>
+                pluginHost.runPlugin("PlotVariogram", args, false)&#10;<br>
             </code>
         </p>
 

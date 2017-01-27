@@ -31,7 +31,7 @@ descriptiveName = "Depth in Sink"
 description = "Measures the depth of sinks (depressions) in a DEM"
 toolboxes = ["RelativeLandscapePosition"]
 	
-class DepthInSink(ActionListener):
+class PluginTool(ActionListener):
 	def __init__(self, args):
 		if len(args) != 0:
 			self.execute(args)
@@ -138,4 +138,4 @@ class DepthInSink(ActionListener):
 if args is None:
 	pluginHost.showFeedback("The arguments array has not been set.")
 else:	
-	DepthInSink(args)
+	PluginTool(args)

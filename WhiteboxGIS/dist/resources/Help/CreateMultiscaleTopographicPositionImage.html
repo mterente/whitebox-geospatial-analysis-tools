@@ -32,28 +32,28 @@ topographic position analysis. Geomorphology, 245: 51-61. DOI: 10.1016/j.geomorp
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                localScaleFile = wd + "local.dep"<br>
-                mesoScaleFile = wd + "meso.dep"<br>
-                broadScaleFile = wd + "broad.dep"<br>
-                outputFile = wd + "output.dep"<br>
-                outputScaleFile = wd + "outputScale.dep"<br>
-                imageLightness = "1.2"<br>
-                args = [localScaleFile, mesoScaleFile, broadScaleFile, outputFile, imageLightness]<br>
-                pluginHost.runPlugin("CreateMultiscaleTopographicPositionImage", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                localScaleFile = wd + "local.dep"&#10;<br>
+                mesoScaleFile = wd + "meso.dep"&#10;<br>
+                broadScaleFile = wd + "broad.dep"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                outputScaleFile = wd + "outputScale.dep"&#10;<br>
+                imageLightness = "1.2"&#10;<br>
+                args = [localScaleFile, mesoScaleFile, broadScaleFile, outputFile, imageLightness]&#10;<br>
+                pluginHost.runPlugin("CreateMultiscaleTopographicPositionImage", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def localScaleFile = wd + "local.dep"<br>
-                def mesoScaleFile = wd + "meso.dep"<br>
-                def broadScaleFile = wd + "broad.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                def imageLightness = "1.2"<br>
-                String[] args = [localScaleFile, mesoScaleFile, broadScaleFile, outputFile, imageLightness]<br>
-                <br>pluginHost.runPlugin("CreateMultiscaleTopographicPositionImage", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def localScaleFile = wd + "local.dep"&#10;<br>
+                def mesoScaleFile = wd + "meso.dep"&#10;<br>
+                def broadScaleFile = wd + "broad.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def imageLightness = "1.2"&#10;<br>
+                String[] args = [localScaleFile, mesoScaleFile, broadScaleFile, outputFile, imageLightness]&#10;<br>
+                &#10;<br>pluginHost.runPlugin("CreateMultiscaleTopographicPositionImage", args, false)&#10;<br>
             </code>
         </p>
 

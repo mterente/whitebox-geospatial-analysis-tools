@@ -47,23 +47,23 @@ calculate an appropriate value for the Z Conversion Factor. </p>
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "DEM.dep"<br>
-                outputFile = wd + "slope.dep"<br>
-                zFactor = "1.0"<br>
-                args = [inputFile, outputFile, zFactor]<br>
-                pluginHost.runPlugin("Slope", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "DEM.dep"&#10;<br>
+                outputFile = wd + "slope.dep"&#10;<br>
+                zFactor = "1.0"&#10;<br>
+                args = [inputFile, outputFile, zFactor]&#10;<br>
+                pluginHost.runPlugin("Slope", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "DEM.dep"<br>
-                def outputFile = wd + "slope.dep"<br>
-                def zFactor = "1.0"<br>
-                String[] args = [inputFile, outputFile, zFactor]<br>
-                pluginHost.runPlugin("Slope", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "DEM.dep"&#10;<br>
+                def outputFile = wd + "slope.dep"&#10;<br>
+                def zFactor = "1.0"&#10;<br>
+                String[] args = [inputFile, outputFile, zFactor]&#10;<br>
+                pluginHost.runPlugin("Slope", args, false)&#10;<br>
             </code>
         </p>
 

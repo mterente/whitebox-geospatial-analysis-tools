@@ -27,31 +27,31 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "input.dep"<br>
-                outputFile = wd + "output.dep"<br>
-                modelType = "sigmoidal"<br>
-                mpRisesAbove0At = "55.0"<br>
-                mpRisesTo1At = "90.0"<br>
-                mpFallsBelow1At = "not specified"<br>
-                mpFallsTo0At = "not specified"<br>
-                args = [inputFile, outputFile, modelType, mpRisesAbove0At, mpRisesTo1At, mpFallsBelow1At, mpFallsTo0At]<br>
-                pluginHost.runPlugin("FuzzyMembership", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "input.dep"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                modelType = "sigmoidal"&#10;<br>
+                mpRisesAbove0At = "55.0"&#10;<br>
+                mpRisesTo1At = "90.0"&#10;<br>
+                mpFallsBelow1At = "not specified"&#10;<br>
+                mpFallsTo0At = "not specified"&#10;<br>
+                args = [inputFile, outputFile, modelType, mpRisesAbove0At, mpRisesTo1At, mpFallsBelow1At, mpFallsTo0At]&#10;<br>
+                pluginHost.runPlugin("FuzzyMembership", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "input.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                def modelType = "linear"<br>
-                def mpRisesAbove0At = "55.0"<br>
-                def mpRisesTo1At = "90.0"<br>
-                def mpFallsBelow1At = "95.0"<br>
-                def mpFallsTo0At = "120.0"<br>
-                String[] args = [inputFile, outputFile, modelType, mpRisesAbove0At, mpRisesTo1At, mpFallsBelow1At, mpFallsTo0At]<br>
-                pluginHost.runPlugin("FuzzyMembership", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "input.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def modelType = "linear"&#10;<br>
+                def mpRisesAbove0At = "55.0"&#10;<br>
+                def mpRisesTo1At = "90.0"&#10;<br>
+                def mpFallsBelow1At = "95.0"&#10;<br>
+                def mpFallsTo0At = "120.0"&#10;<br>
+                String[] args = [inputFile, outputFile, modelType, mpRisesAbove0At, mpRisesTo1At, mpFallsBelow1At, mpFallsTo0At]&#10;<br>
+                pluginHost.runPlugin("FuzzyMembership", args, false)&#10;<br>
             </code>
         </p>
 

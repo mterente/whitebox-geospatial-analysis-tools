@@ -24,29 +24,29 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                streamsFile = wd + "streams.shp"<br>
-                baseFile = wd + "base.dep"<br>
-                outputFile = wd + "output.dep"<br>
-                nodataBackground = "true"<br>
-                useFeatureNumAsOutput = "true"<br>
-                outputCollisions = "false"<br>
-                args = [streamsFile, baseFile, outputFile, nodataBackground, useFeatureNumAsOutput, outputCollisions]<br>
-                pluginHost.runPlugin("RasterizeStreams", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                streamsFile = wd + "streams.shp"&#10;<br>
+                baseFile = wd + "base.dep"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                nodataBackground = "true"&#10;<br>
+                useFeatureNumAsOutput = "true"&#10;<br>
+                outputCollisions = "false"&#10;<br>
+                args = [streamsFile, baseFile, outputFile, nodataBackground, useFeatureNumAsOutput, outputCollisions]&#10;<br>
+                pluginHost.runPlugin("RasterizeStreams", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def streamsFile = wd + "streams.shp"<br>
-                def baseFile = wd + "base.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                def nodataBackground = "true"<br>
-                def useFeatureNumAsOutput = "true"<br>
-                def outputCollisions = "false"<br>
-                String[] args = [streamsFile, baseFile, outputFile, nodataBackground, useFeatureNumAsOutput, outputCollisions]<br>
-                pluginHost.runPlugin("RasterizeStreams", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def streamsFile = wd + "streams.shp"&#10;<br>
+                def baseFile = wd + "base.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def nodataBackground = "true"&#10;<br>
+                def useFeatureNumAsOutput = "true"&#10;<br>
+                def outputCollisions = "false"&#10;<br>
+                String[] args = [streamsFile, baseFile, outputFile, nodataBackground, useFeatureNumAsOutput, outputCollisions]&#10;<br>
+                pluginHost.runPlugin("RasterizeStreams", args, false)&#10;<br>
             </code>
         </p>
 

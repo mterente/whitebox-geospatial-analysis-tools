@@ -1,3 +1,6 @@
+/* This tool has been replaced by an alternate tool written in Rust as part of
+   the whitebox_tools suite. The new tool uses a different and better algorithm.
+*/
 /*
  * Copyright (C) 2011-2012 Dr. John Lindsay <jlindsay@uoguelph.ca>
  *
@@ -299,126 +302,142 @@ public class RemoveOffTerrainObjects implements WhiteboxPlugin {
                         FileUtilities.copyFile(new File(tempDataFile), new File(outputData));
 
                         output = new WhiteboxRaster(outputHeader, "rw");
+                        double minVal = output.getMinimumValue();
+                        for (col = 0; col < cols; col++) {
+                            if (output.getValue(0, col) != noData) {
+                                output.setValue(0, col, minVal);
+                            }
+                            if (output.getValue(rows - 1, col) != noData) {
+                                output.setValue(rows - 1, col, minVal);
+                            }
+                        }
                         
-                        // first trim the edge-intersecting peaks.
-                        colOffset = 0;
-                        flag = true;
-                        do {
-                            // top row
-                            data[0] = noData;
-                            data[OTOMaxSize + 1] = noData;
-                            a = 0;
-                            for (col = colOffset; col < colOffset + OTOMaxSize; col++) {
-                                data[a + 1] = output.getValue(0, col);
-                                if (data[a + 1] != noData) { numValidCells++; }
-                                a++;
+                        for (row = 0; row < rows; row++) {
+                            if (output.getValue(row, 0) != noData) {
+                                output.setValue(row, 0, minVal);
                             }
-
-                            if (numValidCells > 2) {
-                                cleavePeaks1D(data, noData);
+                            if (output.getValue(row, cols - 1) != noData) {
+                                output.setValue(row, cols - 1, minVal);
                             }
-
-                            a = 0;
-                            for (col = colOffset; col < colOffset + OTOMaxSize; col++) {
-                                z1 = output.getValue(0, col);
-                                z2 = data[a + 1];
-                                if (z2 < z1) {
-                                    output.setValue(0, col, z2);
-                                }
-                                a++;
-                            }
-
-                            // bottom row
-                            data[0] = noData;
-                            data[OTOMaxSize + 1] = noData;
-                            numValidCells = 0;
-                            a = 0;
-                            for (col = colOffset; col < colOffset + OTOMaxSize; col++) {
-                                data[a + 1] = output.getValue(rows - 1, col);
-                                if (data[a + 1] != noData) { numValidCells++; }
-                                a++;
-                            }
-
-                            if (numValidCells > 2) {
-                                cleavePeaks1D(data, noData);
-                            }
-                            
-                            a = 0;
-                            for (col = colOffset; col < colOffset + OTOMaxSize; col++) {
-                                z1 = output.getValue(rows - 1, col);
-                                z2 = data[a + 1];
-                                if (z2 < z1) {
-                                    output.setValue(rows - 1, col, z2);
-                                }
-                                a++;
-                            }
-
-                            colOffset += halfOTOMaxSize;
-                            if (colOffset > cols - 1) {
-                                flag = false;
-                            }
-                        } while (flag);
-
-                        rowOffset = 0;
-                        flag = true;
-                        do {
-                            // left column
-                            data[0] = noData;
-                            data[OTOMaxSize + 1] = noData;
-                            numValidCells = 0;
-                            a = 0;
-                            for (row = rowOffset; row < rowOffset + OTOMaxSize; row++) {
-                                data[a + 1] = output.getValue(row, 0);
-                                if (data[a + 1] != noData) { numValidCells++; }
-                                a++;
-                            }
-
-                            if (numValidCells > 2) {
-                                cleavePeaks1D(data, noData);
-                            }
-                            
-                            a = 0;
-                            for (row = rowOffset; row < rowOffset + OTOMaxSize; row++) {
-                                z1 = output.getValue(row, 0);
-                                z2 = data[a + 1];
-                                if (z2 < z1) {
-                                    output.setValue(row, 0, z2);
-                                }
-                                a++;
-                            }
-
-                            // right coloumn
-                            data[0] = noData;
-                            data[OTOMaxSize + 1] = noData;
-                            numValidCells = 0;
-                            a = 0;
-                            for (row = rowOffset; row < rowOffset + OTOMaxSize; row++) {
-                                data[a + 1] = output.getValue(row, cols - 1);
-                                if (data[a + 1] != noData) { numValidCells++; }
-                                a++;
-                            }
-
-                            if (numValidCells > 2) {
-                                cleavePeaks1D(data, noData);
-                            }
-
-                            a = 0;
-                            for (row = rowOffset; row < rowOffset + OTOMaxSize; row++) {
-                                z1 = output.getValue(row, cols - 1);
-                                z2 = data[a + 1];
-                                if (z2 < z1) {
-                                    output.setValue(row, cols - 1, z2);
-                                }
-                                a++;
-                            }
-
-                            rowOffset += halfOTOMaxSize;
-                            if (rowOffset > rows - 1) {
-                                flag = false;
-                            }
-                        } while (flag);
-
-
+                        }
+                        
+//                        // first trim the edge-intersecting peaks.
+//                        colOffset = 0;
+//                        flag = true;
+//                        do {
+//                            // top row
+//                            data[0] = noData;
+//                            data[OTOMaxSize + 1] = noData;
+//                            a = 0;
+//                            for (col = colOffset; col < colOffset + OTOMaxSize; col++) {
+//                                data[a + 1] = output.getValue(0, col);
+//                                if (data[a + 1] != noData) { numValidCells++; }
+//                                a++;
+//                            }
+//
+//                            if (numValidCells > 2) {
+//                                cleavePeaks1D(data, noData);
+//                            }
+//
+//                            a = 0;
+//                            for (col = colOffset; col < colOffset + OTOMaxSize; col++) {
+//                                z1 = output.getValue(0, col);
+//                                z2 = data[a + 1];
+//                                if (z2 < z1) {
+//                                    output.setValue(0, col, z2);
+//                                }
+//                                a++;
+//                            }
+//
+//                            // bottom row
+//                            data[0] = noData;
+//                            data[OTOMaxSize + 1] = noData;
+//                            numValidCells = 0;
+//                            a = 0;
+//                            for (col = colOffset; col < colOffset + OTOMaxSize; col++) {
+//                                data[a + 1] = output.getValue(rows - 1, col);
+//                                if (data[a + 1] != noData) { numValidCells++; }
+//                                a++;
+//                            }
+//
+//                            if (numValidCells > 2) {
+//                                cleavePeaks1D(data, noData);
+//                            }
+//                            
+//                            a = 0;
+//                            for (col = colOffset; col < colOffset + OTOMaxSize; col++) {
+//                                z1 = output.getValue(rows - 1, col);
+//                                z2 = data[a + 1];
+//                                if (z2 < z1) {
+//                                    output.setValue(rows - 1, col, z2);
+//                                }
+//                                a++;
+//                            }
+//
+//                            colOffset += halfOTOMaxSize;
+//                            if (colOffset > cols - 1) {
+//                                flag = false;
+//                            }
+//                        } while (flag);
+//
+//                        rowOffset = 0;
+//                        flag = true;
+//                        do {
+//                            // left column
+//                            data[0] = noData;
+//                            data[OTOMaxSize + 1] = noData;
+//                            numValidCells = 0;
+//                            a = 0;
+//                            for (row = rowOffset; row < rowOffset + OTOMaxSize; row++) {
+//                                data[a + 1] = output.getValue(row, 0);
+//                                if (data[a + 1] != noData) { numValidCells++; }
+//                                a++;
+//                            }
+//
+//                            if (numValidCells > 2) {
+//                                cleavePeaks1D(data, noData);
+//                            }
+//                            
+//                            a = 0;
+//                            for (row = rowOffset; row < rowOffset + OTOMaxSize; row++) {
+//                                z1 = output.getValue(row, 0);
+//                                z2 = data[a + 1];
+//                                if (z2 < z1) {
+//                                    output.setValue(row, 0, z2);
+//                                }
+//                                a++;
+//                            }
+//
+//                            // right coloumn
+//                            data[0] = noData;
+//                            data[OTOMaxSize + 1] = noData;
+//                            numValidCells = 0;
+//                            a = 0;
+//                            for (row = rowOffset; row < rowOffset + OTOMaxSize; row++) {
+//                                data[a + 1] = output.getValue(row, cols - 1);
+//                                if (data[a + 1] != noData) { numValidCells++; }
+//                                a++;
+//                            }
+//
+//                            if (numValidCells > 2) {
+//                                cleavePeaks1D(data, noData);
+//                            }
+//
+//                            a = 0;
+//                            for (row = rowOffset; row < rowOffset + OTOMaxSize; row++) {
+//                                z1 = output.getValue(row, cols - 1);
+//                                z2 = data[a + 1];
+//                                if (z2 < z1) {
+//                                    output.setValue(row, cols - 1, z2);
+//                                }
+//                                a++;
+//                            }
+//
+//                            rowOffset += halfOTOMaxSize;
+//                            if (rowOffset > rows - 1) {
+//                                flag = false;
+//                            }
+//                        } while (flag);
 
                         colOffset = -1; //Why minus one? It's because if we don't create sub-grids that are just beyond the edge of 
                         //the DEM, then we won't be able to find any OTOs that intersect top and left edges of the DEM.
@@ -617,7 +636,7 @@ public class RemoveOffTerrainObjects implements WhiteboxPlugin {
             // initialize and fill the priority queue.
             //*******************************************
 
-            PriorityQueue<GridCell> queue = new PriorityQueue<GridCell>(OTOMaxSize * OTOMaxSize);
+            PriorityQueue<GridCell> queue = new PriorityQueue<>(OTOMaxSize * OTOMaxSize);
 
             for (row = 0; row < OTOMaxSize; row++) {
                 for (col = 0; col < OTOMaxSize; col++) {
@@ -841,7 +860,7 @@ public class RemoveOffTerrainObjects implements WhiteboxPlugin {
                     }
                 }
 
-                KdTree<Double> tree = new KdTree.SqrEuclid<Double>(2, numEdges);
+                KdTree<Double> tree = new KdTree.SqrEuclid<>(2, numEdges);
 
                 for (row = 0; row < OTOMaxSize; row++) {
                     for (col = 0; col < OTOMaxSize; col++) {
@@ -858,14 +877,14 @@ public class RemoveOffTerrainObjects implements WhiteboxPlugin {
                     for (col = 0; col < OTOMaxSize; col++) {
                         if (modifiedCells[row][col] == 1) {
                             double[] entry = {row, col};
-                            results = tree.nearestNeighbor(entry, 6, true);
+                            results = tree.nearestNeighbor(entry, 12, true);
                             sumWeights = 0;
                             for (i = 0; i < results.size(); i++) {
-                                sumWeights += 1 / (results.get(i).distance);
+                                sumWeights += 1 / (results.get(i).distance * results.get(i).distance);
                             }
                             z = 0;
                             for (i = 0; i < results.size(); i++) {
-                                z += (1 / (results.get(i).distance)) / sumWeights * results.get(i).value;
+                                z += (1 / (results.get(i).distance * results.get(i).distance)) / sumWeights * results.get(i).value;
                             }
                             input[row + 1][col + 1] = z;
                         }
@@ -899,7 +918,7 @@ public class RemoveOffTerrainObjects implements WhiteboxPlugin {
             // initialize and fill the priority queue.
             //*******************************************
 
-            PriorityQueue<GridCell> queue = new PriorityQueue<GridCell>(OTOMaxSize);
+            PriorityQueue<GridCell> queue = new PriorityQueue<>(OTOMaxSize);
 
             for (row = 0; row < OTOMaxSize; row++) {
                 output[row] = initialValue;
@@ -1045,7 +1064,7 @@ public class RemoveOffTerrainObjects implements WhiteboxPlugin {
 
                 }
 
-                KdTree<Double> tree = new KdTree.SqrEuclid<Double>(1, numEdges);
+                KdTree<Double> tree = new KdTree.SqrEuclid<>(1, numEdges);
 
                 for (row = 0; row < OTOMaxSize; row++) {
                     if (modifiedCells[row] == 3) {
@@ -1122,18 +1141,17 @@ public class RemoveOffTerrainObjects implements WhiteboxPlugin {
         }
     }
 
-//    // this is only used for debugging the tool
-//    public static void main(String[] args) {
-//        RemoveOffTerrainObjects me = new RemoveOffTerrainObjects();
-//        args = new String[5];
-//        //args[0] = "/Users/johnlindsay/Documents/Data/tmp1.dep";
-//        //args[1] = "/Users/johnlindsay/Documents/Data/tmp5.dep";
-//        //args[0] = "/Users/johnlindsay/Documents/Data/u_5565073175 NN LR.dep";
-//        args[0] = "/Users/johnlindsay/Documents/Data/Picton data/picton filled.dep";
-//        args[1] = "no OTOs";
-//        args[2] = "500";
-//        args[3] = "10";
-//        me.setArgs(args);
-//        me.run();
-//    }
+    // this is only used for debugging the tool
+    public static void main(String[] args) {
+        RemoveOffTerrainObjects me = new RemoveOffTerrainObjects();
+        args = new String[5];
+        // args[0] = "/Users/johnlindsay/Documents/research/OTOpaper/Take3/data/Rondeau/420_4687_NN_filled.dep";
+        args[0] = "/Users/johnlindsay/Documents/research/OTOpaper/Take3/data/PEC/Picton data/1km183270487302008GROUPEALTA_filled.dep";
+        args[1] = "no OTOs";
+        args[2] = "350";
+        args[3] = "7.5";
+        args[4] = "true";
+        me.setArgs(args);
+        me.run();
+    }
 }

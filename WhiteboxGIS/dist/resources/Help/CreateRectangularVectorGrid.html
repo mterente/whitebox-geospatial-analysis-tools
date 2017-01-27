@@ -22,29 +22,29 @@ origin of the grid (x and y coordinates) and the grid width in the x and y direc
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                baseFile = wd + "input.dep"<br>
-                outputFile = wd + "output.shp"<br>
-                originX = "0.0"<br>
-                originY = "0.0"<br>
-                widthX = "10.0"<br>
-                widthY = "10.0"<br>
-                args = [baseFile, outputFile, originX, originY, widthX, widthY]<br>
-                pluginHost.runPlugin("CreateRectangularVectorGrid", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                baseFile = wd + "input.dep"&#10;<br>
+                outputFile = wd + "output.shp"&#10;<br>
+                originX = "0.0"&#10;<br>
+                originY = "0.0"&#10;<br>
+                widthX = "10.0"&#10;<br>
+                widthY = "10.0"&#10;<br>
+                args = [baseFile, outputFile, originX, originY, widthX, widthY]&#10;<br>
+                pluginHost.runPlugin("CreateRectangularVectorGrid", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def baseFile = wd + "input.shp"<br>
-                def outputFile = wd + "output.shp"<br>
-                def originX = "0.0"<br>
-                def originY = "0.0"<br>
-                def widthX = "10.0"<br>
-                def widthY = "10.0"<br>
-                String[] args = [baseFile, outputFile, originX, originY, widthX, widthY]<br>
-                pluginHost.runPlugin("CreateRectangularVectorGrid", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def baseFile = wd + "input.shp"&#10;<br>
+                def outputFile = wd + "output.shp"&#10;<br>
+                def originX = "0.0"&#10;<br>
+                def originY = "0.0"&#10;<br>
+                def widthX = "10.0"&#10;<br>
+                def widthY = "10.0"&#10;<br>
+                String[] args = [baseFile, outputFile, originX, originY, widthX, widthY]&#10;<br>
+                pluginHost.runPlugin("CreateRectangularVectorGrid", args, false)&#10;<br>
             </code>
         </p>
 

@@ -86,26 +86,26 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                inputFile = "\some_directory\input.dep"<br>
-                conditionalStatment = "value &lt; (maxvalue - 100.0)"<br>
-                trueValue = "\some_directory\input.dep"<br>
-                falseValue = "\some_directory\some_other_image.dep"<br>
-                outputFile = "\some_directory\output.dep"<br>
-                args = [inputFile, conditionalStatment, trueValue, falseValue, outputFile]<br>
-                pluginHost.runPlugin("ConditionalEvaluation", args, False)<br>
+                inputFile = "\some_directory\input.dep"&#10;<br>
+                conditionalStatment = "value &lt; (maxvalue - 100.0)"&#10;<br>
+                trueValue = "\some_directory\input.dep"&#10;<br>
+                falseValue = "\some_directory\some_other_image.dep"&#10;<br>
+                outputFile = "\some_directory\output.dep"&#10;<br>
+                args = [inputFile, conditionalStatment, trueValue, falseValue, outputFile]&#10;<br>
+                pluginHost.runPlugin("ConditionalEvaluation", args, False)&#10;<br>
             </code>
         </p>
 
         <p>This is a Groovy script also using the tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def inputFile = "\some_directory\input.dep"<br>
-                def conditionalStatment = "value &gt; 652.7"<br>
-                def trueValue = "\some_directory\input.dep"<br>
-                def falseValue = "nodata"<br>
-                def outputFile = "\some_directory\output.dep"<br>
-                String[] args = [inputFile, conditionalStatment, trueValue, falseValue, outputFile]<br>
-                pluginHost.runPlugin("ConditionalEvaluation", args, false)<br>
+                def inputFile = "\some_directory\input.dep"&#10;<br>
+                def conditionalStatment = "value &gt; 652.7"&#10;<br>
+                def trueValue = "\some_directory\input.dep"&#10;<br>
+                def falseValue = "nodata"&#10;<br>
+                def outputFile = "\some_directory\output.dep"&#10;<br>
+                String[] args = [inputFile, conditionalStatment, trueValue, falseValue, outputFile]&#10;<br>
+                pluginHost.runPlugin("ConditionalEvaluation", args, false)&#10;<br>
             </code>
         </p>
 

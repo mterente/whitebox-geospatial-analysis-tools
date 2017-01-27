@@ -57,25 +57,25 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                pointerFile = wd + "D8 pointer.dep"<br>
-                watershedFile = wd + "watersheds.dep"<br>
-                weightingFile = "not specified"<br>
-                outputFile = wd + "output.dep"<br>
-                args = [pointerFile, watershedFile, weightingFile, outputFile]<br>
-                pluginHost.runPlugin("DownslopeFlowpathLength", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                pointerFile = wd + "D8 pointer.dep"&#10;<br>
+                watershedFile = wd + "watersheds.dep"&#10;<br>
+                weightingFile = "not specified"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                args = [pointerFile, watershedFile, weightingFile, outputFile]&#10;<br>
+                pluginHost.runPlugin("DownslopeFlowpathLength", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def pointerFile = wd + "D8 pointer.dep"<br>
-                def watershedFile = wd + "watersheds.dep"<br>
-                def weightingFile = wd + "weights.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                String[] args = [pointerFile, watershedFile, weightingFile, outputFile]<br>
-                pluginHost.runPlugin("DownslopeFlowpathLength", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def pointerFile = wd + "D8 pointer.dep"&#10;<br>
+                def watershedFile = wd + "watersheds.dep"&#10;<br>
+                def weightingFile = wd + "weights.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                String[] args = [pointerFile, watershedFile, weightingFile, outputFile]&#10;<br>
+                pluginHost.runPlugin("DownslopeFlowpathLength", args, false)&#10;<br>
             </code>
         </p>
 

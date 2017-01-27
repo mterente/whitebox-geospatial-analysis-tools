@@ -26,21 +26,21 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputData = wd + "countries.shp" + ";" + "POPULATION"<br>
-                numBins = "10"<br>
-                args = [inputData, numBins]<br>
-                pluginHost.runPlugin("AttributeHistogram", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputData = wd + "countries.shp" + ";" + "POPULATION"&#10;<br>
+                numBins = "10"&#10;<br>
+                args = [inputData, numBins]&#10;<br>
+                pluginHost.runPlugin("AttributeHistogram", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputData = wd + "countries.shp" + ";" + "POPULATION"<br>
-                // Note: the number of bins is not specified in this example<br>
-                String[] args = [inputData]<br>
-                pluginHost.runPlugin("AttributeHistogram", args, False)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputData = wd + "countries.shp" + ";" + "POPULATION"&#10;<br>
+                // Note: the number of bins is not specified in this example&#10;<br>
+                String[] args = [inputData]&#10;<br>
+                pluginHost.runPlugin("AttributeHistogram", args, False)&#10;<br>
             </code>
         </p>
 

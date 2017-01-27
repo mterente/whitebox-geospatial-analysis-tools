@@ -48,33 +48,33 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # Input data has the shapefile name followed<br>
-                # by the attribute (primary key), separated by <br>
-                # a semicolon.<br>
-                inputData = wd + "coutries.shp" + ";" + "NAME"<br>
-                csvFile = wd + "populationData.csv"<br>
-                containsHeader = "true"<br>
-                foreignKey = "COUNTRY"<br>
-                includeFields = "POPULATION;AREA"<br>
-                args = [inputData, csvFile, containsHeader, foreignKey, includeFields]<br>
-                pluginHost.runPlugin("MergeTableWithCSV", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # Input data has the shapefile name followed&#10;<br>
+                # by the attribute (primary key), separated by &#10;<br>
+                # a semicolon.&#10;<br>
+                inputData = wd + "coutries.shp" + ";" + "NAME"&#10;<br>
+                csvFile = wd + "populationData.csv"&#10;<br>
+                containsHeader = "true"&#10;<br>
+                foreignKey = "COUNTRY"&#10;<br>
+                includeFields = "POPULATION;AREA"&#10;<br>
+                args = [inputData, csvFile, containsHeader, foreignKey, includeFields]&#10;<br>
+                pluginHost.runPlugin("MergeTableWithCSV", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // Input data has the shapefile name followed <br>
-                // by the attribute (primary key), separated by <br>
-                // a semicolon.<br>
-                def inputData = wd + "coutries.shp" + ";" + "NAME"<br>
-                def csvFile = wd + "populationData.csv"<br>
-                def containsHeader = "false"<br>
-                def foreignKey = "COLUMN1"<br>
-                def includeFields = "COLUMN2;COLUMN3"<br>
-                String[] args = [inputData, csvFile, containsHeader, foreignKey, includeFields]<br>
-                pluginHost.runPlugin("MergeTableWithCSV", args, False)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // Input data has the shapefile name followed &#10;<br>
+                // by the attribute (primary key), separated by &#10;<br>
+                // a semicolon.&#10;<br>
+                def inputData = wd + "coutries.shp" + ";" + "NAME"&#10;<br>
+                def csvFile = wd + "populationData.csv"&#10;<br>
+                def containsHeader = "false"&#10;<br>
+                def foreignKey = "COLUMN1"&#10;<br>
+                def includeFields = "COLUMN2;COLUMN3"&#10;<br>
+                String[] args = [inputData, csvFile, containsHeader, foreignKey, includeFields]&#10;<br>
+                pluginHost.runPlugin("MergeTableWithCSV", args, False)&#10;<br>
             </code>
         </p>
 

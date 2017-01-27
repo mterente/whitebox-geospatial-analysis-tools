@@ -36,23 +36,23 @@ the <a href="FlowPointerD8.html">D8 algorithm</a>.</p>
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                d8Pointer = wd + "pointer.dep"<br>
-                pourPoints = wd + "pourPoints.shp"<br>
-                outputFile = wd + "output.dep"<br>
-                args = [d8Pointer, pourPoints, outputFile]<br>
-                pluginHost.runPlugin("UnnestBasins", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                d8Pointer = wd + "pointer.dep"&#10;<br>
+                pourPoints = wd + "pourPoints.shp"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                args = [d8Pointer, pourPoints, outputFile]&#10;<br>
+                pluginHost.runPlugin("UnnestBasins", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def d8Pointer = wd + "pointer.dep"<br>
-                def pourPoints = wd + "pourPoints.shp"<br>
-                def outputFile = wd + "output.dep"<br>
-                String[] args = [d8Pointer, pourPoints, outputFile]<br>
-                pluginHost.runPlugin("UnnestBasins", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def d8Pointer = wd + "pointer.dep"&#10;<br>
+                def pourPoints = wd + "pourPoints.shp"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                String[] args = [d8Pointer, pourPoints, outputFile]&#10;<br>
+                pluginHost.runPlugin("UnnestBasins", args, false)&#10;<br>
             </code>
         </p>
         

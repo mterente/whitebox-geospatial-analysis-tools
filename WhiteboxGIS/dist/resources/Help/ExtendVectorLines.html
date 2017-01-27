@@ -23,25 +23,25 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "input.shp"<br>
-                outputFile = wd + "output.shp"<br>
-                extendDist = "1000.0"<br>
-                method = "both ends"<br>
-                args = [inputFile, outputFile, extendDist, method]<br>
-                pluginHost.runPlugin("ExtendVectorLines", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "input.shp"&#10;<br>
+                outputFile = wd + "output.shp"&#10;<br>
+                extendDist = "1000.0"&#10;<br>
+                method = "both ends"&#10;<br>
+                args = [inputFile, outputFile, extendDist, method]&#10;<br>
+                pluginHost.runPlugin("ExtendVectorLines", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "input.shp"<br>
-                def outputFile = wd + "output.shp"<br>
-                def extendDist = "1000.0"<br>
-                def method = "line start"<br>
-                String[] args = [inputFile, outputFile, extendDist, method]<br>
-                pluginHost.runPlugin("ExtendVectorLines", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "input.shp"&#10;<br>
+                def outputFile = wd + "output.shp"&#10;<br>
+                def extendDist = "1000.0"&#10;<br>
+                def method = "line start"&#10;<br>
+                String[] args = [inputFile, outputFile, extendDist, method]&#10;<br>
+                pluginHost.runPlugin("ExtendVectorLines", args, false)&#10;<br>
             </code>
         </p>
 

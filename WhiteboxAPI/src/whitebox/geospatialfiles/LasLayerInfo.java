@@ -67,6 +67,7 @@ public class LasLayerInfo implements MapLayer {
     private int[] intensityData;
     private byte[] scanAngleData;
     private double[] gpsTimeData;
+    private int[] rgbData;
     private byte[] classData;
     private byte fillCriterion = 0; // z value
     private int numPaletteEntries = 0;
@@ -220,8 +221,10 @@ public class LasLayerInfo implements MapLayer {
                 return "class";
             case 3:
                 return "scan angle";
-            default:
+            case 4:
                 return "gps time";
+            default:
+                return "RGB data";
         }
     }
 
@@ -244,6 +247,9 @@ public class LasLayerInfo implements MapLayer {
         } else if (value.toLowerCase().contains("time")) {
             fillCriterion = 4; // gps time
             paletteFile = paletteDirectory + "spectrum.pal";
+        } else if (value.toLowerCase().contains("rgb")) {
+            fillCriterion = 5; // RGB data
+            paletteFile = paletteDirectory + "RGB_red.pal";
         }
         setRecordsColourData();
     }
@@ -422,33 +428,52 @@ public class LasLayerInfo implements MapLayer {
                 maximumValue = maxGpsTime;
                 displayMinValue = minimumValue;
                 displayMaxValue = maximumValue;
+            }
+        } else if (criterion.toLowerCase().contains("rgb")) {
+            fillCriterion = 5; // RGB data
+            if (rgbData == null) {
+                readRgbData();
+            } else {
 
-//                int range = (int) (maximumValue - minimumValue) + 1;
-//                histo = new int[range];
-//                binSize = 1;
-//                int min = (int) minimumValue;
-//                for (int i = 0; i < numPointRecords; i++) {
-//                    int bin = (int)(gpsTimeData[i] - min);
-//                    histo[bin]++;
-//                }
-//                int onePercent = (int) (numPointRecords * 0.01);
-//                int sum = 0;
-//                for (int i = 0; i < histo.length; i++) {
-//                    sum += histo[i];
-//                    if (sum >= onePercent) {
-//                        displayMinValue = i + min;
-//                        break;
-//                    }
-//                }
-//
-//                sum = 0;
-//                for (int i = histo.length - 1; i >= 0; i--) {
-//                    sum += histo[i];
-//                    if (sum >= onePercent) {
-//                        displayMaxValue = i + min;
-//                        break;
-//                    }
-//                }
+                int minVal = Integer.MAX_VALUE;
+                int maxVal = Integer.MIN_VALUE;
+                for (int i = 0; i < rgbData.length; i++) {
+                    int val = rgbData[i];
+                    if (val < minVal) {
+                        minVal = val;
+                    }
+                    if (val > maxVal) {
+                        maxVal = val;
+                    }
+                }
+                minimumValue = minVal;
+                maximumValue = maxVal;
+
+                int range = (int) (maximumValue - minimumValue) + 1;
+                histo = new int[range];
+                binSize = 1;
+                int min = (int) minimumValue;
+                for (int i = 0; i < numPointRecords; i++) {
+                    histo[scanAngleData[i] - min]++;
+                }
+                int onePercent = (int) (numPointRecords * 0.01);
+                int sum = 0;
+                for (int i = 0; i < histo.length; i++) {
+                    sum += histo[i];
+                    if (sum >= onePercent) {
+                        displayMinValue = i + min;
+                        break;
+                    }
+                }
+
+                sum = 0;
+                for (int i = histo.length - 1; i >= 0; i--) {
+                    sum += histo[i];
+                    if (sum >= onePercent) {
+                        displayMaxValue = i + min;
+                        break;
+                    }
+                }
             }
         }
     }
@@ -907,6 +932,57 @@ public class LasLayerInfo implements MapLayer {
 //                break;
 //            }
 //        }
+    }
+    
+    private void readRgbData() {
+        byte scanAngle;
+        byte minScanAngle = Byte.MAX_VALUE;
+        byte maxScanAngle = Byte.MIN_VALUE;
+        scanAngleData = new byte[(int) numPointRecords];
+        PointRecord rec;
+        for (int i = 0; i < numPointRecords; i++) {
+            rec = lasFile.getPointRecord(i);
+            if (!rec.isPointWithheld()) {
+                scanAngle = rec.getScanAngle();
+                scanAngleData[i] = scanAngle;
+                if (scanAngle < minScanAngle) {
+                    minScanAngle = scanAngle;
+                }
+                if (scanAngle > maxScanAngle) {
+                    maxScanAngle = scanAngle;
+                }
+            }
+        }
+
+        minimumValue = minScanAngle;
+        maximumValue = maxScanAngle;
+
+        int range = (int) (maximumValue - minimumValue) + 1;
+        histo = new int[range];
+        binSize = 1;
+        int min = (int) minimumValue;
+        for (int i = 0; i < numPointRecords; i++) {
+            histo[scanAngleData[i] - min]++;
+        }
+        int onePercent = (int) (numPointRecords * 0.01);
+        int sum = 0;
+        for (int i = 0; i < histo.length; i++) {
+            sum += histo[i];
+            if (sum >= onePercent) {
+                displayMinValue = i + min;
+                break;
+            }
+        }
+
+        sum = 0;
+        for (int i = histo.length - 1; i >= 0; i--) {
+            sum += histo[i];
+            if (sum >= onePercent) {
+                displayMaxValue = i + min;
+                break;
+            }
+        }
+
     }
 
     public void clipLowerTailForDisplayMinimum(double percent) {

@@ -51,22 +51,22 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "polygons.shp"<br>
-                outputFile = wd + "output.shp"<br>
-                separateHoles = "true"<br>
-                args = [inputFile, outputFile, separateHoles]<br>
-                pluginHost.runPlugin("MultipartsToSingleparts", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "polygons.shp"&#10;<br>
+                outputFile = wd + "output.shp"&#10;<br>
+                separateHoles = "true"&#10;<br>
+                args = [inputFile, outputFile, separateHoles]&#10;<br>
+                pluginHost.runPlugin("MultipartsToSingleparts", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "lines.shp"<br>
-                def outputFile = wd + "output.shp"<br>
-                String[] args = [inputFile, outputFile]<br>
-                pluginHost.runPlugin("MultipartsToSingleparts", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "lines.shp"&#10;<br>
+                def outputFile = wd + "output.shp"&#10;<br>
+                String[] args = [inputFile, outputFile]&#10;<br>
+                pluginHost.runPlugin("MultipartsToSingleparts", args, false)&#10;<br>
             </code>
         </p>
 

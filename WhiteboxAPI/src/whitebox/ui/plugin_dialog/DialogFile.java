@@ -41,26 +41,25 @@ public class DialogFile extends JPanel implements ActionListener, DialogComponen
 
     static final byte MODE_OPEN = 0;
     static final byte MODE_SAVEAS = 1;
-    private int numArgs = 7;
+    private final int numArgs = 7;
     private String name;
     private String description;
     private boolean makeOptional = false;
     private String value = "";
     private byte mode;
     private JLabel label;
-    private JButton button = new JButton();
-    private JTextField text = new JTextField(25);
+    private final JButton button = new JButton();
+    private final JTextField text = new JTextField(25);
     private boolean showButton = true;
-    private String graphicsDirectory;
+    private final String graphicsDirectory;
     private String workingDirectory;
-    private String resourcesDirectory;
-    private String pathSep;
-    private ArrayList<ExtensionFileFilter> filters = new ArrayList<>();
+    private final String resourcesDirectory;
+    private final String pathSep;
+    private final ArrayList<ExtensionFileFilter> filters = new ArrayList<>();
     private Communicator hostDialog = null;
     private AutoCompletion ac;
     private String spaces = "    ";
 
-    
     public DialogFile() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setMaximumSize(new Dimension(2500, 50));

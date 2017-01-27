@@ -51,29 +51,29 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                inputFilesDate1 = wd + "date1_band1.dep" + ";" + wd + "date1_band2.dep" + ";" + wd + "date1_band3.dep"<br>
-                inputFilesDate2 = wd + "date2_band1.dep" + ";" + wd + "date2_band2.dep" + ";" + wd + "date2_band3.dep"<br>
-                outputMagnitude = wd + "change magnitude.dep"<br>
-                outputVector = wd + "change vector.dep"<br>
-                args = [inputFilesDate1, inputFilesDate2, outputMagnitude, outputVector]<br>
-                pluginHost.runPlugin("ChangeVectorAnalysis", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputFilesDate1 = wd + "date1_band1.dep" + ";" + wd + "date1_band2.dep" + ";" + wd + "date1_band3.dep"&#10;<br>
+                inputFilesDate2 = wd + "date2_band1.dep" + ";" + wd + "date2_band2.dep" + ";" + wd + "date2_band3.dep"&#10;<br>
+                outputMagnitude = wd + "change magnitude.dep"&#10;<br>
+                outputVector = wd + "change vector.dep"&#10;<br>
+                args = [inputFilesDate1, inputFilesDate2, outputMagnitude, outputVector]&#10;<br>
+                pluginHost.runPlugin("ChangeVectorAnalysis", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def inputFilesDate1 = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                def inputFilesDate2 = wd + "date2_band1.dep" + ";" + wd + "date2_band2.dep" + ";" + wd + "date2_band3.dep"<br>
-                def outputMagnitude = wd + "change magnitude.dep"<br>
-                def outputVector = wd + "change vector.dep"<br>
-                String[] args = [inputFilesDate1, inputFilesDate2, outputMagnitude, outputVector]<br>
-                pluginHost.runPlugin("ChangeVectorAnalysis", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputFilesDate1 = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                def inputFilesDate2 = wd + "date2_band1.dep" + ";" + wd + "date2_band2.dep" + ";" + wd + "date2_band3.dep"&#10;<br>
+                def outputMagnitude = wd + "change magnitude.dep"&#10;<br>
+                def outputVector = wd + "change vector.dep"&#10;<br>
+                String[] args = [inputFilesDate1, inputFilesDate2, outputMagnitude, outputVector]&#10;<br>
+                pluginHost.runPlugin("ChangeVectorAnalysis", args, false)&#10;<br>
             </code>
         </p>
 
