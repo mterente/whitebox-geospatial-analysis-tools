@@ -105,6 +105,8 @@ class PluginTool(ActionListener):
 				ext = ''
 
 			tool_name = "lidar_elevation_slice"
+			# For more information on tool see: 
+			# whitebox-geospatial-analysis-tools/whitebox_tools/src/bin/lidar_elevation_slice.rs
 			cmd = "." + os.path.sep + "NativePlugins" + os.path.sep + "{}{}".format(tool_name, ext)
 			cmd += ' -i=\"{}\"'.format(inputfile)
 			cmd += ' -o=\"{}\"'.format(outputfile)
