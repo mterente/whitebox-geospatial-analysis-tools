@@ -24,3 +24,29 @@
   <message>HeapSize = -Xmx14G</message>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2017-02-01T21:37:34</date>
+  <millis>1486003054836</millis>
+  <sequence>0</sequence>
+  <logger>whiteboxgis</logger>
+  <level>CONFIG</level>
+  <class>whiteboxgis.Main</class>
+  <method>launchProgram</method>
+  <thread>1</thread>
+  <message>sun.arch.data.model = 64</message>
+</record>
+<record>
+  <date>2017-02-01T21:37:34</date>
+  <millis>1486003054906</millis>
+  <sequence>1</sequence>
+  <logger>whiteboxgis</logger>
+  <level>CONFIG</level>
+  <class>whiteboxgis.Main</class>
+  <method>startSecondJVM</method>
+  <thread>1</thread>
+  <message>HeapSize = -Xmx14G</message>
+</record>
+</log>
