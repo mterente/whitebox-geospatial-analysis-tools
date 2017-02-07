@@ -270,8 +270,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 }
             }
 
-        } catch (ClassNotFoundException | InstantiationException |
-                IllegalAccessException | UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | InstantiationException
+                | IllegalAccessException | UnsupportedLookAndFeelException e) {
             logger.log(Level.SEVERE, "WhiteboxGui.setLookAndFeel", e);
             //System.err.println(e.getMessage());
         }
@@ -289,8 +289,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 }
             }
             return name;
-        } catch (ClassNotFoundException | InstantiationException |
-                IllegalAccessException | UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | InstantiationException
+                | IllegalAccessException | UnsupportedLookAndFeelException e) {
             return null;
         }
     }
@@ -421,7 +421,6 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 //                    status.setMessage(str);
 //                }
 //            }
-
             pan();
 
         } catch (IOException | SecurityException e) {
@@ -683,7 +682,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 
             final JDialog dialog = new JDialog(this, "", true);
             dialog.setAlwaysOnTop(true);
-            
+
             Box mainBox = Box.createVerticalBox();
             mainBox.add(Box.createVerticalStrut(15));
 
@@ -952,10 +951,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                             String[] str2 = strLine.split("=");
                             name = str2[str2.length - 1].replace("\"", "").replace("\'", "").trim();
                         } else if (strLine.toLowerCase().contains("toolname = \"") && name.isEmpty()) {
-                                containsName = true;
-                                // now retreive the name
-                                String[] str2 = strLine.split("=");
-                                name = str2[str2.length - 1].replace("\"", "").replace("\'", "").trim();
+                            containsName = true;
+                            // now retreive the name
+                            String[] str2 = strLine.split("=");
+                            name = str2[str2.length - 1].replace("\"", "").replace("\'", "").trim();
                         } else if (strLine.toLowerCase().contains("descriptivename = \"")) {
                             containsDescriptiveName = true;
                             String[] str2 = strLine.split("=");
@@ -1777,8 +1776,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
         }
         return ma.getActiveLayer();
     }
-    
-    @Override 
+
+    @Override
     public void setActiveMapLayer(int layerNumber) {
         selectedMapAndLayer[1] = layerNumber;
         MapArea ma = openMaps.get(activeMap).getActiveMapArea();
@@ -1826,6 +1825,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 
     /**
      * Used to communicate a request to cancel an operation
+     *
      * @return boolean
      */
     @Override
@@ -2090,16 +2090,16 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                         setScrollZoomDirection(MapRenderer2.ScrollZoomDirection.REVERSE);
                     }
                 }
-                
+
                 // check for the page visible setting
                 if (props.containsKey("pageVisible")) {
                     isPageVisible = Boolean.parseBoolean(props.getProperty("pageVisible"));
                 }
-                
+
                 if (props.containsKey("rasterCartographicGeneralizationLevel")) {
                     rasterCartographicGeneralizationLevel = Double.parseDouble(props.getProperty("rasterCartographicGeneralizationLevel"));
                 }
-                
+
                 if (props.containsKey("vectorCartographicGeneralizationLevel")) {
                     vectorCartographicGeneralizationLevel = Double.parseDouble(props.getProperty("vectorCartographicGeneralizationLevel"));
                 }
@@ -2301,7 +2301,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             mapinfo.setDefaultFont(defaultFont);
             mapinfo.setMargin(defaultMapMargin);
             mapinfo.setPageVisible(isPageVisible);
-            
+
             MapArea ma = new MapArea(bundle.getString("MapArea").replace(" ", "") + "1");
             ma.setUpperLeftX(-32768);
             ma.setUpperLeftY(-32768);
@@ -2653,9 +2653,9 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             mi.addActionListener(this);
             mi.setActionCommand("exportLayer");
             layersMenu.add(mi);
-                
+
             layersMenu.addSeparator();
-            
+
             menubar.add(layersMenu);
 
             // View menu
@@ -2739,15 +2739,14 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             viewMenu.add(nextExtent);
             nextExtent.addActionListener(this);
             nextExtent.setActionCommand("nextExtent");
-            
+
             selectMenuItem = new JCheckBoxMenuItem(bundle.getString("SelectMapElement"),
-                    new ImageIcon(graphicsDirectory + "selectMap.png"));            
+                    new ImageIcon(graphicsDirectory + "selectMap.png"));
             viewMenu.add(selectMenuItem);
             selectMenuItem.addActionListener(this);
             selectMenuItem.setActionCommand("select");
             selectMenuItem.setState(false);
-            
-            
+
             JMenuItem zoomToPage = new JMenuItem(bundle.getString("ZoomToPage"),
                     new ImageIcon(graphicsDirectory + "ZoomToPage.png"));
             viewMenu.add(zoomToPage);
@@ -2950,7 +2949,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             ungroupMenu.addActionListener(this);
             ungroupMenu.setActionCommand("ungroupElements");
             cartoMenu.add(ungroupMenu);
-            
+
             JMenuItem selectMapElementsMenu = new JMenuItem(bundle.getString("SelectAllMapElements"));
             selectMapElementsMenu.addActionListener(e -> {
                 if (openMaps.get(activeMap).selectAllElements()) {
@@ -3031,9 +3030,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             deleteFeatureMenuItem.setEnabled(false);
 
             toolsMenu.add(editVectorMenu);
-            
-//            toolsMenu.addSeparator();
 
+//            toolsMenu.addSeparator();
             // Help menu
             helpMenu = new JMenu(bundle.getString("Help"));
             JMenuItem helpIndex = new JMenuItem(bundle.getString("Index"),
@@ -3454,7 +3452,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             JButton zoomToFullExtent = makeToolBarButton("Globe.png", "zoomToFullExtent",
                     bundle.getString("ZoomToFullExtent"), "Zoom To Full Extent");
             toolbar.add(zoomToFullExtent);
-            
+
             JButton previousExtent = makeToolBarButton("back.png", "previousExtent",
                     bundle.getString("PreviousExtent"), "Prev Extent");
             toolbar.add(previousExtent);
@@ -3462,15 +3460,15 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                     bundle.getString("NextExtent"), "Next Extent");
             nextExtent.setActionCommand("nextExtent");
             toolbar.add(nextExtent);
-            
+
             select = makeToggleToolBarButton("selectMap.png", "select",
                     bundle.getString("SelectMapElement"), "Select");
             toolbar.add(select);
-            
+
             JButton zoomToPage = makeToolBarButton("ZoomFullExtent3.png", "zoomToPage",
                     bundle.getString("ZoomToPage"), "Zoom To Page");
             toolbar.add(zoomToPage);
-            
+
             pan.setSelected(true);
             //openMaps.get(activeMap).deslectAllCartographicElements();
             //refreshMap(false);
@@ -3480,7 +3478,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             zoomMenuItem.setState(true);
             zoomOutMenuItem.setState(false);
             panMenuItem.setState(false);
-            
+
             ButtonGroup viewButtonGroup = new ButtonGroup();
             viewButtonGroup.add(select);
             viewButtonGroup.add(selectFeature);
@@ -3489,8 +3487,6 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             viewButtonGroup.add(zoomIntoBox);
             //select.setSelected(true);
             //zoomIntoBox.setSelected(true);
-
-
 
             toolbar.addSeparator();
 
@@ -4053,7 +4049,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                                             executeScriptFile(updateScript, args, false);
                                         });
                                         pm.add(mi);
-                                        
+
                                         pm.show((JComponent) e.getSource(), e.getX(), e.getY());
 
                                     }
@@ -4209,9 +4205,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 }
 
                 searchString = searchString.replace("\"", "");
+                String rawString = searchString;
 
-                int count = 0;
-                boolean containsWord;
+                //int count = 0;
+                //boolean containsWord;
 
                 searchString = searchString.replace("-", " ");
                 searchString = searchString.replace(" the ", "");
@@ -4224,6 +4221,9 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 searchString = searchString.replace(" it ", "");
 
                 String[] words = searchString.split(" ");
+                int numWordsToMatch = words.length + quotedStrings.size();
+                int[][] searchCounts = new int[plugInfo.size()][3];
+
                 for (int i = 0; i < plugInfo.size(); i++) {
                     plugInfo.get(i).setSortMode(PluginInfo.SORT_MODE_NAMES);
                 }
@@ -4232,38 +4232,76 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                     descriptiveName = plugInfo.get(i).getDescriptiveName().toLowerCase().replace("-", " ");
                     shortName = plugInfo.get(i).getName().toLowerCase().replace("-", " ");
                     description = plugInfo.get(i).getDescription();
-                    containsWord = false;
-
+                    //containsWord = false;
+                    int countsFor = 0;
+                    int countsAgainst = 0;
+                    String descript = descriptiveName;
                     for (String word : words) {
-                        if (descriptiveName.contains(word)) {
-                            containsWord = true;
-                        }
-                        if (shortName.contains(word)) {
-                            containsWord = true;
-                        }
-                        if (description.contains(" " + word + " ")) {
-                            containsWord = true;
+                        if (descriptiveName.contains(word)
+                                || shortName.contains(word)) {
+                            //containsWord = true;
+                            countsFor += 2;
+                            descript = descript.replace(word, "");
+                        } else if (description.contains(" " + word + " ")) {
+                            countsFor++;
                         }
                     }
 
                     for (String word : quotedStrings) {
-                        if (descriptiveName.contains(word)) {
-                            containsWord = true;
-                        }
-                        if (shortName.contains(word)) {
-                            containsWord = true;
-                        }
-                        if (description.contains(" " + word + " ")) {
-                            containsWord = true;
+                        if (descriptiveName.contains(word)
+                                || shortName.contains(word)) {
+                            //containsWord = true;
+                            countsFor += 2;
+                            descript = descript.replace(word, "");
+                        } else if (description.contains(" " + word + " ")) {
+                            countsFor++;
                         }
                     }
-                    if (containsWord) {
-                        model.add(count, plugInfo.get(i).getDescriptiveName());
-                        count++;
-                    }
+                    countsAgainst = descript.split(" ").length;
+//                    if (containsWord) {
+//                        model.add(count, plugInfo.get(i).getDescriptiveName());
+//                        count++;
+//                    }
+                    searchCounts[i][0] = countsFor;
+                    searchCounts[i][1] = i;
+                    searchCounts[i][2] = countsAgainst;
+                }
 
+                Arrays.sort(searchCounts, (int[] entry1, int[] entry2) -> {
+                    final int countsFor1 = entry1[0];
+                    final int countsFor2 = entry2[0];
+                    final int countsAgainst1 = entry1[2];
+                    final int countsAgainst2 = entry2[2];
+                    if (countsFor1 > countsFor2) {
+                        return -1;
+                    } else if (countsFor1 == countsFor2) {
+                        if (countsAgainst1 < countsAgainst2) {
+                            return -1;
+                        } else if (countsAgainst1 > countsAgainst2) {
+                            return 1;
+                        } else {
+                            String str1 = plugInfo.get(entry1[1]).getDescriptiveName().toLowerCase();
+                            String str2 = plugInfo.get(entry2[1]).getDescriptiveName().toLowerCase();
+                            if (str1.equals(rawString)) {
+                                return -1;
+                            } else if (str2.equals(rawString)) {
+                                return 1;
+                            } else {
+                                return str1.compareTo(str2);
+                            }
+                        }
+                    } else {
+                        return 1;
+                    }
+                });
+                
+                for (int i = plugInfo.size() - 1; i >= 0; i--) {
+                    if (searchCounts[i][0] > 0) {
+                        model.add(0, plugInfo.get(searchCounts[i][1]).getDescriptiveName()); // + " (" + searchCounts[i][0] + ", " + searchCounts[i][2] + ")");
+                    }
                 }
             }
+
             allTools.setModel(model);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "WhiteboxGui.searchForWords", e);
@@ -4437,19 +4475,19 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
     public void setReceiveAnnouncements(boolean receiveAnnouncements) {
         this.receiveAnnouncements = receiveAnnouncements;
     }
-    
+
     public double getRasterCartographicGeneralizationLevel() {
         return this.rasterCartographicGeneralizationLevel;
     }
-    
+
     public void setRasterCartographicGeneralizationLevel(double value) {
         this.rasterCartographicGeneralizationLevel = value;
     }
-    
+
     public double getVectorCartographicGeneralizationLevel() {
         return this.vectorCartographicGeneralizationLevel;
     }
-    
+
     public void setVectorCartographicGeneralizationLevel(double value) {
         this.vectorCartographicGeneralizationLevel = value;
     }
@@ -4492,7 +4530,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 //    }
     @Override
     public int showFeedback(String message) {
-        if (suppressReturnedData  || multiOperationsuppressReturnedData) {
+        if (suppressReturnedData || multiOperationsuppressReturnedData) {
             return - 1; // returns can be disruptive for scripts
         }
         JOptionPane.showMessageDialog(this, message);
@@ -4750,7 +4788,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 
             ExtensionFileFilter eff = new ExtensionFileFilter(filterDescription, extensions);
             filters.add(eff);
-            
+
             filterDescription = "Shapefiles (*.shp)";
             extensions = new String[]{"SHP"};
             eff = new ExtensionFileFilter(filterDescription, extensions);
@@ -4765,7 +4803,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             extensions = new String[]{"LAS"};
             eff = new ExtensionFileFilter(filterDescription, extensions);
             filters.add(eff);
-            
+
             for (InteroperableGeospatialDataFormat igdf : interopGeospatialDataFormat) {
                 if (igdf.getInteropPluginType() == InteropPluginType.importPlugin) {
                     filterDescription = igdf.getName() + " Files (";
@@ -5123,11 +5161,11 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             MapArea activeMapArea = openMaps.get(mapNum).getMapAreaByElementNum(mapAreaNum);
             activeMapArea.addLayer(mapLayer);
             //mapLayer.setOverlayNumber(activeMapArea.getNumLayers() - 1);
-            
-            if (mapLayer.getOverlayNumber() < 0) { 
+
+            if (mapLayer.getOverlayNumber() < 0) {
                 mapLayer.setOverlayNumber(openMaps.get(mapNum).getMapAreaByElementNum(mapAreaNum).getNumLayers() - 1);
             }
-            
+
             activeMapArea.setActiveLayer(activeMapArea.getNumLayers() - 1);
 
             String fileName = "";
@@ -5747,11 +5785,11 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
         selectedMapAndLayer[1] = -1;
         selectedMapAndLayer[2] = -1;
     }
-    
+
     public boolean isPageVisible() {
         return isPageVisible;
     }
-    
+
     public void setPageVisibility(boolean value) {
         for (int a = 0; a < openMaps.size(); a++) {
             openMaps.get(a).setPageVisible(value);
@@ -5784,7 +5822,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             selectedMapAndLayer[2] = -1;
         }
     }
-    
+
     public void setAsActiveMap(int mapIndex) {
         if (mapIndex >= 0 && mapIndex < openMaps.size()) {
             activeMap = mapIndex;
@@ -5799,7 +5837,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             selectedMapAndLayer[2] = -1;
         }
     }
-    
+
     public void setAsActiveMap(String mapName) {
         // find the map with this map title
         for (int i = 0; i < openMaps.size(); i++) {
@@ -6290,7 +6328,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             }
         }
     }
-    
+
     @Override
     public void zoomIn() {
         int mapNum;
@@ -6320,7 +6358,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             refreshMap(false);
         }
     }
-    
+
     @Override
     public void zoomOut() {
         int mapNum;
@@ -6552,7 +6590,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             if (ma.getLayer(layerOverlayNum).getLayerType() == MapLayerType.RASTER
                     || ma.getLayer(layerOverlayNum).getLayerType() == MapLayerType.VECTOR
                     || ma.getLayer(layerOverlayNum).getLayerType() == MapLayerType.LAS) {
-                
+
                 MapLayer layer = ma.getLayer(layerOverlayNum);
                 LayerProperties lp = new LayerProperties(this, false, layer, openMaps.get(mapNum));
                 lp.setSize(640, 420);
