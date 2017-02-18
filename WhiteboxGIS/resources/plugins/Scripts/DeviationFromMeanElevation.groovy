@@ -176,7 +176,7 @@ public class DeviationFromMeanElevation implements ActionListener {
 			int x1, x2, y1, y2
 			double outValue, v, s, m, N
 			for (int row = 0; row < rows; row++) {
-				y1 = row - neighbourhoodSize
+				y1 = row - neighbourhoodSize - 1
 				if (y1 < 0) { y1 = 0 }
 				if (y1 >= rows) { y1 = rows - 1 }
 
@@ -187,7 +187,7 @@ public class DeviationFromMeanElevation implements ActionListener {
 				for (int col = 0; col < cols; col++) {
   					z = image.getValue(row, col)		
   					if (z != nodata) {
-	  					x1 = col - neighbourhoodSize
+	  					x1 = col - neighbourhoodSize - 1
 						if (x1 < 0) { x1 = 0 }
 						if (x1 >= cols) { x1 = cols - 1 }
 	

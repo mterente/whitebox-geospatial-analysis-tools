@@ -122,6 +122,11 @@ public class Scripter extends JDialog implements ActionListener, KeyListener {
     public Scripter(Frame owner, boolean modal) {
         super(owner, modal);
         try {
+            if (owner != null && owner instanceof WhiteboxPluginHost) {
+                host = (WhiteboxPluginHost) owner;
+                bundle = host.getGuiLabelsBundle();
+            }    
+
             this.pathSep = File.separator;
             String applicationDirectory = java.net.URLDecoder.decode(getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
             if (applicationDirectory.endsWith(".exe") || applicationDirectory.endsWith(".jar")) {
@@ -137,12 +142,7 @@ public class Scripter extends JDialog implements ActionListener, KeyListener {
             applicationDirectory = new File(applicationDirectory).getParent();
             findGraphicsDirectory(new File(applicationDirectory));
             findScriptDirectory(new File(applicationDirectory));
-
-            if (owner != null && owner instanceof WhiteboxPluginHost) {
-                host = (WhiteboxPluginHost) owner;
-                bundle = host.getGuiLabelsBundle();
-            }
-
+   
             initUI();
         } catch (Exception e) {
             host.logException("Error in Scripter.", e);

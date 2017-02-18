@@ -221,7 +221,7 @@ public class MaximumElevationDeviation implements ActionListener {
 			double outValue, v, s, m, N
 			for (int neighbourhood = minNeighbourhood; neighbourhood <= maxNeighbourhood; neighbourhood += neighbourhoodStep) {
 				for (int row = 0; row < rows; row++) {
-					y1 = row - neighbourhood
+					y1 = row - neighbourhood - 1
 					if (y1 < 0) { y1 = 0 }
 					if (y1 >= rows) { y1 = rows - 1 }
 	
@@ -232,7 +232,7 @@ public class MaximumElevationDeviation implements ActionListener {
 					for (int col = 0; col < cols; col++) {
 	  					z = zVal[row][col] //image.getValue(row, col)		
 	  					if (z != nodata) {
-		  					x1 = col - neighbourhood
+		  					x1 = col - neighbourhood - 1
 							if (x1 < 0) { x1 = 0 }
 							if (x1 >= cols) { x1 = cols - 1 }
 		

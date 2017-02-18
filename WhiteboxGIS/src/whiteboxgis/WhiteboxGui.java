@@ -112,7 +112,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
     private StatusBar status;
     // common variables
     private static final String versionName = "3.4 'Montreal'";
-    public static final String versionNumber = "3.4.0";
+    public static final String versionNumber = "3.4.1";
     public static String currentVersionNumber;
     private String skipVersionNumber = versionNumber;
     private ArrayList<PluginInfo> plugInfo = null;
@@ -7728,8 +7728,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 exportMapAsImage();
                 break;
             case "scripter":
+                
                 Scripter scripter = new Scripter(this, false);
                 scripter.setVisible(true);
+            
                 break;
             case "options":
                 SettingsDialog dlg = new SettingsDialog(this, false);

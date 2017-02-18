@@ -19,6 +19,13 @@ massive data files, as it greatly increased performance.
 
 RELEASE NOTES:
 
+Version 3.4.1 'Montreal' (Feb. 2017)
+- Enhanced the tool search functionality to place more likely tools nearer the
+  top of the list.
+- Added the Flightline Overlap (LiDAR) tool, which produces a raster containing
+  the number of flightlines that overlap atop each raster grid cell. This tool
+  is useful for visualizing the flightlines within a LiDAR point cloud.
+
 Version 3.4.0 'Montreal' (January 2017)
 - This is the first release of Whitebox GAT that includes some plugin tools that 
   are compiled to native code rather than running on the Java Runtime Environment.

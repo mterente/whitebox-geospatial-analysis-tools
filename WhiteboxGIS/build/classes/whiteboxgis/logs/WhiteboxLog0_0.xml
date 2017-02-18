@@ -38,3 +38,67 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2017-02-09T19:04:20</date>
+  <millis>1486685060688</millis>
+  <sequence>0</sequence>
+  <logger>whiteboxgis</logger>
+  <level>SEVERE</level>
+  <class>whiteboxgis.WhiteboxGui</class>
+  <method>logException</method>
+  <thread>119</thread>
+  <message>Whitebox 3.4.0. Error
+Error in Import XYZ To Vector Points</message>
+  <exception>
+    <message>java.lang.NumberFormatException: For input string: "﻿-79.3716"</message>
+    <frame>
+      <class>sun.misc.FloatingDecimal</class>
+      <method>readJavaFormatString</method>
+      <line>2043</line>
+    </frame>
+    <frame>
+      <class>sun.misc.FloatingDecimal</class>
+      <method>parseDouble</method>
+      <line>110</line>
+    </frame>
+    <frame>
+      <class>java.lang.Double</class>
+      <method>parseDouble</method>
+      <line>538</line>
+    </frame>
+    <frame>
+      <class>plugins.ImportXYZToVectorPoints</class>
+      <method>run</method>
+      <line>261</line>
+    </frame>
+    <frame>
+      <class>java.lang.Thread</class>
+      <method>run</method>
+      <line>745</line>
+    </frame>
+  </exception>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
