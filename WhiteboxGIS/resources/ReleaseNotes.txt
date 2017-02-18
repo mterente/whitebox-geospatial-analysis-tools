@@ -20,6 +20,7 @@ massive data files, as it greatly increased performance.
 RELEASE NOTES:
 
 Version 3.4.1 'Montreal' (Feb. 2017)
+- Added Root Mean Square Error plugin tool.
 - Enhanced the tool search functionality to place more likely tools nearer the
   top of the list.
 - Added the Flightline Overlap (LiDAR) tool, which produces a raster containing
