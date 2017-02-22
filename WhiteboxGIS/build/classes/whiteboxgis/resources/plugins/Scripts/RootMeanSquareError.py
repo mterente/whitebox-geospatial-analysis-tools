@@ -50,8 +50,8 @@ class PluginTool(ActionListener):
 			self.sd.setSourceFile(os.path.abspath(__file__))
 	
 			# add some components to the dialog '''
-			self.sd.addDialogFile("Input raster file 1 (base)", "Input Raster File:", "open", "Raster Files (*.dep), DEP", True, False)
-			self.sd.addDialogFile("Input raster file 2 (comparison)", "Input Raster File:", "open", "Raster Files (*.dep), DEP", True, False)
+			self.sd.addDialogFile("Input raster file 1 (base)", "Input Base Raster File:", "open", "Raster Files (*.dep), DEP", True, False)
+			self.sd.addDialogFile("Input raster file 2 (comparison)", "Input Comparison Raster File:", "open", "Raster Files (*.dep), DEP", True, False)
 			
 			# Resize the dialog to the standard size and display it '''
 			self.sd.setSize(800, 400)
