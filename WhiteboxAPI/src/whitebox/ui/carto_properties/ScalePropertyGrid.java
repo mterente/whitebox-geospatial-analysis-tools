@@ -304,7 +304,7 @@ public class ScalePropertyGrid extends JPanel implements PropertyChangeListener 
             scaleStyle.setPreferredWidth(preferredWidth);
             scaleStyle.setParseIntegersOnly(true);
             scaleStyle.setMinValue(1);
-            scaleStyle.setMaxValue(3);
+            scaleStyle.setMaxValue(4);
             scaleStyle.revalidate();
             scaleStyle.addPropertyChangeListener("value", this);
             mainBox.add(scaleStyle);
@@ -374,6 +374,9 @@ public class ScalePropertyGrid extends JPanel implements PropertyChangeListener 
                     break;
                 case 3:
                     mapScale.setScaleStyle(MapScale.ScaleStyle.COMPLEX);
+                    break;
+                case 4:
+                    mapScale.setScaleStyle(MapScale.ScaleStyle.COMPACT);
                     break;
             }
             didSomething = true;

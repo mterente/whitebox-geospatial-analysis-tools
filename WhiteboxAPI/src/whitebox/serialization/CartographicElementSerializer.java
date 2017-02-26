@@ -178,6 +178,9 @@ public class CartographicElementSerializer implements JsonSerializer<Cartographi
                         case SIMPLE:
                             jo.addProperty("scaleStyle", "SIMPLE");
                             break;
+                        case COMPACT:
+                            jo.addProperty("scaleStyle", "COMPACT");
+                            break;
                         default:
                             jo.addProperty("scaleStyle", "STANDARD");
                             break;

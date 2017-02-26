@@ -718,6 +718,8 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
 
     private void drawMapScale(Graphics2D g2, MapScale mapScale, BasicStroke dashed) {
         if (mapScale.isVisible()) {
+            ScaleStyle styleType = mapScale.getScaleStyle();
+
             if (mapScale.getMapArea() != null) {
                 mapScale.setScale();
             }
@@ -813,7 +815,7 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
                         + (mapScale.getHeight() - contentHeight) / 2.0
                         + contentHeight);
 
-                if (mapScale.isGraphicalScaleVisible()) {
+                if (mapScale.isGraphicalScaleVisible() && styleType != ScaleStyle.COMPACT) {
                     // draw the units label to the scale
                     label = mapScale.getUnits();
                     if (label.toLowerCase().contains("deg")) {
@@ -833,7 +835,6 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
 
                 if (mapScale.isGraphicalScaleVisible()) {
                     g2.setStroke(new BasicStroke(0.5f));
-                    ScaleStyle styleType = mapScale.getScaleStyle();
                     float halfBarHeight = barHeight / 2.0f;
                     y = contentBottomY - fontHeight - spacingBetweenElements - barHeight;
                     switch (styleType) {
@@ -890,6 +891,19 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
                                 }
                             }
                             break;
+                        case COMPACT:
+                            for (int k = 0; k < mapScale.getNumberDivisions(); k++) {
+                                x = (float) (k * barLengthInMapUnits + barStartingX);
+                                polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 4);
+                                polyline.moveTo(x, y);
+                                polyline.lineTo(x, y + barHeight);
+                                polyline.lineTo(x + barLengthInMapUnits, y + barHeight);
+                                polyline.lineTo(x + barLengthInMapUnits, y);
+                                g2.draw(polyline);
+
+                            }
+                            break;
+
                     }
                 }
 
@@ -903,7 +917,15 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
 
                     adv = metrics.stringWidth(mapScale.getUpperLabel());
                     x = (int) (barStartingX + barLengthInMapUnits * mapScale.getNumberDivisions() - adv / 2.0);
-                    g2.drawString(mapScale.getUpperLabel(), x, y);
+                    if (styleType != ScaleStyle.COMPACT) {
+                        g2.drawString(mapScale.getUpperLabel(), x, y);
+                    } else {
+                        label = mapScale.getUnits();
+                        if (label.toLowerCase().contains("deg")) {
+                            label = "km";
+                        }
+                        g2.drawString(mapScale.getUpperLabel() + " " + label, x, y);
+                    }
                 }
 
                 // label the representative fraction

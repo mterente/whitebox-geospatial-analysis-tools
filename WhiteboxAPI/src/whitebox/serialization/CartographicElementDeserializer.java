@@ -282,6 +282,9 @@ public class CartographicElementDeserializer implements JsonDeserializer<Cartogr
                         case "SIMPLE":
                             ms.setScaleStyle(MapScale.ScaleStyle.SIMPLE);
                             break;
+                        case "COMPACT":
+                            ms.setScaleStyle(MapScale.ScaleStyle.COMPACT);
+                            break;
                         default:
                             ms.setScaleStyle(MapScale.ScaleStyle.STANDARD);
                                  
