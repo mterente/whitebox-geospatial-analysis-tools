@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2014 Dr. John Lindsay <jlindsay@uoguelph.ca>
+ * Tool modified Feb. 2017
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,11 +79,14 @@ public class ImportCSV implements ActionListener {
 			
             // add some components to the dialog
             sd.addDialogMultiFile("Select some input CSV files", "Input CSV Files:", "Comma-separated Values Files (*.csv, *.txt), CSV, TXT")
-			sd.addDialogComboBox("First column definition", "<html>1<sup>st</sup> column definition:</html>", ["x-coordinate", "y-coordinate", "numerical attribute", "string attribute"], 0)
-            sd.addDialogComboBox("Second column definition", "<html>2<sup>nd</sup> column definition:</html>", ["x-coordinate", "y-coordinate", "numerical attribute", "string attribute"], 1)
-            sd.addDialogComboBox("Third column definition", "<html>3<sup>rd</sup> column definition:</html>", ["x-coordinate", "y-coordinate", "numerical attribute", "string attribute", "not present"], 4)
-            sd.addDialogComboBox("Fourth column definition", "<html>4<sup>th</sup> column definition:</html>", ["x-coordinate", "y-coordinate", "numerical attribute", "string attribute", "not present"], 4)
-            sd.addDialogComboBox("Fifth column definition", "<html>5<sup>th</sup> column definition:</html>", ["x-coordinate", "y-coordinate", "numerical attribute", "string attribute", "not present"], 4)
+            sd.addDialogDataInput("x-coordinate column number (optional)", "x-Coordinate Column Number (optional):", "", true, true)
+            sd.addDialogDataInput("y-coordinate column number (optional)", "y-Coordinate Column Number (optional):", "", true, true)
+            
+//			sd.addDialogComboBox("First column definition", "<html>1<sup>st</sup> column definition:</html>", ["x-coordinate", "y-coordinate", "numerical attribute", "string attribute"], 0)
+//            sd.addDialogComboBox("Second column definition", "<html>2<sup>nd</sup> column definition:</html>", ["x-coordinate", "y-coordinate", "numerical attribute", "string attribute"], 1)
+//            sd.addDialogComboBox("Third column definition", "<html>3<sup>rd</sup> column definition:</html>", ["x-coordinate", "y-coordinate", "numerical attribute", "string attribute", "not present"], 4)
+//            sd.addDialogComboBox("Fourth column definition", "<html>4<sup>th</sup> column definition:</html>", ["x-coordinate", "y-coordinate", "numerical attribute", "string attribute", "not present"], 4)
+//            sd.addDialogComboBox("Fifth column definition", "<html>5<sup>th</sup> column definition:</html>", ["x-coordinate", "y-coordinate", "numerical attribute", "string attribute", "not present"], 4)
             
             // resize the dialog to the standard size and display it
             sd.setSize(800, 400)
@@ -117,96 +121,83 @@ public class ImportCSV implements ActionListener {
 			String[] inputFiles = inputFileString.split(";")
 			int numFiles = inputFiles.length;
 
-			int numColumnDefinitions = args.length - 1
-			String[] columnDef = new String[numColumnDefinitions]
 			int xColNum = -1
+			if (args.length >=3 && args[1].toLowerCase() != "not specified") {
+				xColNum = Integer.parseInt(args[1]) - 1;
+			}
 			int yColNum = -1
+			if (args.length >=3 && args[2].toLowerCase() != "not specified") {
+				yColNum = Integer.parseInt(args[2]) - 1;
+			}
 			int numAttributes = 0
 
-			if (numColumnDefinitions > 0) {
-				for (i = 0; i < numColumnDefinitions; i++) {
-					if (args[i + 1].toLowerCase().contains("x")) {
-						columnDef[i] = "x"
-						xColNum = i
-					} else if (args[i + 1].toLowerCase().contains("y")) {
-						columnDef[i] = "y"
-						yColNum = i
-					} else if (args[i + 1].toLowerCase().contains("num")) {
-						columnDef[i] = "numeric"
-						numAttributes++
-					} else if (args[i + 1].toLowerCase().contains("string")) {
-						columnDef[i] = "string"
-						numAttributes++
-					} else { //if (args[i + 1].toLowerCase().contains("not")) {
-						columnDef[i] = "not present"
-					}
-				}
-			} else {
-				// try to find the x and y and figure out the attributes
-				csvFileName = inputFiles[0];
-                if (!((new File(csvFileName)).exists())) {
-                    pluginHost.showFeedback("CSV file does not exist.");
-                    return;
-                }
-				
-                String[] fileLines = ((new File(csvFileName)).text).split("\n")
-                String[] secondLine
-                
-                if (fileLines.length > 1) {
-                	secondLine = fileLines[1].split(delimeter)
-                	if (secondLine.length == 1) {
-                		delimeter = "\t";
-                		secondLine = fileLines[1].split(delimeter)
-                		if (secondLine.length == 1) {
-                			delimeter = ";";
-                			secondLine = fileLines[1].split(delimeter)
-                			if (secondLine.length == 1) {
-                				delimeter = " ";
-                				secondLine = fileLines[1].split(delimeter)
-                			}
-                		}
-                	}
-                } else {
-                	secondLine = fileLines[0].split(delimeter) // actually the first line
-                	if (secondLine.length == 1) {
-                		delimeter = "\t";
-                		secondLine = fileLines[0].split(delimeter)
-                		if (secondLine.length == 1) {
-                			delimeter = ";";
-                			secondLine = fileLines[0].split(delimeter)
-                			if (secondLine.length == 1) {
-                				delimeter = " ";
-                				secondLine = fileLines[0].split(delimeter)
-                			}
-                		}
-                	}
-                }
+			// try to find the x and y and figure out the attributes
+			csvFileName = inputFiles[0];
+            if (!((new File(csvFileName)).exists())) {
+                pluginHost.showFeedback("CSV file does not exist.");
+                return;
+            }
+			
+            String[] fileLines = ((new File(csvFileName)).text).split("\n")
+            String[] secondLine
+            String[] firstLine
+            
+            if (fileLines.length > 1) {
+            	secondLine = fileLines[1].split(delimeter)
+            	if (secondLine.length == 1) {
+            		delimeter = "\t";
+            		secondLine = fileLines[1].split(delimeter)
+            		if (secondLine.length == 1) {
+            			delimeter = ";";
+            			secondLine = fileLines[1].split(delimeter)
+            			if (secondLine.length == 1) {
+            				delimeter = " ";
+            				secondLine = fileLines[1].split(delimeter)
+            			}
+            		}
+            	}
 
-                numColumnDefinitions = secondLine.length
-                columnDef = new String[numColumnDefinitions]
-                for (i = 0; i < numColumnDefinitions; i++) {
-                	if (secondLine[i].trim().isInteger()) {
-                		columnDef[i] = "numeric"
+            	firstLine = fileLines[0].split(delimeter)
+            } else {
+            	secondLine = fileLines[0].split(delimeter) // actually the first line
+            	if (secondLine.length == 1) {
+            		delimeter = "\t";
+            		secondLine = fileLines[0].split(delimeter)
+            		if (secondLine.length == 1) {
+            			delimeter = ";";
+            			secondLine = fileLines[0].split(delimeter)
+            			if (secondLine.length == 1) {
+            				delimeter = " ";
+            				secondLine = fileLines[0].split(delimeter)
+            			}
+            		}
+            	}
+            }
+
+            int numColumnDefinitions = secondLine.length
+            def columnDef = new String[numColumnDefinitions]
+            for (i = 0; i < numColumnDefinitions; i++) {
+            	if (secondLine[i].trim().isInteger()) {
+            		columnDef[i] = "numeric"
+					numAttributes++
+            	} else if (secondLine[i].trim().isDouble()) {
+            		if (xColNum == -1) {
+            			columnDef[i] = "x"
+            			xColNum = i
+            		} else if (yColNum == -1) {
+            			columnDef[i] = "y"
+            			yColNum = i
+            		} else {
+            			columnDef[i] = "numeric"
 						numAttributes++
-                	} else if (secondLine[i].trim().isDouble()) {
-                		if (xColNum == -1) {
-                			columnDef[i] = "x"
-                			xColNum = i
-                		} else if (yColNum == -1) {
-                			columnDef[i] = "y"
-                			yColNum = i
-                		} else {
-                			columnDef[i] = "numeric"
-							numAttributes++
-                		}
-                	} else {
-                		columnDef[i] = "string"
-						numAttributes++
-                	}
-                }
-                fileLines = null
-                secondLine = null
-			}
+            		}
+            	} else {
+            		columnDef[i] = "string"
+					numAttributes++
+            	}
+            }
+            fileLines = null
+            secondLine = null
 
 			if (xColNum == -1 || yColNum == -1) {
 				pluginHost.showFeedback("The x- and y-coordinate columns could not be found.")
@@ -228,7 +219,11 @@ public class ImportCSV implements ActionListener {
 				
 				if (columnDef[i].equals("numeric")) { 
 					fields[j] = new DBFField();
-		            fields[j].setName("ATTRIB_${j}");
+					if (firstLine != null) {
+		            	fields[j].setName(firstLine[i]);
+					} else {
+						fields[j].setName("ATTRIB_${j}");
+					}
 		            fields[j].setDataType(DBFField.DBFDataType.NUMERIC);
 		            fields[j].setFieldLength(10);
 		            fields[j].setDecimalCount(4);
