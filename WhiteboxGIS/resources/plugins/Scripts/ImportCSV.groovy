@@ -158,6 +158,9 @@ public class ImportCSV implements ActionListener {
             	}
 
             	firstLine = fileLines[0].split(delimeter)
+                for i = 0; i < firstLine.length; i ++) {
+                    firstLine[i] = firstLine[i].replace(" ", "").take(10)
+                }
             } else {
             	secondLine = fileLines[0].split(delimeter) // actually the first line
             	if (secondLine.length == 1) {
