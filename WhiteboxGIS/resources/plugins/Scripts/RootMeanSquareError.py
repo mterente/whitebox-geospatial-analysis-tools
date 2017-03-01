@@ -83,6 +83,7 @@ class PluginTool(ActionListener):
 			inputraster2 = WhiteboxRaster(inputfile2, 'r')
 			if rows != inputraster2.getNumberRows() or cols != inputraster2.getNumberColumns():
 				pluginHost.showFeedback("The input images must have the same number of rows and columns")
+                                return
 				
 			nodata2 = inputraster2.getNoDataValue()
 
