@@ -139,10 +139,13 @@ public class ImportCSV implements ActionListener {
             }
 			
             String[] fileLines = ((new File(csvFileName)).text).split("\n")
+            if (fileLines.length == 1) {
+            	fileLines = this.parseEOL((new File(csvFileName)).text)
+            }
             String[] secondLine
             String[] firstLine
             
-            if (fileLines.length > 1) {
+//            if (fileLines.length > 1) {
             	secondLine = fileLines[1].split(delimeter)
             	if (secondLine.length == 1) {
             		delimeter = "\t";
@@ -158,24 +161,22 @@ public class ImportCSV implements ActionListener {
             	}
 
             	firstLine = fileLines[0].split(delimeter)
-                for (i = 0; i < firstLine.length; i ++) {
-                    firstLine[i] = firstLine[i].replace(" ", "").take(10)
-                }
-            } else {
-            	secondLine = fileLines[0].split(delimeter) // actually the first line
-            	if (secondLine.length == 1) {
-            		delimeter = "\t";
-            		secondLine = fileLines[0].split(delimeter)
-            		if (secondLine.length == 1) {
-            			delimeter = ";";
-            			secondLine = fileLines[0].split(delimeter)
-            			if (secondLine.length == 1) {
-            				delimeter = " ";
-            				secondLine = fileLines[0].split(delimeter)
-            			}
-            		}
-            	}
-            }
+//            	pluginHost.showFeedback("{firstLine.length}")
+//            } else {
+//            	secondLine = fileLines[0].split(delimeter) // actually the first line
+//            	if (secondLine.length == 1) {
+//            		delimeter = "\t";
+//            		secondLine = fileLines[0].split(delimeter)
+//            		if (secondLine.length == 1) {
+//            			delimeter = ";";
+//            			secondLine = fileLines[0].split(delimeter)
+//            			if (secondLine.length == 1) {
+//            				delimeter = " ";
+//            				secondLine = fileLines[0].split(delimeter)
+//            			}
+//            		}
+//            	}
+//            }
 
             int numColumnDefinitions = secondLine.length
             def columnDef = new String[numColumnDefinitions]
@@ -223,7 +224,8 @@ public class ImportCSV implements ActionListener {
 				if (columnDef[i].equals("numeric")) { 
 					fields[j] = new DBFField();
 					if (firstLine != null) {
-		            	fields[j].setName(firstLine[i]);
+//						pluginHost.showFeedback(firstLine[i])
+		            	fields[j].setName(firstLine[i].take(9).toString());
 					} else {
 						fields[j].setName("ATTRIB_${j}");
 					}
@@ -235,7 +237,13 @@ public class ImportCSV implements ActionListener {
 		            j++
 				} else if (columnDef[i].equals("string")) {
 					fields[j] = new DBFField();
-		            fields[j].setName("ATTRIB_${j}");
+					if (firstLine != null) {
+//						pluginHost.showFeedback(firstLine[i])
+		            	fields[j].setName(firstLine[i].take(9).toString());
+					} else {
+						fields[j].setName("ATTRIB_${j}");
+					}
+//		            fields[j].setName("ATTRIB_${j}");
 		            fields[j].setDataType(DBFField.DBFDataType.STRING);
 		            fields[j].setFieldLength(12);
 		            attributeTypes[j - 1] = 1
@@ -263,7 +271,13 @@ public class ImportCSV implements ActionListener {
 
 				int featureNum = 1
 				boolean checkForHeader = false
-				csvFile.eachLine { line -> 
+
+				fileLines = ((csvFile).text).split("\n")
+	            if (fileLines.length == 1) {
+	            	fileLines = this.parseEOL((new File(csvFileName)).text)
+	            }
+	            for (line in fileLines) {
+//				csvFile.eachLine { line -> 
 					String str = String.valueOf(line)
 					String[] columnData = str.split(delimeter)
 					if (columnData.length == 1) {
@@ -278,6 +292,7 @@ public class ImportCSV implements ActionListener {
                 			}
                 		}
                 	}
+     
 					int lowerNum = (numColumnDefinitions < columnData.length) ? numColumnDefinitions :  columnData.length
 					boolean headerLine = false
 					if (!checkForHeader) {
@@ -301,11 +316,19 @@ public class ImportCSV implements ActionListener {
 	                    Object[] rowData = new Object[numAttributes + 1]
 	                    rowData[0] = new Double(featureNum)
 	                    for (int k = 0; k < numAttributes; k++) {
-							if (attributeTypes[k] == 0) { // numeric
-								rowData[k + 1] = new Double(columnData[attributeColumns[k]])
-							} else { // string
-								rowData[k + 1] = columnData[attributeColumns[k]].trim().replaceAll('^"|"$','').replace('?','')
-							}
+	                    	if (k < columnData.length) {
+								if (attributeTypes[k] == 0) { // numeric
+									if (columnData[attributeColumns[k]].isNumber()) {
+										rowData[k + 1] = new Double(columnData[attributeColumns[k]])
+									} else {
+										rowData[k + 1] = null
+									}
+								} else { // string
+									rowData[k + 1] = columnData[attributeColumns[k]].trim().replaceAll('^"|"$','').replace('?','')
+								}
+	                    	} else {
+	                    		rowData[k + 1] = null
+	                    	}
 						}
 	                    
 	                    output.addRecord(wbGeometry, rowData);
@@ -329,6 +352,7 @@ public class ImportCSV implements ActionListener {
         } catch (OutOfMemoryError oe) {
             pluginHost.showFeedback("An out-of-memory error has occurred during operation.")
 	    } catch (Exception e) {
+	    	pluginHost.showFeedback(e.toString())
 	        pluginHost.showFeedback("An error has occurred during operation. See log file for details.")
 	        pluginHost.logException("Error in " + descriptiveName, e)
         } finally {
@@ -336,6 +360,31 @@ public class ImportCSV implements ActionListener {
         	pluginHost.updateProgress(0)
         }
     }
+
+    private String[] parseEOL(String fileText) {
+		int numLines = 0;
+		for (int i = 0; i < fileText.length(); i++){
+		    char c = fileText.charAt(i);
+		    if (c == "\r" || c == "\n") {
+		    	numLines++;
+		    }
+		}
+			
+		String[] retArray = new String[numLines];
+		String s = "";
+		int lineNum = 0;
+		for (int i = 0; i < fileText.length(); i++){
+		    char c = fileText.charAt(i);
+		    if ((c == "\r" || c == "\n") && s.length() > 0) {
+		    	retArray[lineNum] = s
+		    	s = "";
+		    	lineNum++;
+		    } else {
+		    	s += c
+		    }
+		}
+		return retArray;
+	}
 
     @Override
     public void actionPerformed(ActionEvent event) {
