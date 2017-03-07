@@ -20,6 +20,10 @@ massive data files, as it greatly increased performance.
 RELEASE NOTES:
 
 Version 3.4.1 'Montreal' (Feb. 2017)
+- Updated the Extract Statistics tool to optionally output a text file in addition 
+  to the optional raster and displayed text outputs. This can be useful when
+  there are many thousands of features and the displayed text output is too
+  slow at rendering.
 - Updated the Import CSV tool to import an arbitrary number of attributes without
   need for column definitions. 
 - Added Root Mean Square Error plugin tool.

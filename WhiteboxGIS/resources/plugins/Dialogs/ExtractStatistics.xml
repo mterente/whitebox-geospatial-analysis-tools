@@ -44,4 +44,14 @@
 		<InitialState>true</InitialState>
 		<IsVisible>True</IsVisible>
 	</DialogComponent>
+        <DialogComponent type="DialogFile">
+		<Name>textOutputFile</Name>
+		<Description>Enter the name of the output text file here (Optional)</Description>
+		<LabelText>Output Text File (Optional):</LabelText>
+		<DialogMode>Save File</DialogMode>
+		<Filter>Text Files (*.txt), TXT</Filter>
+		<IsVisible>True</IsVisible>
+		<MakeOptional>True</MakeOptional>
+		<ShowButton>True</ShowButton>
+	</DialogComponent>
 </Dialog>

@@ -16,6 +16,7 @@
  */
 package plugins;
 
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.Date;
 import whitebox.geospatialfiles.WhiteboxRaster;
@@ -216,20 +217,17 @@ public class ExtractStatistics implements WhiteboxPlugin {
             showFeedback("Plugin parameters have not been set.");
             return;
         }
-
-        for (i = 0; i < args.length; i++) {
-            if (i == 0) {
-                dataImageHeader = args[i];
-            } else if (i == 1) {
-                featureImageHeader = args[i];
-            } else if (i == 2) {
-                outputHeader = args[i];
-            } else if (i == 3) {
-                statType = args[i].toLowerCase();
-            } else if (i == 4) {
-                textOutput = Boolean.parseBoolean(args[i]);
-            }
+        
+        dataImageHeader = args[0];
+        featureImageHeader = args[1];
+        outputHeader = args[2];
+        statType = args[3].toLowerCase();
+        textOutput = Boolean.parseBoolean(args[4]);
+        String outputTextFile = "not specified";
+        if (args.length >= 6) {
+            outputTextFile = args[5];
         }
+        
 
         // check to see that the inputHeader and outputHeader are not null.
         if ((dataImageHeader == null) || (featureImageHeader == null) || (outputHeader == null)) {
@@ -473,7 +471,7 @@ public class ExtractStatistics implements WhiteboxPlugin {
             }
             
 
-            if (textOutput) {
+            if (textOutput || !outputTextFile.toLowerCase().equals("not specified")) {
 
                 DecimalFormat df;
                 df = new DecimalFormat("0.000");
@@ -538,7 +536,14 @@ public class ExtractStatistics implements WhiteboxPlugin {
                     showFeedback("Specified statistic type not recognized");
                     return;
                 }
-                returnData(retstr);
+                if (!outputTextFile.toLowerCase().equals("not specified")) {
+                    // output the text to a file
+                    try(PrintWriter out = new PrintWriter(outputTextFile)){
+                        out.println(retstr);
+                    }
+                } else {
+                    returnData(retstr);
+                }
 
             }
             
