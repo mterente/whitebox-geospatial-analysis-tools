@@ -2914,3 +2914,176 @@ Error in Import CSV</message>
   </exception>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2017-03-07T13:39:05</date>
+  <millis>1488911945977</millis>
+  <sequence>0</sequence>
+  <logger>whiteboxgis</logger>
+  <level>SEVERE</level>
+  <class>whiteboxgis.WhiteboxGui</class>
+  <method>logException</method>
+  <thread>133</thread>
+  <message>Whitebox 3.4.1. Error
+Error in Extract Statistics</message>
+  <exception>
+    <message>java.lang.NegativeArraySizeException</message>
+    <frame>
+      <class>plugins.ExtractStatistics</class>
+      <method>run</method>
+      <line>288</line>
+    </frame>
+    <frame>
+      <class>whiteboxgis.WhiteboxGui</class>
+      <method>runPlugin</method>
+      <line>1216</line>
+    </frame>
+    <frame>
+      <class>sun.reflect.NativeMethodAccessorImpl</class>
+      <method>invoke0</method>
+    </frame>
+    <frame>
+      <class>sun.reflect.NativeMethodAccessorImpl</class>
+      <method>invoke</method>
+      <line>62</line>
+    </frame>
+    <frame>
+      <class>sun.reflect.DelegatingMethodAccessorImpl</class>
+      <method>invoke</method>
+      <line>43</line>
+    </frame>
+    <frame>
+      <class>java.lang.reflect.Method</class>
+      <method>invoke</method>
+      <line>498</line>
+    </frame>
+    <frame>
+      <class>org.python.core.PyReflectedFunction</class>
+      <method>__call__</method>
+      <line>186</line>
+    </frame>
+    <frame>
+      <class>org.python.core.PyReflectedFunction</class>
+      <method>__call__</method>
+      <line>204</line>
+    </frame>
+    <frame>
+      <class>org.python.core.PyObject</class>
+      <method>__call__</method>
+      <line>515</line>
+    </frame>
+    <frame>
+      <class>org.python.core.PyObject</class>
+      <method>__call__</method>
+      <line>521</line>
+    </frame>
+    <frame>
+      <class>org.python.core.PyMethod</class>
+      <method>__call__</method>
+      <line>171</line>
+    </frame>
+    <frame>
+      <class>org.python.pycode._pyx13</class>
+      <method>f$0</method>
+      <line>27</line>
+    </frame>
+    <frame>
+      <class>org.python.pycode._pyx13</class>
+      <method>call_function</method>
+    </frame>
+    <frame>
+      <class>org.python.core.PyTableCode</class>
+      <method>call</method>
+      <line>167</line>
+    </frame>
+    <frame>
+      <class>org.python.core.PyCode</class>
+      <method>call</method>
+      <line>18</line>
+    </frame>
+    <frame>
+      <class>org.python.core.Py</class>
+      <method>runCode</method>
+      <line>1374</line>
+    </frame>
+    <frame>
+      <class>org.python.core.__builtin__</class>
+      <method>eval</method>
+      <line>497</line>
+    </frame>
+    <frame>
+      <class>org.python.core.__builtin__</class>
+      <method>eval</method>
+      <line>501</line>
+    </frame>
+    <frame>
+      <class>org.python.util.PythonInterpreter</class>
+      <method>eval</method>
+      <line>262</line>
+    </frame>
+    <frame>
+      <class>org.python.jsr223.PyScriptEngine</class>
+      <method>eval</method>
+      <line>40</line>
+    </frame>
+    <frame>
+      <class>org.python.jsr223.PyScriptEngine</class>
+      <method>eval</method>
+      <line>31</line>
+    </frame>
+    <frame>
+      <class>javax.script.AbstractScriptEngine</class>
+      <method>eval</method>
+      <line>264</line>
+    </frame>
+    <frame>
+      <class>whiteboxgis.user_interfaces.Scripter$11</class>
+      <method>run</method>
+      <line>1729</line>
+    </frame>
+    <frame>
+      <class>java.lang.Thread</class>
+      <method>run</method>
+      <line>745</line>
+    </frame>
+  </exception>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+</log>

@@ -19,7 +19,12 @@ massive data files, as it greatly increased performance.
 
 RELEASE NOTES:
 
-Version 3.4.1 'Montreal' (Feb. 2017)
+Version 3.4.1 'Montreal' (March 2017)
+- Added first steps in allowing Whitebox to run for multiple users installed on
+  a network. When Whitebox launches, it checks to see if it has write permission 
+  in the application directory. If it doesn't, it checks if user.home/WhiteboxGAT
+  exists. If this user Whitebox directory isn't found, it will create it and copy
+  the contents of the Whitebox => resources folder to this location.
 - Updated the Extract Statistics tool to optionally output a text file in addition 
   to the optional raster and displayed text outputs. This can be useful when
   there are many thousands of features and the displayed text output is too
@@ -29,9 +34,11 @@ Version 3.4.1 'Montreal' (Feb. 2017)
 - Added Root Mean Square Error plugin tool.
 - Enhanced the tool search functionality to place more likely tools nearer the
   top of the list.
+- Fixed the Recent and Most Used tabs.
 - Added the Flightline Overlap (LiDAR) tool, which produces a raster containing
   the number of flightlines that overlap atop each raster grid cell. This tool
   is useful for visualizing the flightlines within a LiDAR point cloud.
+- Added the 'View Error Logs' and 'Clear Error Logs' menu extensions.
 
 Version 3.4.0 'Montreal' (January 2017)
 - This is the first release of Whitebox GAT that includes some plugin tools that 

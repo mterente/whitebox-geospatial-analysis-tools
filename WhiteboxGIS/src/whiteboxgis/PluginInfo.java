@@ -145,11 +145,8 @@ public class PluginInfo implements Comparable<PluginInfo> {
             }
             
         } else if (this.sortMode == SORT_MODE_RECENT) {
-            if (this.lastUsed.compareTo(other.lastUsed) < 0) {
-                return BEFORE;
-            } else if (this.lastUsed.compareTo(other.lastUsed) > 0) {
-                return AFTER;
-            }
+//            return this.lastUsed.compareTo(other.lastUsed);
+            return other.lastUsed.compareTo(this.lastUsed);
         }
         
         // else compare them based on their names.

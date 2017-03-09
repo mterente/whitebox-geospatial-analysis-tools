@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 //import javax.swing.UIManager;
 import java.util.List;
 import java.util.logging.*;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -35,12 +36,18 @@ public class Main {
     private String[] args;
     private String applicationDirectory;
     private String pathSep;
+    private static boolean networkedFlag = true;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         try {
+            for (String s : args) {
+                if (s.trim().toLowerCase().equals("-networked")) {
+                    networkedFlag = true;
+                }
+            }
 //            //setLookAndFeel("Nimbus");
 //            setLookAndFeel("systemLAF");
 ////
@@ -114,7 +121,22 @@ public class Main {
             if (!applicationDirectory.endsWith(pathSep)) {
                 applicationDirectory += pathSep;
             }
-            findFile(new File(applicationDirectory), "logs");
+            //String logDirectory = "";
+            String usersApplicationDirectory = "";
+            if ((new File(applicationDirectory)).canWrite() && !networkedFlag) {
+                usersApplicationDirectory = applicationDirectory;
+            } else {
+                String homeDir = System.getProperty("user.home");
+                if ((new File(homeDir)).canWrite()) {
+                    usersApplicationDirectory = homeDir + pathSep + "WhiteboxGAT" + pathSep;
+                    if (!(new File(usersApplicationDirectory)).exists()) {
+                        // copy the resources folders over to this user home directory
+                        FileUtils.copyDirectory(new File(applicationDirectory + "resources"), new File(usersApplicationDirectory + "resources"));
+                    }
+                }
+            }
+//            findFile(new File(applicationDirectory), "logs");
+            findFile(new File(usersApplicationDirectory), "logs");
             if (retFile != null && !retFile.isEmpty()) {
                 String logDirectory = retFile + pathSep;
                 // set up the logger

@@ -128,20 +128,23 @@ public class Scripter extends JDialog implements ActionListener, KeyListener {
             }    
 
             this.pathSep = File.separator;
-            String applicationDirectory = java.net.URLDecoder.decode(getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
-            if (applicationDirectory.endsWith(".exe") || applicationDirectory.endsWith(".jar")) {
-                applicationDirectory = new File(applicationDirectory).getParent();
-            } else {
-                // Add the path to the class files
-                applicationDirectory += getClass().getName().replace('.', File.separatorChar);
-
-                // Step one level up as we are only interested in the
-                // directory containing the class files
-                applicationDirectory = new File(applicationDirectory).getParent();
-            }
-            applicationDirectory = new File(applicationDirectory).getParent();
-            findGraphicsDirectory(new File(applicationDirectory));
-            findScriptDirectory(new File(applicationDirectory));
+            findGraphicsDirectory(new File(host.getResourcesDirectory()));
+            findScriptDirectory(new File(host.getResourcesDirectory()));
+            
+//            String applicationDirectory = java.net.URLDecoder.decode(getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
+//            if (applicationDirectory.endsWith(".exe") || applicationDirectory.endsWith(".jar")) {
+//                applicationDirectory = new File(applicationDirectory).getParent();
+//            } else {
+//                // Add the path to the class files
+//                applicationDirectory += getClass().getName().replace('.', File.separatorChar);
+//
+//                // Step one level up as we are only interested in the
+//                // directory containing the class files
+//                applicationDirectory = new File(applicationDirectory).getParent();
+//            }
+//            applicationDirectory = new File(applicationDirectory).getParent();
+//            findGraphicsDirectory(new File(applicationDirectory));
+//            findScriptDirectory(new File(applicationDirectory));
    
             initUI();
         } catch (Exception e) {
@@ -153,25 +156,29 @@ public class Scripter extends JDialog implements ActionListener, KeyListener {
         super(owner, modal);
         try {
             this.pathSep = File.separator;
-            String applicationDirectory = java.net.URLDecoder.decode(getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
-            if (applicationDirectory.endsWith(".exe") || applicationDirectory.endsWith(".jar")) {
-                applicationDirectory = new File(applicationDirectory).getParent();
-            } else {
-                // Add the path to the class files
-                applicationDirectory += getClass().getName().replace('.', File.separatorChar);
-
-                // Step one level up as we are only interested in the
-                // directory containing the class files
-                applicationDirectory = new File(applicationDirectory).getParent();
-            }
-            applicationDirectory = new File(applicationDirectory).getParent();
-            findGraphicsDirectory(new File(applicationDirectory));
-            findScriptDirectory(new File(applicationDirectory));
+//            String applicationDirectory = java.net.URLDecoder.decode(getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
+//            if (applicationDirectory.endsWith(".exe") || applicationDirectory.endsWith(".jar")) {
+//                applicationDirectory = new File(applicationDirectory).getParent();
+//            } else {
+//                // Add the path to the class files
+//                applicationDirectory += getClass().getName().replace('.', File.separatorChar);
+//
+//                // Step one level up as we are only interested in the
+//                // directory containing the class files
+//                applicationDirectory = new File(applicationDirectory).getParent();
+//            }
+//            applicationDirectory = new File(applicationDirectory).getParent();
+//            findGraphicsDirectory(new File(applicationDirectory));
+//            findScriptDirectory(new File(applicationDirectory));
 
             if (owner != null && owner instanceof WhiteboxPluginHost) {
                 host = (WhiteboxPluginHost) owner;
                 bundle = host.getGuiLabelsBundle();
             }
+            
+            findGraphicsDirectory(new File(host.getResourcesDirectory()));
+            findScriptDirectory(new File(host.getResourcesDirectory()));
+            
 
             initUI();
 
