@@ -6891,7 +6891,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
     }
 
     private void callSplashScreen() {
-        String splashFile = graphicsDirectory + "WhiteboxLogo.png"; //"SplashScreen.png";
+        String splashFile = graphicsDirectory + "WhiteboxLogo2.png"; //"SplashScreen.png";
         SplashWindow sw = new SplashWindow(splashFile, 2000, VERSION_NAME);
         long t0, t1;
         t0 = System.currentTimeMillis();

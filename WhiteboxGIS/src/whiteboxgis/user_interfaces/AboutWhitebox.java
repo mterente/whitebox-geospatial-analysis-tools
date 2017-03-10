@@ -67,22 +67,27 @@ public class AboutWhitebox extends JDialog implements ActionListener {
         mainPane.setLayout(new BoxLayout(mainPane, BoxLayout.Y_AXIS));
         mainPane.setBorder(BorderFactory.createEmptyBorder(10, 15, 0, 15));
         
-        File file = new File(graphicsDirectory + "WhiteboxLogo.png");
+        Box vertBox1 = Box.createVerticalBox();
+        
+        
+        File file = new File(graphicsDirectory + "WhiteboxLogo2.png");
         if (!file.exists()) {
             return;
         }
         ImagePanel imagePane = new ImagePanel(file.toString());
         
-        mainPane.add(imagePane);
-        mainPane.add(Box.createVerticalStrut(10));
+        vertBox1.add(imagePane);
+        vertBox1.add(Box.createVerticalStrut(10));
         
-        JLabel label4 = new JLabel(versionName + " (" + versionNumber + ") released 2017");
+        Box vertBox2 = Box.createVerticalBox();
+        
+        JLabel label4 = new JLabel("Whitebox GAT " + versionName + " (" + versionNumber + ") released 2017");
         Box box4 = Box.createHorizontalBox();
         box4.add(Box.createHorizontalGlue());
         box4.add(label4);
         box4.add(Box.createHorizontalGlue());
-        mainPane.add(box4);
-        mainPane.add(Box.createVerticalStrut(10));
+        vertBox2.add(box4);
+        vertBox2.add(Box.createVerticalStrut(10));
         
         
         JTextArea contributors = new JTextArea();
@@ -113,9 +118,18 @@ public class AboutWhitebox extends JDialog implements ActionListener {
         contributors.setWrapStyleWord(true);
         contributors.setCaretPosition(0);
         contributors.setEditable(false);
-        mainPane.add(scroll);
+        contributors.setSize(320, 385);
+        vertBox2.add(scroll);
         
-        mainPane.add(Box.createVerticalStrut(10));
+        vertBox2.add(Box.createVerticalStrut(10));
+        
+        Box topBox = Box.createHorizontalBox();
+        topBox.add(vertBox1);
+        topBox.add(Box.createHorizontalStrut(20));
+        topBox.add(vertBox2);
+        
+        mainPane.add(topBox);
+        
         
 
         // buttons

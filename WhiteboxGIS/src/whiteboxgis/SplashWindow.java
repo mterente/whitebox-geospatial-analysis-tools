@@ -29,7 +29,7 @@ import java.io.File;
 public class SplashWindow extends JWindow {
 
     String fileName = "";
-    int waitTime = 2000;
+    int waitTime = 10000;
     String versionNumber = "";
     int width = 0;
     int height = 0;
@@ -57,8 +57,10 @@ public class SplashWindow extends JWindow {
             File file = new File(fileName);
             image = ImageIO.read(file);
             
-            width = 200;
-            height = 200;
+//            width = 200;
+//            height = 200;
+//            width = 320;
+//            height = 398;
             
             JLabel l = new JLabel(new ImageIcon(fileName));
             width = l.getWidth();
@@ -117,21 +119,21 @@ public class SplashWindow extends JWindow {
             Graphics2D g2d = (Graphics2D) g;
 
             g2d.drawImage(image, 0, 0, this);
-            FontMetrics metrics = g2d.getFontMetrics();
-            int x = 185;
-            int y = 320;
-            int dY = metrics.getHeight() + 1;
-            
-            String str = "Version " + versionNumber + " released 2013";
-            g2d.drawString(str, x, y);
-            str = "Dr. John Lindsay (Lead Developer)";
-            g2d.drawString(str, x, y + 2 * dY);
-            //str = "The Department of Geography";
-            //g2d.drawString(str, x, y + 3 * dY);
-            str = "The University of Guelph, Canada";
-            g2d.drawString(str, x, y + 3 * dY);
-            str = "e-mail: jlindsay@uoguelph.ca";
-            g2d.drawString(str, x, y + 4 * dY);
+//            FontMetrics metrics = g2d.getFontMetrics();
+//            int x = 185;
+//            int y = 320;
+//            int dY = metrics.getHeight() + 1;
+//            
+//            String str = "Version " + versionNumber + " released 2017";
+//            g2d.drawString(str, x, y);
+//            str = "Dr. John Lindsay (Lead Developer)";
+//            g2d.drawString(str, x, y + 2 * dY);
+//            //str = "The Department of Geography";
+//            //g2d.drawString(str, x, y + 3 * dY);
+//            str = "The University of Guelph, Canada";
+//            g2d.drawString(str, x, y + 3 * dY);
+//            str = "e-mail: jlindsay@uoguelph.ca";
+//            g2d.drawString(str, x, y + 4 * dY);
         } catch (Exception e) {
         }
     }

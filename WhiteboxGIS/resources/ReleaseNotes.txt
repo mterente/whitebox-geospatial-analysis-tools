@@ -25,20 +25,23 @@ Version 3.4.1 'Montreal' (March 2017)
   in the application directory. If it doesn't, it checks if user.home/WhiteboxGAT
   exists. If this user Whitebox directory isn't found, it will create it and copy
   the contents of the Whitebox => resources folder to this location.
+- Added the Flightline Overlap (LiDAR) tool, which produces a raster containing
+  the number of flightlines that overlap atop each raster grid cell. This tool
+  is useful for visualizing the flightlines within a LiDAR point cloud.
+- Added Root Mean Square Error plugin tool, which can be used to measure the 
+  RMSE, mean difference, and accuracy at 95% level between two overlapping rasters
+  (usually DEMs).
 - Updated the Extract Statistics tool to optionally output a text file in addition 
   to the optional raster and displayed text outputs. This can be useful when
   there are many thousands of features and the displayed text output is too
   slow at rendering.
 - Updated the Import CSV tool to import an arbitrary number of attributes without
   need for column definitions. 
-- Added Root Mean Square Error plugin tool.
+- Added 'View Error Logs' and 'Clear Error Logs' menu extensions.
 - Enhanced the tool search functionality to place more likely tools nearer the
   top of the list.
-- Fixed the Recent and Most Used tabs.
-- Added the Flightline Overlap (LiDAR) tool, which produces a raster containing
-  the number of flightlines that overlap atop each raster grid cell. This tool
-  is useful for visualizing the flightlines within a LiDAR point cloud.
-- Added the 'View Error Logs' and 'Clear Error Logs' menu extensions.
+- Fixed the Recent and Most Used tabs so they now work properly.
+- Updated the Whitebox GAT logo.
 
 Version 3.4.0 'Montreal' (January 2017)
 - This is the first release of Whitebox GAT that includes some plugin tools that 
