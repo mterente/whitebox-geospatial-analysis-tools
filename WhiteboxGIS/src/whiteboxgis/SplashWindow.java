@@ -29,7 +29,7 @@ import java.io.File;
 public class SplashWindow extends JWindow {
 
     String fileName = "";
-    int waitTime = 10000;
+    int waitTime = 2500;
     String versionNumber = "";
     int width = 0;
     int height = 0;
@@ -50,9 +50,9 @@ public class SplashWindow extends JWindow {
 
     private void createGui() {
         try {
-            if (System.getProperty("os.name").contains("Mac")) {
-                this.getRootPane().putClientProperty("apple.awt.brushMetalLook", Boolean.TRUE);
-            }
+//            if (System.getProperty("os.name").contains("Mac")) {
+//                this.getRootPane().putClientProperty("apple.awt.brushMetalLook", Boolean.TRUE);
+//            }
 
             File file = new File(fileName);
             image = ImageIO.read(file);

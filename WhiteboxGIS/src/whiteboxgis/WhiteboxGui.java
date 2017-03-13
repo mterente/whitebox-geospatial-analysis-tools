@@ -218,16 +218,11 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
     private String[] pluginNames = new String[0];
     private String[] pluginUsage = new String[0];
     private String[] pluginLastUse = new String[0];
-    private static boolean networkedFlag = true;
+    private static boolean networkedFlag = false;
 
     public static void main(String[] args) {
         try {
-            for (String s : args) {
-                if (s.trim().toLowerCase().equals("-networked")) {
-                    networkedFlag = true;
-                }
-            }
-
+            
             //setLookAndFeel("Nimbus");
             setLookAndFeel("systemLAF");
             if (System.getProperty("os.name").contains("Mac")) {
@@ -326,6 +321,19 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 applicationDirectory = new File(applicationDirectory).getParent();
             }
 
+            // networked mode?
+            String networkPropsFile = applicationDirectory + pathSep + "resources" + pathSep + "networkProps.txt";
+            File propertiesFile = new File(networkPropsFile);
+            if (propertiesFile.exists()) {
+                Properties props = new Properties();
+                FileInputStream in = new FileInputStream(networkPropsFile);
+                props.load(in);
+                if (props.containsKey("networkedMode")) {
+                    networkedFlag = Boolean.parseBoolean(props.getProperty("networkedMode"));
+                }
+                in.close();
+            }
+            
             // do we have write access to the applicationDirectory?
             if ((new File(applicationDirectory)).canWrite() && !networkedFlag) {
                 resourcesDirectory = applicationDirectory + pathSep + "resources" + pathSep;
@@ -6891,7 +6899,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
     }
 
     private void callSplashScreen() {
-        String splashFile = graphicsDirectory + "WhiteboxLogo2.png"; //"SplashScreen.png";
+        String splashFile = graphicsDirectory + "WhiteboxLogo2.png";
         SplashWindow sw = new SplashWindow(splashFile, 2000, VERSION_NAME);
         long t0, t1;
         t0 = System.currentTimeMillis();

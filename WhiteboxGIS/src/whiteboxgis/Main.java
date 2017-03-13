@@ -18,11 +18,13 @@ package whiteboxgis;
 
 import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.management.*;
 //import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 //import javax.swing.UIManager;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.*;
 import org.apache.commons.io.FileUtils;
 
@@ -36,18 +38,14 @@ public class Main {
     private String[] args;
     private String applicationDirectory;
     private String pathSep;
-    private static boolean networkedFlag = true;
+    private static boolean networkedFlag = false;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         try {
-            for (String s : args) {
-                if (s.trim().toLowerCase().equals("-networked")) {
-                    networkedFlag = true;
-                }
-            }
+            
 //            //setLookAndFeel("Nimbus");
 //            setLookAndFeel("systemLAF");
 ////
@@ -121,6 +119,19 @@ public class Main {
             if (!applicationDirectory.endsWith(pathSep)) {
                 applicationDirectory += pathSep;
             }
+            
+            String networkPropsFile = applicationDirectory + "resources" + pathSep + "networkProps.txt";
+            File propertiesFile = new File(networkPropsFile);
+            if (propertiesFile.exists()) {
+                Properties props = new Properties();
+                FileInputStream in = new FileInputStream(networkPropsFile);
+                props.load(in);
+                if (props.containsKey("networkedMode")) {
+                    networkedFlag = Boolean.parseBoolean(props.getProperty("networkedMode"));
+                }
+                in.close();
+            }
+            
             //String logDirectory = "";
             String usersApplicationDirectory = "";
             if ((new File(applicationDirectory)).canWrite() && !networkedFlag) {
