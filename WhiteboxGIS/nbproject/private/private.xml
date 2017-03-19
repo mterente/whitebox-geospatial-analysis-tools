@@ -3,11 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxGIS/resources/plugins/Scripts/LidarJoin.py</file>
-            <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxGIS/src/whiteboxgis/user_interfaces/Scripter.java</file>
+            <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxGIS/src/whiteboxgis/PluginInfo.java</file>
             <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxGIS/src/whiteboxgis/WhiteboxGui.java</file>
+            <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxGIS/src/whiteboxgis/user_interfaces/AboutWhitebox.java</file>
+            <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxGIS/src/whiteboxgis/SplashWindow.java</file>
             <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxGIS/resources/ReleaseNotes.txt</file>
-            <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxGIS/resources/VersionInfo.xml</file>
             <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxGIS/src/whiteboxgis/Main.java</file>
         </group>
     </open-files>

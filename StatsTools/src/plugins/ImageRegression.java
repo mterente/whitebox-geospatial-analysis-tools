@@ -382,11 +382,11 @@ public class ImageRegression implements WhiteboxPlugin {
             
             if (intercept >= 0) {
                 retstr += "Regression Equation:\t\t" + image2.getShortHeaderFile() + " = " 
-                    + df.format(slope) + " \u00D7 " + image2.getShortHeaderFile() + " + " + df.format(intercept) + "\n";
+                    + df.format(slope) + " \u00D7 " + image1.getShortHeaderFile() + " + " + df.format(intercept) + "\n";
             
             } else {
                 retstr += "Regression Equation:\t\t" + image2.getShortHeaderFile() + " = " 
-                    + df.format(slope) + " \u00D7 " + image2.getShortHeaderFile() + " - " + df.format(-intercept) + "\n";
+                    + df.format(slope) + " \u00D7 " + image1.getShortHeaderFile() + " - " + df.format(-intercept) + "\n";
             
             }
             
