@@ -19,7 +19,7 @@ massive data files, as it greatly increased performance.
 
 RELEASE NOTES:
 
-Version 3.4.1 'Montreal' (March 2017)
+Version 3.4.1 'Montreal' (April 2017)
 - Added first steps in allowing Whitebox to run for multiple users installed on
   a network. When Whitebox launches, it checks to see if it has write permission 
   in the application directory. If it doesn't, it checks if user.home/WhiteboxGAT
@@ -42,6 +42,8 @@ Version 3.4.1 'Montreal' (March 2017)
   top of the list.
 - Fixed the Recent and Most Used tabs so they now work properly.
 - Updated the Whitebox GAT logo.
+- Fixed minor bugs in the Image Regression and the Write Function Memory 
+  Insertion tools.
 
 Version 3.4.0 'Montreal' (January 2017)
 - This is the first release of Whitebox GAT that includes some plugin tools that 
