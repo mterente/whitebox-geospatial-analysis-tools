@@ -19,7 +19,7 @@ massive data files, as it greatly increased performance.
 
 RELEASE NOTES:
 
-Version 3.4.1 'Montreal' (April 2017)
+Version 3.4.1 'Montreal' (July 2017)
 - Added first steps in allowing Whitebox to run for multiple users installed on
   a network. When Whitebox launches, it checks to see if it has write permission 
   in the application directory. If it doesn't, it checks if user.home/WhiteboxGAT
@@ -37,6 +37,7 @@ Version 3.4.1 'Montreal' (April 2017)
   slow at rendering.
 - Updated the Import CSV tool to import an arbitrary number of attributes without
   need for column definitions. 
+- Updated the LAS Footprint tool to take multiple LAS files as input.
 - Added 'View Error Logs' and 'Clear Error Logs' menu extensions.
 - Enhanced the tool search functionality to place more likely tools nearer the
   top of the list.
