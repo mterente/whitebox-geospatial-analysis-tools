@@ -245,6 +245,9 @@ public class ImageRegression implements WhiteboxPlugin {
                 data1 = image1.getRowValues(row);
                 data2 = image2.getRowValues(row);
                 for (col = 0; col < cols; col++) {
+                    if (col == 655) {
+                        col = 655;
+                    }
                     x = data1[col];
                     y = data2[col];
                     if (x != noData1 && y != noData2) {
@@ -414,15 +417,15 @@ public class ImageRegression implements WhiteboxPlugin {
     
     
 //    // this is only used for debugging the tool
-//    public static void main(String[] args) {
-//        ImageRegression ir = new ImageRegression();
-//        args = new String[3];
-//        args[0] = "/Users/johnlindsay/Documents/Data/LandsatData/band1.dep";
-//        args[1] = "/Users/johnlindsay/Documents/Data/LandsatData/band2_cropped.dep";
-//        args[2]= "not specified";
-//        
-//        ir.setArgs(args);
-//        ir.run();
-//        
-//    }
+    public static void main(String[] args) {
+        ImageRegression ir = new ImageRegression();
+        args = new String[3];
+        args[0] = "/Users/johnlindsay/Documents/data/DanData/EP11.dep";
+        args[1] = "/Users/johnlindsay/Documents/data/DanData/PER11.dep";
+        args[2]= "not specified";
+        
+        ir.setArgs(args);
+        ir.run();
+        
+    }
 }
