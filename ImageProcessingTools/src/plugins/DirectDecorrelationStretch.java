@@ -296,9 +296,11 @@ public class DirectDecorrelationStretch implements WhiteboxPlugin {
                 progress = (int) (100f * row / (rows - 1));
                 updateProgress(progress);
             }
+            
+            output.flush();
 
             for (row = 0; row < rows; row++) {
-                data = input.getRowValues(row);
+                data = output.getRowValues(row);
                 for (col = 0; col < cols; col++) {
                     z = data[col];
                     if (z != noData) {
@@ -328,6 +330,10 @@ public class DirectDecorrelationStretch implements WhiteboxPlugin {
                         }
                         if (bOut < 0) {
                             bOut = 0;
+                        }
+                        
+                        if (row == 100 && col == 100) {
+                            gOut = gOut;
                         }
                         
                         z = (double) ((255 << 24) | (bOut << 16) | (gOut << 8) | rOut);
@@ -365,5 +371,22 @@ public class DirectDecorrelationStretch implements WhiteboxPlugin {
             amIActive = false;
             myHost.pluginComplete();
         }
+    }
+    
+    /**
+     * This method is only used for debugging the tool.
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        DirectDecorrelationStretch obj = new DirectDecorrelationStretch();
+        args = new String[3];
+        args[0] = "/Users/johnlindsay/Documents/teaching/GEOG3420/W17/Labs/Lab5/Data/Lab5_data/tmp8.dep";
+        args[1] = "/Users/johnlindsay/Documents/teaching/GEOG3420/W17/Labs/Lab5/Data/Lab5_data/tmp9.dep";
+        args[2] = "0.5";
+
+        obj.setArgs(args);
+        obj.run();
+//        doSomething(args);
     }
 }
