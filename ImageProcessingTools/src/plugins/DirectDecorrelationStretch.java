@@ -298,6 +298,8 @@ public class DirectDecorrelationStretch implements WhiteboxPlugin {
             }
             
             output.flush();
+            
+            double maxMax = Math.max(Math.max(rMax, gMax), bMax);
 
             for (row = 0; row < rows; row++) {
                 data = output.getRowValues(row);
@@ -308,9 +310,9 @@ public class DirectDecorrelationStretch implements WhiteboxPlugin {
                         gIn = (((int) z >> 8) & 0xFF);
                         bIn = (((int) z >> 16) & 0xFF);
 
-                        rOut = (int) (rIn / rMax * 255);
-                        gOut = (int) (gIn / gMax * 255);
-                        bOut = (int) (bIn / bMax * 255);
+                        rOut = (int) (rIn / maxMax * 255);
+                        gOut = (int) (gIn / maxMax * 255);
+                        bOut = (int) (bIn / maxMax * 255);
                         
                         if (rOut > 255) {
                             rOut = 255;
@@ -330,10 +332,6 @@ public class DirectDecorrelationStretch implements WhiteboxPlugin {
                         }
                         if (bOut < 0) {
                             bOut = 0;
-                        }
-                        
-                        if (row == 100 && col == 100) {
-                            gOut = gOut;
                         }
                         
                         z = (double) ((255 << 24) | (bOut << 16) | (gOut << 8) | rOut);
@@ -387,6 +385,5 @@ public class DirectDecorrelationStretch implements WhiteboxPlugin {
 
         obj.setArgs(args);
         obj.run();
-//        doSomething(args);
     }
 }
