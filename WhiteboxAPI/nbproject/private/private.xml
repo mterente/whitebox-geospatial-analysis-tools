@@ -5,6 +5,7 @@
         <group>
             <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxAPI/src/whitebox/geospatialfiles/RasterLayerInfo.java</file>
             <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxAPI/src/whitebox/geospatialfiles/WhiteboxRaster.java</file>
+            <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxAPI/src/whitebox/geospatialfiles/GeoTiff.java</file>
             <file>file:/Users/johnlindsay/Documents/programming/Whitebox/trunk/WhiteboxAPI/src/whitebox/geospatialfiles/WhiteboxRasterBase.java</file>
         </group>
     </open-files>
