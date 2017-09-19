@@ -46,7 +46,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import whiteboxgis.user_interfaces.Scripter;
 import whitebox.interfaces.WhiteboxPluginHost;
-import static whiteboxgis.WhiteboxGui.logger;
+import static whiteboxgis.WhiteboxGui.LOGGER;
 
 /**
  *

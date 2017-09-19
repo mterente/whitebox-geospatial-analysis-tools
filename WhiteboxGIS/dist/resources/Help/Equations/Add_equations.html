@@ -6,7 +6,7 @@
 
 // Next: Fix Up preprocessing of binary operators to search for left-hand and right-hand arguments (NOT whole string) 
 // for infix notation, a+b should be $(a)+$(b), and NOT $(a+b) Tell them that...
-// add to instructions: approx = "apprx" actual symbols is Å
+// add to instructions: approx = "apprx" actual symbols is ï¿½
 // for operations with longer than one character:
 //	first replace them all by a single symbol
 //	do this in the array oper[] as well!
@@ -17,7 +17,7 @@
 // Solution for typesetting, put the comma (or character) inside the formula:
 // $(a $,) $(b)
 
-// *********************** COPYRIGHT © 1997 STEFAN WANER *********
+// *********************** COPYRIGHT ï¿½ 1997 STEFAN WANER *********
 // *********************** ALL RIGHTS RESERVED *********************
 // Each math object is a table td which may include script tags for 
 // fraction lines, square roots & other items.
@@ -54,29 +54,29 @@ theString = replaceSubstring (theString,"{","$E("); // math expression
 theString = replaceSubstring (theString,"}",")"); // math expression
 theString = replaceSubstring (theString,"$M($E()","$M({}"); // fix up $M stuff
 theString = replaceSubstring (theString,"$M($E(","$M({"); // fix up $M stuff
-theString = replaceSubstring (theString,"--",""); //negative offset code
+theString = replaceSubstring (theString,"--","ï¿½ï¿½"); //negative offset code
 theString = replaceSubstring (theString,"$(","$E("); // math expression $S is text
-theString = replaceSubstring (theString,"apprx","Å"); // approx
-theString = replaceSubstring (theString,"$infinity","Ó"); // infinity
-theString = replaceSubstring (theString,"$pi","½"); // pi
-theString = replaceSubstring (theString,"$$","ð"); // Dollar sign 
-theString = replaceSubstring (theString,"$ ","¡"); // Forced Space
-theString = replaceSubstring (theString,"$/","¿"); // Forced Space
-theString = replaceSubstring (theString,"$,","¤"); // Comma
-theString = replaceSubstring (theString,"$+ ","±±"); // Plus,space
-theString = replaceSubstring (theString,"$- ","°"); // minus,space
-theString = replaceSubstring (theString,"$> ","¦¦"); // gt,space
-theString = replaceSubstring (theString,"$< ","……"); // lt,space
-theString = replaceSubstring (theString,"$= ","®®"); // eqspace
-theString = replaceSubstring (theString,"$- ","°"); // minus,space
-theString = replaceSubstring (theString,">=","„"); // gte
-theString = replaceSubstring (theString,"<=","¾"); // lte
+theString = replaceSubstring (theString,"apprx","ï¿½"); // approx
+theString = replaceSubstring (theString,"$infinity","ï¿½"); // infinity
+theString = replaceSubstring (theString,"$pi","ï¿½"); // pi
+theString = replaceSubstring (theString,"$$","ï¿½"); // Dollar sign 
+theString = replaceSubstring (theString,"$ ","ï¿½"); // Forced Space
+theString = replaceSubstring (theString,"$/","ï¿½"); // Forced Space
+theString = replaceSubstring (theString,"$,","ï¿½"); // Comma
+theString = replaceSubstring (theString,"$+ ","ï¿½ï¿½"); // Plus,space
+theString = replaceSubstring (theString,"$- ","ï¿½"); // minus,space
+theString = replaceSubstring (theString,"$> ","ï¿½ï¿½"); // gt,space
+theString = replaceSubstring (theString,"$< ","ï¿½ï¿½"); // lt,space
+theString = replaceSubstring (theString,"$= ","ï¿½ï¿½"); // eqspace
+theString = replaceSubstring (theString,"$- ","ï¿½"); // minus,space
+theString = replaceSubstring (theString,">=","ï¿½"); // gte
+theString = replaceSubstring (theString,"<=","ï¿½"); // lte
 theString = replaceSubstring (theString,"notequal ","Z"); // obvious
-theString = replaceSubstring (theString,"<->","Ï"); // bi arrow
-theString = replaceSubstring (theString,"->","Í"); // right arrow
-theString = replaceSubstring (theString,"<-","Î"); // left arrow
+theString = replaceSubstring (theString,"<->","ï¿½"); // bi arrow
+theString = replaceSubstring (theString,"->","ï¿½"); // right arrow
+theString = replaceSubstring (theString,"<-","ï¿½"); // left arrow
 theString = stripSpaces(theString);	// this leaves $S(  ) expressions alone.
-theString = replaceSubstring (theString,")$",")ø$"); // adjacent expressions
+theString = replaceSubstring (theString,")$",")ï¿½$"); // adjacent expressions
 
 // alert(theString);
 
@@ -93,24 +93,24 @@ oper[4] = "+";
 oper[5] = "_";
 oper[6] = "=";
 oper[7] = "<";
-oper[8] = "¾";
+oper[8] = "ï¿½";
 oper[9] = ">";
-oper[10] = "„";
-oper[11] = "Å";
+oper[10] = "ï¿½";
+oper[11] = "ï¿½";
 oper[12] = "Z";
 oper[13] = "~";
-oper[14] = "Î"; // left arrow
-oper[15] = "Í"; // right arrow
-oper[16] = "Ï"; // bi arrow
-oper[17] = "ø" // adjacent expressions
-for (i = 18; i < 31; i++) oper[i] = "¶"; // whoops!
-for (i = 1; i <= 30; i++) theString = replaceSubstring(theString,oper[i],"¢"+oper[i]);
+oper[14] = "ï¿½"; // left arrow
+oper[15] = "ï¿½"; // right arrow
+oper[16] = "ï¿½"; // bi arrow
+oper[17] = "ï¿½" // adjacent expressions
+for (i = 18; i < 31; i++) oper[i] = "ï¿½"; // whoops!
+for (i = 1; i <= 30; i++) theString = replaceSubstring(theString,oper[i],"ï¿½"+oper[i]);
 // remove the extra symbol when processed
 
 // alert(theString);
 for (i = 1; i <= 30; i++)
 	{ 
-	posn[i] = checkString(theString,"¢"+oper[i],false);
+	posn[i] = checkString(theString,"ï¿½"+oper[i],false);
 	var count = 0;
 	while ( (posn[i] != -1) && (count < 300) )
 		{
@@ -118,17 +118,17 @@ for (i = 1; i <= 30; i++)
 // alert (theString);
 		theString = processInfix(theString,oper[i], posn[i]);
 // alert (theString);
-		posn[i] = checkString(theString, "¢"+oper[i], false);
+		posn[i] = checkString(theString, "ï¿½"+oper[i], false);
 		} // while posn[i]... 
 	} // for i = ...
 return (theString);
 } // end of preprocess
 
 function processInfix(InString, operation, position) {
-// position is one before the operation  ... ¢*
+// position is one before the operation  ... ï¿½*
 // first get rid of it if it's already prefix
 var Length = InString.length;
-if ((position > 0) && (InString.charAt(position-1) == "$")) var theString = (InString.substring(0, position) + InString.substring(position+1,Length)); // remove the ¢
+if ((position > 0) && (InString.charAt(position-1) == "$")) var theString = (InString.substring(0, position) + InString.substring(position+1,Length)); // remove the ï¿½
 else 
 	{
 	var leftPart = InString.substring(0,position);
@@ -183,17 +183,17 @@ return (theString);
 
 function postProcess(InString) {
 var theString = InString;
-theString = replaceSubstring (theString,"ð","$"); // Dollar sign 
-theString = replaceSubstring (theString, "¡","&nbsp;"); // Forced Space
-theString = replaceSubstring (theString ,"¤", ","); // Comma
-theString = replaceSubstring (theString ,"¿", "/"); // slash
-theString = replaceSubstring (theString, "±±","+ "); // plus, space
-theString = replaceSubstring (theString, "°","-"); // minus, space
-theString = replaceSubstring (theString, "¦¦","> "); // gt, space
-theString = replaceSubstring (theString, "……","< "); // lt, space
-theString = replaceSubstring (theString, "®®","= "); // lt, space
-theString = replaceSubstring (theString, 'Ó','<img src = "SYMB/INF.GIF">'); // infinity
-theString = replaceSubstring (theString, '½','<img src = "SYMB/PI.GIF">'); // pi
+theString = replaceSubstring (theString,"ï¿½","$"); // Dollar sign 
+theString = replaceSubstring (theString, "ï¿½","&nbsp;"); // Forced Space
+theString = replaceSubstring (theString ,"ï¿½", ","); // Comma
+theString = replaceSubstring (theString ,"ï¿½", "/"); // slash
+theString = replaceSubstring (theString, "ï¿½ï¿½","+ "); // plus, space
+theString = replaceSubstring (theString, "ï¿½","-"); // minus, space
+theString = replaceSubstring (theString, "ï¿½ï¿½","> "); // gt, space
+theString = replaceSubstring (theString, "ï¿½ï¿½","< "); // lt, space
+theString = replaceSubstring (theString, "ï¿½ï¿½","= "); // lt, space
+theString = replaceSubstring (theString, 'ï¿½','<img src = "SYMB/INF.GIF">'); // infinity
+theString = replaceSubstring (theString, 'ï¿½','<img src = "SYMB/PI.GIF">'); // pi
 return(theString);
 }
 // *********************** End Pre/Post processing **************************
@@ -463,7 +463,7 @@ if ( (theOperation == "F") || (theOperation == "L"))
 		}
 	}
 
-else if ( ( ( (theOperation == "ø") || (theOperation == ".") || (theOperation == "+") ) || ( (theOperation == "-" ) || (theOperation == "=") ) ) || (theOperation == "Z") || (theOperation == "Å") || (theOperation == "<") || (theOperation == ">") ||  (theOperation == "¾") || (theOperation == "„") || (theOperation == "Í") ||  (theOperation == "Î") || (theOperation == "Ï") || (theOperation == "~"))
+else if ( ( ( (theOperation == "ï¿½") || (theOperation == ".") || (theOperation == "+") ) || ( (theOperation == "-" ) || (theOperation == "=") ) ) || (theOperation == "Z") || (theOperation == "ï¿½") || (theOperation == "<") || (theOperation == ">") ||  (theOperation == "ï¿½") || (theOperation == "ï¿½") || (theOperation == "ï¿½") ||  (theOperation == "ï¿½") || (theOperation == "ï¿½") || (theOperation == "~"))
 	{
 	var commaPosition = checkString(InString,",",false);
 	if (commaPosition == -1) theOutput = "Error!";
@@ -486,19 +486,19 @@ else if ( ( ( (theOperation == "ø") || (theOperation == ".") || (theOperation ==
 		var biarr = false;
 		var tilde = false;
 
-		if ( (theOperation == "ø") || (theOperation == ".")) mult = true;
+		if ( (theOperation == "ï¿½") || (theOperation == ".")) mult = true;
 		else if (theOperation == "-") diff = true;
 		else if (theOperation == "=") equals = true;
 		else if (theOperation == "+") sum = true;
 		else if (theOperation == "Z") notequals = true;
-		else if (theOperation == "Å") approx = true;
+		else if (theOperation == "ï¿½") approx = true;
 		else if (theOperation == "<") lessthan = true;
 		else if (theOperation == ">") greaterthan = true;
-		else if (theOperation == "¾") lte = true;
-		else if (theOperation == "„") gte = true;
-		else if (theOperation == "Î") leftarr = true;
-		else if (theOperation == "Í") rightarr = true;
-		else if (theOperation == "Ï") biarr = true; 
+		else if (theOperation == "ï¿½") lte = true;
+		else if (theOperation == "ï¿½") gte = true;
+		else if (theOperation == "ï¿½") leftarr = true;
+		else if (theOperation == "ï¿½") rightarr = true;
+		else if (theOperation == "ï¿½") biarr = true; 
 		else if (theOperation == "~") tilde = true;
 
 		var tl = getInfo(leftFactor).width;
@@ -609,7 +609,7 @@ else if (theOperation == "R" )
 	{
 	// radicals
 	//   **** Format *********
-	// $R(expr; ±#)
+	// $R(expr; ï¿½#)
 	// $R(expr1)
 	// (use negative numbers for subScripts)
 	// note the semicolon
@@ -799,7 +799,7 @@ else if ( (theOperation == "^") || (theOperation == "_") )
 	// I suppose we can add an optional parameter to 
 	// adjust the height, like +2 or -3
 	//   **** Format *********
-	// $^(expr1,expr2; #)
+	// $^(expr1,expr2; ï¿½ï¿½#)
 	// $(expr1,expr2)
 	// note the semicolon
 	// where the last argument is optional
@@ -811,7 +811,7 @@ else if ( (theOperation == "^") || (theOperation == "_") )
 	var increment = 0; 	// default height of superscript
 	// first decode
 	var delta = 0;
-	if (theData[0] == 2) delta = eval(replaceSubstring(theData[2],"","-")); // decode the 
+	if (theData[0] == 2) delta = eval(replaceSubstring(theData[2],"ï¿½ï¿½","-")); // decode the ï¿½ï¿½
 	if ( (delta >0) || (delta <0) ) increment += delta;
 	argList = parser(theData[1],",");
 	if  (argList[0] != 2) theOutput = "Error!";

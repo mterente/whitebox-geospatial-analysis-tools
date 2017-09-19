@@ -57,25 +57,25 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "polygons.shp"<br>
-                idField = "CLASS_ID"<br>
-                outputFile = wd + "output.shp"<br>
-                searchForHoles = "true"<br>
-                args = [inputFile, idField, outputFile, searchForHoles]<br>
-                pluginHost.runPlugin("SinglepartsToMultiparts", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "polygons.shp"&#10;<br>
+                idField = "CLASS_ID"&#10;<br>
+                outputFile = wd + "output.shp"&#10;<br>
+                searchForHoles = "true"&#10;<br>
+                args = [inputFile, idField, outputFile, searchForHoles]&#10;<br>
+                pluginHost.runPlugin("SinglepartsToMultiparts", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "lines.shp"<br>
-                def idField = "merge all"<br>
-                def outputFile = wd + "output.shp"<br>
-                String[] args = [inputFile, idField, outputFile]<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "lines.shp"&#10;<br>
+                def idField = "merge all"&#10;<br>
+                def outputFile = wd + "output.shp"&#10;<br>
+                String[] args = [inputFile, idField, outputFile]&#10;<br>
                 // searchForHoles need not be specified because the input vector does not contain polygons.
-                pluginHost.runPlugin("SinglepartsToMultiparts", args, false)<br>
+                pluginHost.runPlugin("SinglepartsToMultiparts", args, false)&#10;<br>
             </code>
         </p>
 

@@ -97,8 +97,9 @@ public class LasFootprint {
 			sd.setSourceFile(scriptFile)
 			
 			// add some components to the dialog
-			sd.addDialogFile("Input LAS file", "Input LAS File:", "open", "LAS Files (*.las), LAS", true, false)
-            sd.addDialogFile("Output file", "Output Vector File:", "close", "Vector Files (*.shp), SHP", true, false)
+			sd.addDialogMultiFile("Select the input LAS files", "Input LAS Files:", "LAS Files (*.las), LAS")
+//			sd.addDialogFile("Input LAS file", "Input LAS File:", "open", "LAS Files (*.las), LAS", true, false)
+//            sd.addDialogFile("Output file", "Output Vector File:", "close", "Vector Files (*.shp), SHP", true, false)
             
 			// resize the dialog to the standard size and display it
 			sd.setSize(800, 400)
@@ -112,88 +113,121 @@ public class LasFootprint {
 	@CompileStatic
 	private void execute(String[] args) {
 	  	try {
-		  	if (args.length != 2) {
+		  	if (args.length != 1) {
 				pluginHost.showFeedback("Incorrect number of arguments given to tool.")
 				return
 			}
 			double x, y, z
 			int numPoints, i, a, progress, oldProgress = -1
 			
-			String inputFile = args[0];
-            String outputFile = args[1];
+//			String inputFile = args[0];
+//            String outputFile = args[1];
 
-            LASReader las = new LASReader(inputFile);
-			numPoints = (int) las.getNumPointRecords();
-	        ArrayList<Coordinate> coordsList = new ArrayList<>();
-			for (a = 0; a < numPoints; a++) {
-                def point = las.getPointRecord(a);
-                if (!point.isPointWithheld()) {
-                    x = point.getX();
-                    y = point.getY();
-                    //z = point.getZ();
-                    coordsList.add(new Coordinate(x, y));
-                }
-                progress = (int) (100f * (a + 1) / numPoints);
-                if (progress != oldProgress) {
-                    oldProgress = progress;
-                    pluginHost.updateProgress("Reading point data:", progress);
-                    if (pluginHost.isRequestForOperationCancelSet()) {
-                        pluginHost.showFeedback("Operation cancelled")
-						return
-                    }
-                }
-            }
+			final String inputFileString = args[0]
 
-            GeometryFactory factory = new GeometryFactory();
-            com.vividsolutions.jts.geom.MultiPoint mp = factory.createMultiPoint(coordsList.toArray(new Coordinate[coordsList.size()]));
-            coordsList = null;
-            
-            pluginHost.updateProgress("Calculating convex hull...", 0);
-            com.vividsolutions.jts.geom.Geometry ch = mp.convexHull();
+			String[] inputFiles = inputFileString.split(";")
 
-			// set up the output files of the shapefile and the dbf
-            DBFField[] fields = new DBFField[1];
+			// check for empty entries in the inputFiles array
+			i = 0;
+			for (String inputFile : inputFiles) {
+				if (!inputFile.isEmpty()) {
+					i++
+				}
+			}
+	
+			if (i != inputFiles.length) {
+				// there are empty entries in the inputFiles array
+				// remove them.
+				ArrayList<String> temp = new ArrayList<>();
+				for (String inputFile : inputFiles) {
+					if (!inputFile.isEmpty()) {
+						temp.add(inputFile)
+					}
+				}
+				inputFiles = new String[i];
+	    		temp.toArray(inputFiles);
+			}
 
-            fields[0] = new DBFField();
-            fields[0].setName("FID");
-            fields[0].setDataType(DBFField.DBFDataType.NUMERIC);
-            fields[0].setFieldLength(10);
-            fields[0].setDecimalCount(0);
+			final int numFiles = inputFiles.length
+//			BoundingBox[] bb = new BoundingBox[numFiles]
+			int q = 0
+			for (String inputFile : inputFiles) {
+//				bb[i] = new BoundingBox(las.getMinX(), las.getMinY(), las.getMaxX(), las.getMaxY());
+				q++
+			    LASReader las = new LASReader(inputFile);
+				numPoints = (int) las.getNumPointRecords();
+		        ArrayList<Coordinate> coordsList = new ArrayList<>();
+				for (a = 0; a < numPoints; a++) {
+	                def point = las.getPointRecord(a);
+	                if (!point.isPointWithheld()) {
+	                    x = point.getX();
+	                    y = point.getY();
+	                    //z = point.getZ();
+	                    coordsList.add(new Coordinate(x, y));
+	                }
+	                progress = (int) (100f * (a + 1) / numPoints);
+	                if (progress != oldProgress) {
+	                    oldProgress = progress;
+	                    pluginHost.updateProgress("Reading point data (${q} of ${numFiles}):", progress);
+	                    if (pluginHost.isRequestForOperationCancelSet()) {
+	                        pluginHost.showFeedback("Operation cancelled")
+							return
+	                    }
+	                }
+	            }
+	
+	            GeometryFactory factory = new GeometryFactory();
+	            com.vividsolutions.jts.geom.MultiPoint mp = factory.createMultiPoint(coordsList.toArray(new Coordinate[coordsList.size()]));
+	            coordsList = null;
+	            
+	            pluginHost.updateProgress("Calculating convex hull (${q} of ${numFiles})...", 0);
+	            com.vividsolutions.jts.geom.Geometry ch = mp.convexHull();
+	
+				// set up the output files of the shapefile and the dbf
+	            DBFField[] fields = new DBFField[1];
+	
+	            fields[0] = new DBFField();
+	            fields[0].setName("FID");
+	            fields[0].setDataType(DBFField.DBFDataType.NUMERIC);
+	            fields[0].setFieldLength(10);
+	            fields[0].setDecimalCount(0);
+	
+	            pluginHost.updateProgress("Saving polygon...", 0);
 
-            pluginHost.updateProgress("Saving polygon...", 0);
-            
-            ShapeFile output = new ShapeFile(outputFile, ShapeType.POLYGON, fields);
-
-			if (ch instanceof com.vividsolutions.jts.geom.Polygon) {
-
-                com.vividsolutions.jts.geom.Polygon chPoly = (com.vividsolutions.jts.geom.Polygon) ch;
-
-                PointsList points = new PointsList();
-			
-                int[] parts = new int[chPoly.getNumInteriorRing() + 1];
-
-                Coordinate[] buffCoords = chPoly.getExteriorRing().getCoordinates();
-                if (!Topology.isClockwisePolygon(buffCoords)) {
-                    for (i = buffCoords.length - 1; i >= 0; i--) {
-                        points.addPoint(buffCoords[i].x, buffCoords[i].y);
-                    }
-                } else {
-                    for (i = 0; i < buffCoords.length; i++) {
-                        points.addPoint(buffCoords[i].x, buffCoords[i].y);
-                    }
-                }
-
-                whitebox.geospatialfiles.shapefile.Polygon poly = new whitebox.geospatialfiles.shapefile.Polygon(parts, points.getPointsArray());
-					            
-                Object[] rowData = new Object[1];
-                rowData[0] = new Double(1);
-                output.addRecord(poly, rowData);
-
-            }
-
-            output.write();
-
-            pluginHost.returnData(outputFile);
+	            def outputFile = inputFile.replace(".las", ".shp")
+	            ShapeFile output = new ShapeFile(outputFile, ShapeType.POLYGON, fields);
+	
+				if (ch instanceof com.vividsolutions.jts.geom.Polygon) {
+	
+	                com.vividsolutions.jts.geom.Polygon chPoly = (com.vividsolutions.jts.geom.Polygon) ch;
+	
+	                PointsList points = new PointsList();
+				
+	                int[] parts = new int[chPoly.getNumInteriorRing() + 1];
+	
+	                Coordinate[] buffCoords = chPoly.getExteriorRing().getCoordinates();
+	                if (!Topology.isClockwisePolygon(buffCoords)) {
+	                    for (i = buffCoords.length - 1; i >= 0; i--) {
+	                        points.addPoint(buffCoords[i].x, buffCoords[i].y);
+	                    }
+	                } else {
+	                    for (i = 0; i < buffCoords.length; i++) {
+	                        points.addPoint(buffCoords[i].x, buffCoords[i].y);
+	                    }
+	                }
+	
+	                whitebox.geospatialfiles.shapefile.Polygon poly = new whitebox.geospatialfiles.shapefile.Polygon(parts, points.getPointsArray());
+						            
+	                Object[] rowData = new Object[1];
+	                rowData[0] = new Double(1);
+	                output.addRecord(poly, rowData);
+	
+	            }
+	
+	            output.write();
+	
+	            pluginHost.returnData(outputFile);
+			}
 	            
 	  	} catch (OutOfMemoryError oe) {
             pluginHost.showFeedback("An out-of-memory error has occurred during operation.")

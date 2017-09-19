@@ -104,29 +104,29 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                outputSuffix = "PCA"<br>
-                standardized = "true"<br>
-                numComponents = "not specified"<br>
-                args = [inputFiles, outputSuffix, standardized, numComponents]<br>
-                pluginHost.runPlugin("PrincipalComponentAnalysis", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                outputSuffix = "PCA"&#10;<br>
+                standardized = "true"&#10;<br>
+                numComponents = "not specified"&#10;<br>
+                args = [inputFiles, outputSuffix, standardized, numComponents]&#10;<br>
+                pluginHost.runPlugin("PrincipalComponentAnalysis", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                def outputSuffix = "PCA"<br>
-                def standardized = "true"<br>
-                def numComponents = "2"<br>
-                String[] args = [inputFiles, outputSuffix, standardized, numComponents]<br>
-                pluginHost.runPlugin("PrincipalComponentAnalysis", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                def outputSuffix = "PCA"&#10;<br>
+                def standardized = "true"&#10;<br>
+                def numComponents = "2"&#10;<br>
+                String[] args = [inputFiles, outputSuffix, standardized, numComponents]&#10;<br>
+                pluginHost.runPlugin("PrincipalComponentAnalysis", args, false)&#10;<br>
             </code>
         </p>
         

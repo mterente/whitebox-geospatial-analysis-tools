@@ -24,25 +24,25 @@ will be performed, and the number of histogram bins.</p>
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # The tool accepts LAS files<br>
-                inputFile = wd + "input.las"<br>
-                attribute = "Elevation"<br>
-                bins = "10"<br>
-                args = [inputFile, attribute, bins]<br>
-                pluginHost.runPlugin("LidarHistogram", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # The tool accepts LAS files&#10;<br>
+                inputFile = wd + "input.las"&#10;<br>
+                attribute = "Elevation"&#10;<br>
+                bins = "10"&#10;<br>
+                args = [inputFile, attribute, bins]&#10;<br>
+                pluginHost.runPlugin("LidarHistogram", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // The tool accepts LAS files<br>
-                def inputFile = wd + "input.las"<br>
-                def attribute = "Intensity"<br>
-                def bins = "10"<br>
-                String[] args = [inputFile, attribute, bins]<br>
-                pluginHost.runPlugin("LidarHistogram", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // The tool accepts LAS files&#10;<br>
+                def inputFile = wd + "input.las"&#10;<br>
+                def attribute = "Intensity"&#10;<br>
+                def bins = "10"&#10;<br>
+                String[] args = [inputFile, attribute, bins]&#10;<br>
+                pluginHost.runPlugin("LidarHistogram", args, false)&#10;<br>
             </code>
         </p>
 

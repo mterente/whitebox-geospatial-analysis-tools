@@ -30,27 +30,27 @@ viable. The viewing height is in the same units as the elevations of the DEM.</p
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                demFile = wd + "DEM.dep"<br>
-                outputFile = wd + "output.dep"<br>
-                resolutionFactor = "2.0"<br>
-                parallelProcess = "true"<br>
-                viewingHeight = "10.0"<br>
-                args = [inputFile, outputFile, resolutionFactor, parallelProcess, viewingHeight]<br>
-                pluginHost.runPlugin("VisibilityIndex", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                demFile = wd + "DEM.dep"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                resolutionFactor = "2.0"&#10;<br>
+                parallelProcess = "true"&#10;<br>
+                viewingHeight = "10.0"&#10;<br>
+                args = [inputFile, outputFile, resolutionFactor, parallelProcess, viewingHeight]&#10;<br>
+                pluginHost.runPlugin("VisibilityIndex", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def demFile = wd + "DEM.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                def resolutionFactor = "2.0"<br>
-                def parallelProcess = "true"<br>
-                def viewingHeight = "10.0"<br>
-                String[] args = [inputFile, outputFile, resolutionFactor, parallelProcess, viewingHeight]<br>
-                pluginHost.runPlugin("VisibilityIndex", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def demFile = wd + "DEM.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def resolutionFactor = "2.0"&#10;<br>
+                def parallelProcess = "true"&#10;<br>
+                def viewingHeight = "10.0"&#10;<br>
+                String[] args = [inputFile, outputFile, resolutionFactor, parallelProcess, viewingHeight]&#10;<br>
+                pluginHost.runPlugin("VisibilityIndex", args, false)&#10;<br>
             </code>
         </p>
         

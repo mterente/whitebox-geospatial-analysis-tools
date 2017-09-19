@@ -136,7 +136,7 @@ public class BurnStreamsAtRoads implements ActionListener {
 
             ShapeFile roads = new ShapeFile(roadsFile)
 			shapeType = roads.getShapeType()
-            if (shapeType != ShapeType.POLYLINE) {
+            if (shapeType.getBaseType() != ShapeType.POLYLINE) {
             	pluginHost.showFeedback("The input roads shapefile should be of a POLYLINE ShapeType.")
             	return
             }

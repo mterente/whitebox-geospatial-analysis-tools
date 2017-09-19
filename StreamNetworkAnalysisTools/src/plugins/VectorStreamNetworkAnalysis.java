@@ -19,6 +19,7 @@ package plugins;
 import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.LinkedList;
 import whitebox.geospatialfiles.WhiteboxRaster;
@@ -263,7 +264,7 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
         String lakesFile = args[2];
         String outputFile = args[3];
         double snapDistance = Double.parseDouble(args[4]);
-        
+
         try {
             // read the input image
             WhiteboxRaster dem = new WhiteboxRaster(demFile, "r");
@@ -286,12 +287,12 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                     double longDegDist = (num / denum);
                     double latDegDist = 111132.954 - 559.822 * Math.cos(2.0 * midLat) + 1.175 * Math.cos(4.0 * midLat);
                     distMultiplier = (longDegDist + latDegDist) / 2.0;
-                    
+
                     snapDistance = snapDistance / distMultiplier;
 //                    System.out.println(snapDistance);
                 }
             }
-            
+
             snapDistance = snapDistance * snapDistance;
 
             ShapeFile input = new ShapeFile(streamsFile);
@@ -339,7 +340,7 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
              */
             // first enter the line end-nodes into a kd-tree
             // create the output file
-            DBFField[] fields = new DBFField[11];
+            DBFField[] fields = new DBFField[13];
 
             fields[0] = new DBFField();
             fields[0].setName("FID");
@@ -378,34 +379,46 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
             fields[5].setDecimalCount(3);
 
             fields[6] = new DBFField();
-            fields[6].setName("STRAHLER");
+            fields[6].setName("HORTON");
             fields[6].setDataType(DBFField.DBFDataType.NUMERIC);
             fields[6].setFieldLength(6);
             fields[6].setDecimalCount(0);
 
             fields[7] = new DBFField();
-            fields[7].setName("SHREVE");
+            fields[7].setName("STRAHLER");
             fields[7].setDataType(DBFField.DBFDataType.NUMERIC);
-            fields[7].setFieldLength(10);
-            fields[7].setDecimalCount(3);
+            fields[7].setFieldLength(6);
+            fields[7].setDecimalCount(0);
 
             fields[8] = new DBFField();
-            fields[8].setName("MAINSTEM");
+            fields[8].setName("SHREVE");
             fields[8].setDataType(DBFField.DBFDataType.NUMERIC);
-            fields[8].setFieldLength(1);
-            fields[8].setDecimalCount(0);
+            fields[8].setFieldLength(10);
+            fields[8].setDecimalCount(3);
 
             fields[9] = new DBFField();
-            fields[9].setName("TRIB_ID");
+            fields[9].setName("HACK");
             fields[9].setDataType(DBFField.DBFDataType.NUMERIC);
             fields[9].setFieldLength(6);
             fields[9].setDecimalCount(0);
-            
+
             fields[10] = new DBFField();
-            fields[10].setName("DISCONT");
+            fields[10].setName("MAINSTEM");
             fields[10].setDataType(DBFField.DBFDataType.NUMERIC);
-            fields[10].setFieldLength(4);
+            fields[10].setFieldLength(1);
             fields[10].setDecimalCount(0);
+
+            fields[11] = new DBFField();
+            fields[11].setName("TRIB_ID");
+            fields[11].setDataType(DBFField.DBFDataType.NUMERIC);
+            fields[11].setFieldLength(6);
+            fields[11].setDecimalCount(0);
+
+            fields[12] = new DBFField();
+            fields[12].setName("DISCONT");
+            fields[12].setDataType(DBFField.DBFDataType.NUMERIC);
+            fields[12].setFieldLength(4);
+            fields[12].setDecimalCount(0);
 
             ShapeFile output = new ShapeFile(outputFile, ShapeType.POLYLINE, fields);
 
@@ -416,7 +429,7 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
             fields[0].setDataType(DBFField.DBFDataType.NUMERIC);
             fields[0].setFieldLength(6);
             fields[0].setDecimalCount(0);
-            
+
             fields[1] = new DBFField();
             fields[1].setName("TYPE");
             fields[1].setDataType(DBFField.DBFDataType.STRING);
@@ -433,12 +446,13 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
 //            fields[2].setDataType(DBFField.DBFDataType.NUMERIC);
 //            fields[2].setFieldLength(6);
 //            fields[2].setDecimalCount(0);
-
             ShapeFile outputNodes = new ShapeFile(outputFile.replace(".shp", "_nodes.shp"), ShapeType.POINT, fields);
 
             updateProgress("Pre-processing", 0);
 
+            ///////////////////
             // Find edge cells
+            ///////////////////
             int rowsLessOne = rows - 1;
             int nc; // neighbouring cell
             int[] dX = new int[]{1, 1, 1, 0, -1, -1, -1, 0};
@@ -471,7 +485,9 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                 }
             }
 
+            /////////////////////////////
             // count the number of parts
+            /////////////////////////////
             int numLinks = 0;
             int totalVertices = 0;
             for (ShapeFileRecord record : input.records) {
@@ -483,11 +499,13 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
             links = new Link[numLinks];
             boolean[] crossesDemEdge = new boolean[numLinks];
             boolean[] isFeatureMapped = new boolean[numLinks];
-            //double[] linkLengths = new double[numLinks];
 
             pointsTree = new KdTree.SqrEuclid<>(2, null);
 
+            /////////////////////////////////////////////////////////////
             // Read the end-nodes into the KD-tree. 
+            // Find potential outlet nodes and push them into the queue.
+            /////////////////////////////////////////////////////////////
             boolean crossesValidData;
             boolean crossesNodata;
             boolean edgeValue1, edgeValue2;
@@ -591,27 +609,23 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
 //                                rowData[1] = "outlet";
 //                                outputNodes.addRecord(pointOfInterest, rowData);
 //                            }
-                            
-                            // rules for deciding with end point of the link is the actual outlet
+
+                            // rules for deciding which end point of the link is the actual outlet
                             EndPoint e3 = e1;
                             if (z1 == nodata && z2 != nodata) { // first rule: one of end points is nodata and not the other
-                                e3 = e1; 
+                                e3 = e1;
                             } else if (z2 == nodata && z1 != nodata) {
-                                e3 = e2; 
-                            } else {
-                                if (edgeValue1 && (!edgeValue2 && z2 != nodata)) { // second rule: one of the end points is and edge cell and not the other
-                                    e3 = e1; 
-                                } else if (edgeValue2 && (!edgeValue1 && z1 != nodata)) { 
-                                    e3 = e2;
-                                } else {
-                                    if (z1 < z2 && z2 != nodata) { // third rule: one of the points is lower
-                                        e3 = e1;
-                                    } else if (z2 < z1 && z1 != nodata) {
-                                        e3 = e2;
-                                    }
-                                }
+                                e3 = e2;
+                            } else if (edgeValue1 && (!edgeValue2 && z2 != nodata)) { // second rule: one of the end points is and edge cell and not the other
+                                e3 = e1;
+                            } else if (edgeValue2 && (!edgeValue1 && z1 != nodata)) {
+                                e3 = e2;
+                            } else if (z1 < z2 && z2 != nodata) { // third rule: one of the points is lower
+                                e3 = e1;
+                            } else if (z2 < z1 && z1 != nodata) {
+                                e3 = e2;
                             }
-                            
+
                             streamQueue.add(e3);
                             e3.outflowingNode = true;
 //                            whitebox.geospatialfiles.shapefile.Point pointOfInterest
@@ -620,7 +634,7 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
 //                            rowData[0] = new Double(2); //new Double(e2.nodeID);
 //                            rowData[1] = "outlet";
 //                            outputNodes.addRecord(pointOfInterest, rowData);
-                            
+
                         }
                         links[featureNum] = new Link(featureNum, currentEndPoint, currentEndPoint + 1, length);
                         currentEndPoint += 2;
@@ -708,6 +722,10 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                 }
             }
 
+            /////////////////////////////////////////////////////////////////////
+            // Priority-queue operation, progresses from downstream to upstream.
+            // The flow-directions among connected arcs is determined in this step.
+            /////////////////////////////////////////////////////////////////////
             Node node;
             Link link;
             int epNum;
@@ -733,7 +751,7 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                     links[e.linkID].outletLinkID = e.linkID;
 //                    links[e.linkID].isMainstem = true;
                     whitebox.geospatialfiles.shapefile.Point pointOfInterest
-                        = new whitebox.geospatialfiles.shapefile.Point(e.x, e.y);
+                            = new whitebox.geospatialfiles.shapefile.Point(e.x, e.y);
                     rowData = new Object[2];
                     rowData[0] = new Double(e.nodeID);
                     rowData[1] = "outlet";
@@ -754,7 +772,7 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                         e2.outflowingNode = true;
                     }
                 }
-                
+
                 // get the upstream end point and add its node's points to the queue
                 epNum = link.getOtherEndPoint(e.endPointID);
                 node = nodes.get(endPoints.get(epNum).nodeID);
@@ -781,7 +799,7 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                         rowData[1] = "diffluence";
                         outputNodes.addRecord(pointOfInterest, rowData);
 
-                    } else if (links[e2.linkID].outlet != outletID) {
+                    } else if (links[e2.linkID].outlet != outletID && !links[e2.linkID].isOutletLink) {
                         whitebox.geospatialfiles.shapefile.Point pointOfInterest
                                 = new whitebox.geospatialfiles.shapefile.Point(e2.x, e2.y);
                         rowData = new Object[2];
@@ -845,9 +863,13 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                 }
             }
 
+            //////////////////////////////////////////////////////////////
             // Calculate the total upstream channel length (TUCL), 
-            // Streve stream orders, and the tributary ID by traversing
+            // Shreve stream orders, and the tributary ID by traversing
             // the graph from headwater channels towards their outlets
+            //////////////////////////////////////////////////////////////
+            updateProgress("Calculating downstream indices...", 0);
+
             int[] numInflowingLinks = new int[numLinks];
             for (Link lk : links) {
                 if (lk != null) {
@@ -864,7 +886,6 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                 if (numInflowingLinks[i] == 0 && isFeatureMapped[i]) {
                     if (links[i].outlet != -1) {
                         stack.push(i);
-//                    links[i].strahlerOrder = 1;
                         links[i].shreveOrder = 1;
                         links[i].tribID = currentTribNum;
                         currentTribNum++;
@@ -925,7 +946,10 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                 }
             }
 
-            // descend a second time to calculate the strahler order.
+            ///////////////////////////////////////////////////////////
+            // Descend from channel heads to outlets a second time to 
+            // calculate the Strahler order, and to ID the main stem.
+            ///////////////////////////////////////////////////////////
             numInflowingLinks = new int[numLinks];
             for (Link lk : links) {
                 if (lk != null) {
@@ -962,9 +986,8 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                             int tribIDLargestOrder = -1;
                             int secondLargestOrder = 0;
                             int tribIDSecondLargestOrder = -1;
-                            
+
                             for (int usl : links[dsl].inflowingLinks) {
-                                //i += links[usl].shreveOrder;
                                 if (links[usl].strahlerOrder >= largestOrder) {
                                     secondLargestOrder = largestOrder;
                                     tribIDSecondLargestOrder = tribIDLargestOrder;
@@ -979,8 +1002,46 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                             }
                         } else if (links[dsl].inflowingLinks.size() == 1) {
                             links[dsl].strahlerOrder = links[currentLinkIndex].strahlerOrder;
-                            //links[dsl].shreveOrder = links[currentLinkIndex].shreveOrder;
                         }
+                    }
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////
+            // Traverse the graph upstream from outlets to their channel heads
+            // to calculate the Horton and Hack stream orders.
+            ////////////////////////////////////////////////////////////////////
+            updateProgress("Calculating upstream indices...", 0);
+            stack = new LinkedList<>();
+            boolean[] visited = new boolean[numLinks];
+            for (i = 0; i < numLinks; i++) {
+                if (links[i] != null && links[i].isOutletLink) {
+                    stack.push(i);
+                    links[i].hortonOrder = links[i].strahlerOrder;
+                    links[i].hackOrder = 1;
+                    visited[i] = true;
+                }
+            }
+
+            int currentHorton, currentHack, currentTrib;
+            while (!stack.isEmpty()) {
+                int currentLinkIndex = stack.pop();
+                currentHorton = links[currentLinkIndex].hortonOrder;
+                currentHack = links[currentLinkIndex].hackOrder;
+                currentTrib = links[currentLinkIndex].tribID;
+
+                // Visit each the inflowing links to this link.
+                for (int usl : links[currentLinkIndex].inflowingLinks) {
+                    if (!visited[usl]) {
+                        if (links[usl].tribID == currentTrib) {
+                            links[usl].hortonOrder = currentHorton;
+                            links[usl].hackOrder = currentHack;
+                        } else {
+                            links[usl].hortonOrder = links[usl].strahlerOrder;
+                            links[usl].hackOrder = currentHack + 1;
+                        }
+                        stack.push(usl);
+                        visited[usl] = true;
                     }
                 }
             }
@@ -1011,26 +1072,28 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                             pointsList.addPoint(points[i][0], points[i][1]);
                         }
                         wbGeometry = new whitebox.geospatialfiles.shapefile.PolyLine(outParts, pointsList.getPointsArray());
-                        rowData = new Object[11];
+                        rowData = new Object[13];
                         rowData[0] = new Double(k);
-                        link = links[featureNum]; //links.get(k);
+                        link = links[featureNum];
                         rowData[1] = new Double(link.outlet);
                         rowData[2] = link.tucl;
                         rowData[3] = link.maxUpstreamDist;
                         rowData[4] = new Double(link.numDownstreamNodes);
                         rowData[5] = link.distToOutlet;
-                        rowData[6] = new Double(link.strahlerOrder);
-                        rowData[7] = new Double(link.shreveOrder);
+                        rowData[6] = new Double(link.hortonOrder);
+                        rowData[7] = new Double(link.strahlerOrder);
+                        rowData[8] = new Double(link.shreveOrder);
+                        rowData[9] = new Double(link.hackOrder);
                         if (link.isMainstem) {
-                            rowData[8] = 1.0;
-                        } else {
-                            rowData[8] = 0.0;
-                        }
-                        rowData[9] = new Double(link.tribID);
-                        if (link.outlet != -1) {
-                            rowData[10] = 0.0;
-                        } else {
                             rowData[10] = 1.0;
+                        } else {
+                            rowData[10] = 0.0;
+                        }
+                        rowData[11] = new Double(link.tribID);
+                        if (link.outlet != -1) {
+                            rowData[12] = 0.0;
+                        } else {
+                            rowData[12] = 1.0;
                         }
                         output.addRecord(wbGeometry, rowData);
                         k++;
@@ -1048,13 +1111,13 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
                     }
                 }
             }
-            
+
             output.write();
             outputNodes.write();
             dem.close();
-            
+
             pluginHost.updateProgress("Displaying output vector:", 0);
-            
+
             String paletteDirectory = pluginHost.getResourcesDirectory() + "palettes" + File.separator;
             VectorLayerInfo vli = new VectorLayerInfo(outputFile, paletteDirectory, 255, -1);
             vli.setPaletteFile(paletteDirectory + "qual.pal");
@@ -1176,8 +1239,10 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
         double distToOutlet = 0;
         double tucl = 0;
         double maxUpstreamDist = 0;
+        int hortonOrder = 0;
         int strahlerOrder = 0;
         double shreveOrder = 0;
+        int hackOrder = 0;
         boolean isMainstem = false;
         int tribID = -1;
         List<Integer> outflowingLinks = new ArrayList<>();
@@ -1244,6 +1309,24 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
 //            }
 //        }
 //    }
+//    private static void doSomething(String[] args) {
+//        double[] times = new double[10];
+//        
+//        for (int i = 0; i < 10; i++) {
+//            VectorStreamNetworkAnalysis obj = new VectorStreamNetworkAnalysis();
+//            obj.setArgs(args);
+//            long tStart = System.currentTimeMillis();
+//            obj.run();
+//            long tEnd = System.currentTimeMillis();
+//            long tDelta = tEnd - tStart;
+//            times[i] = tDelta / 1000.0;
+//        }
+//        Arrays.sort(times);
+//        for (int i = 0; i < 10; i++) {
+//            System.out.println(times[i]);
+//        }
+//    }
+//    
     /**
      * This method is only used for debugging the tool.
      *
@@ -1252,22 +1335,30 @@ public class VectorStreamNetworkAnalysis implements WhiteboxPlugin {
     public static void main(String[] args) {
         VectorStreamNetworkAnalysis obj = new VectorStreamNetworkAnalysis();
         args = new String[5];
-//        // projected coordinate system data
-        args[0] = "/Users/johnlindsay/Documents/Data/NewBrunswick/streams_geog_coord.shp";
+        // projected coordinate system data
+        //args[0] = "/Users/johnlindsay/Documents/Data/NewBrunswick/streams_geog_coord.shp";
+        //args[1] = "/Users/johnlindsay/Documents/Data/NewBrunswick/alosDEM1_trim.dep";
+        //args[1] = "/Users/johnlindsay/Documents/Data/NewBrunswick/alosDEM1_trim_trim.dep";
+        //args[1] = "/Users/johnlindsay/Documents/Data/NewBrunswick/AW3D30_erased.dep";
+        //args[1] = "/Users/johnlindsay/Documents/Data/NewBrunswick/AW3D30.dep";
         //args[1] = "/Users/johnlindsay/Documents/Data/NewBrunswick/SRTM-3_trim.dep";
-        args[1] = "/Users/johnlindsay/Documents/Data/NewBrunswick/alosDEM1_trim.dep";
-        args[2] = "not specified";
-        args[3] = "/Users/johnlindsay/Documents/Data/NewBrunswick/tmp2.shp";
+        //args[1] = "/Users/johnlindsay/Documents/Data/NewBrunswick/GMTED2010_trim.dep";
+        //args[2] = "not specified";
+        //args[3] = "/Users/johnlindsay/Documents/Data/NewBrunswick/AW3D30_streams.shp";
 
-//        args[0] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/streams.shp";
-//        args[1] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/DEM_erased.dep";
-//        args[2] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/waterbodies.shp";
-//        args[3] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/tmp9.shp";
-
-        args[4] = "10.0"; //"0.000277"; //"0.0000001";
+        args[0] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/streams.shp";
+        args[1] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/ON/AW3D30.dep";
+        //args[1] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/ON/SRTM3_erased.dep";
+////        //args[1] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/DEM_erased.dep";
+        //args[1] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/ON/GMTED_DEM.dep";
+        args[2] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/waterbodies.shp";
+        //args[2] = "not specified";
+        args[3] = "/Users/johnlindsay/Documents/Research/VectorStreamNetworkAnalysis/data/ON/AW3D30_streams.shp";
+        args[4] = "10.0";
 
         obj.setArgs(args);
         obj.run();
+//        doSomething(args);
     }
 
 }

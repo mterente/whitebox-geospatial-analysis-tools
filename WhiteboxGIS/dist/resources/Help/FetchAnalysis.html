@@ -61,25 +61,25 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                demFile = wd + "DEM.dep"<br>
-                outputFile = wd + "output.dep"<br>
-                azimuth = "215.0"<br>
-                heightIncrement = "0.05"<br>
-                args = [inputFile, outputFile, azimuth, heightIncrement]<br>
-                pluginHost.runPlugin("FetchAnalysis", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                demFile = wd + "DEM.dep"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                azimuth = "215.0"&#10;<br>
+                heightIncrement = "0.05"&#10;<br>
+                args = [inputFile, outputFile, azimuth, heightIncrement]&#10;<br>
+                pluginHost.runPlugin("FetchAnalysis", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def demFile = wd + "input.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                def azimuth = "215.0"<br>
-                def heightIncrement = "0.05"<br>
-                String[] args = [demFile, outputFile, azimuth, heightIncrement]<br>
-                pluginHost.runPlugin("FetchAnalysis", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def demFile = wd + "input.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def azimuth = "215.0"&#10;<br>
+                def heightIncrement = "0.05"&#10;<br>
+                String[] args = [demFile, outputFile, azimuth, heightIncrement]&#10;<br>
+                pluginHost.runPlugin("FetchAnalysis", args, false)&#10;<br>
             </code>
         </p>
 

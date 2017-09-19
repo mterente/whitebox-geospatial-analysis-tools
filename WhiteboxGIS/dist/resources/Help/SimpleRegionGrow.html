@@ -29,31 +29,31 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                seedFile = wd + "seeds.shp"<br>
-                outputFile = wd + "output.dep"<br>
-                similarity = "100.0"<br>
-                neighbourhoodType = "vonNeumann"<br>
-                args = [inputFiles, seedFile, outputFile, similarity, neighbourhoodType]<br>
-                pluginHost.runPlugin("SimpleRegionGrow", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                seedFile = wd + "seeds.shp"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                similarity = "100.0"&#10;<br>
+                neighbourhoodType = "vonNeumann"&#10;<br>
+                args = [inputFiles, seedFile, outputFile, similarity, neighbourhoodType]&#10;<br>
+                pluginHost.runPlugin("SimpleRegionGrow", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                def seedFile = wd + "seeds.shp"<br>
-                def outputFile = wd + "output.dep"<br>
-                def similarity = "100.0"<br>
-                def neighbourhoodType = "moore"<br>
-                String[] args = [inputFiles, seedFile, outputFile, similarity, neighbourhoodType]<br>
-                pluginHost.runPlugin("SimpleRegionGrow", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                def seedFile = wd + "seeds.shp"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def similarity = "100.0"&#10;<br>
+                def neighbourhoodType = "moore"&#10;<br>
+                String[] args = [inputFiles, seedFile, outputFile, similarity, neighbourhoodType]&#10;<br>
+                pluginHost.runPlugin("SimpleRegionGrow", args, false)&#10;<br>
             </code>
         </p>
 

@@ -31,6 +31,7 @@ import whitebox.structures.BoundingBox;
 public class RasterLayerInfo implements MapLayer {
 
     private WhiteboxRasterInfo source = null;
+    private WhiteboxRasterInfo hillshadeSource = null;
     private String paletteDirectory = null;
     private double noDataValue = 0;
     private int overlayNumber = 0;
@@ -41,7 +42,7 @@ public class RasterLayerInfo implements MapLayer {
     private String[] defaultPalettes;
     private double[] data = null;
     private boolean visibleInLegend = true;
-    
+
     /* Constructors*/
     public RasterLayerInfo() {
 
@@ -63,23 +64,39 @@ public class RasterLayerInfo implements MapLayer {
             // see if the palette exists. if not, give it one that does.
             file = new File(this.paletteFile);
             if (!file.exists()) {
-                if (source.getDataScale() == WhiteboxRaster.DataScale.CONTINUOUS) {
-                    this.paletteFile = paletteDirectory + defaultPalettes[0];
-                } else if (source.getDataScale() == WhiteboxRaster.DataScale.CATEGORICAL
-                        || source.getDataScale() == WhiteboxRaster.DataScale.BOOLEAN) {
-                    this.paletteFile = paletteDirectory + defaultPalettes[1];
-                } else {
+                if (null == source.getDataScale()) {
                     this.paletteFile = paletteDirectory + defaultPalettes[2];
+                } else {
+                    switch (source.getDataScale()) {
+                        case CONTINUOUS:
+                            this.paletteFile = paletteDirectory + defaultPalettes[0];
+                            break;
+                        case CATEGORICAL:
+                        case BOOLEAN:
+                            this.paletteFile = paletteDirectory + defaultPalettes[1];
+                            break;
+                        default:
+                            this.paletteFile = paletteDirectory + defaultPalettes[2];
+                            break;
+                    }
                 }
             }
         } else {
-            if (source.getDataScale() == WhiteboxRaster.DataScale.CONTINUOUS) {
-                this.paletteFile = paletteDirectory + defaultPalettes[0];
-            } else if (source.getDataScale() == WhiteboxRaster.DataScale.CATEGORICAL
-                    || source.getDataScale() == WhiteboxRaster.DataScale.BOOLEAN) {
-                this.paletteFile = paletteDirectory + defaultPalettes[1];
-            } else {
+            if (null == source.getDataScale()) {
                 this.paletteFile = paletteDirectory + defaultPalettes[2];
+            } else {
+                switch (source.getDataScale()) {
+                    case CONTINUOUS:
+                        this.paletteFile = paletteDirectory + defaultPalettes[0];
+                        break;
+                    case CATEGORICAL:
+                    case BOOLEAN:
+                        this.paletteFile = paletteDirectory + defaultPalettes[1];
+                        break;
+                    default:
+                        this.paletteFile = paletteDirectory + defaultPalettes[2];
+                        break;
+                }
             }
         }
         this.imageWidth = source.getNumberColumns();
@@ -225,7 +242,23 @@ public class RasterLayerInfo implements MapLayer {
             source.writeHeaderFile();
         }
     }
-    
+
+    public String getHillshadeSource() {
+        if (this.hillshadeSource != null) {
+            return this.hillshadeSource.headerFile;
+        } else {
+            return "";
+        }
+    }
+
+    public void setHillshadeSource(String value) {
+        if (!value.isEmpty()) {
+            this.hillshadeSource = new WhiteboxRasterInfo(value);
+        } else {
+            this.hillshadeSource = null;
+        }
+    }
+
     private String paletteFile = "";
 
     public String getPaletteFile() {
@@ -426,8 +459,9 @@ public class RasterLayerInfo implements MapLayer {
             dirty = true;
         }
     }
-    
+
     private double cartographicGeneralizationLevel = 10;
+
     public double getCartographicGeneralizationLevel() {
         return cartographicGeneralizationLevel;
     }
@@ -435,7 +469,9 @@ public class RasterLayerInfo implements MapLayer {
 
     public void setCartographicGeneralizationLevel(double generalizeLevel) {
         cartographicGeneralizationLevel = generalizeLevel;
-        if (cartographicGeneralizationLevel < 1) { cartographicGeneralizationLevel = 1; }
+        if (cartographicGeneralizationLevel < 1) {
+            cartographicGeneralizationLevel = 1;
+        }
         generalizationLevelDirty = true;
     }
 
@@ -477,7 +513,7 @@ public class RasterLayerInfo implements MapLayer {
     public WhiteboxRasterInfo getWhiteboxRasterInfo() {
         return source;
     }
-    
+
     public void resyncWithRasterFile() {
         source = new WhiteboxRasterInfo(headerFile);
         this.imageWidth = source.getNumberColumns();
@@ -502,7 +538,7 @@ public class RasterLayerInfo implements MapLayer {
         }
 
         fullExtent = currentExtent.clone();
-        
+
         update();
     }
 
@@ -539,8 +575,7 @@ public class RasterLayerInfo implements MapLayer {
 
             int numCells = imageHeight * imageWidth;
 
-            WhiteboxRasterInfo sourceData = new WhiteboxRasterInfo(source.getHeaderFile());
-
+            // WhiteboxRasterInfo sourceData = new WhiteboxRasterInfo(source.getHeaderFile());
             int backgroundColour = 0; // transparent black
             pixelData = new int[numCells];
             data = new double[numCells];
@@ -551,98 +586,241 @@ public class RasterLayerInfo implements MapLayer {
             //long startTime = System.currentTimeMillis();
             double[] rawData;
             int i = 0;
-            if (dataScale == WhiteboxRaster.DataScale.CONTINUOUS) {
-                for (row = startRow; row <= endRow; row += resolutionFactor) {
-                    rawData = sourceData.getRowValues(row);
-                    for (col = startCol; col <= endCol; col += resolutionFactor) {
-                        value = rawData[col]; //sourceData.getValue(row, col);
-                        if (value != noDataValue) {
-                            if (gamma == 1) {
-                                entryNum = (int)((value - minVal) / range * numPaletteEntriesLessOne);
-                            } else {
-                                entryNum = (int)(Math.pow(((value - minVal) / range), gamma) * numPaletteEntriesLessOne);
+            if (null != dataScale) {
+                switch (dataScale) {
+                    case CONTINUOUS:
+                        if (hillshadeSource == null) {
+                            for (row = startRow; row <= endRow; row += resolutionFactor) {
+                                rawData = source.getRowValues(row); //sourceData.getRowValues(row);
+                                for (col = startCol; col <= endCol; col += resolutionFactor) {
+                                    value = rawData[col]; //sourceData.getValue(row, col);
+                                    if (value != noDataValue) {
+                                        if (gamma == 1) {
+                                            entryNum = (int) ((value - minVal) / range * numPaletteEntriesLessOne);
+                                        } else {
+                                            entryNum = (int) (Math.pow(((value - minVal) / range), gamma) * numPaletteEntriesLessOne);
+                                        }
+                                        if (entryNum < 0) {
+                                            entryNum = 0;
+                                        }
+                                        if (entryNum > numPaletteEntriesLessOne) {
+                                            entryNum = numPaletteEntriesLessOne;
+                                        }
+                                        pixelData[i] = paletteData[entryNum];
+                                    } else {
+                                        pixelData[i] = backgroundColour;
+                                    }
+                                    data[i] = value;
+                                    i++;
+                                }
                             }
-                            if (entryNum < 0) {
-                                entryNum = 0;
-                            }
-                            if (entryNum > numPaletteEntriesLessOne) {
-                                entryNum = numPaletteEntriesLessOne;
-                            }
-                            pixelData[i] = paletteData[entryNum];
-                        } else {
-                            pixelData[i] = backgroundColour;
-                        }
-                        data[i] = value;
-                        i++;
-                    }
-                }
+                        } else { // render with hillshade
+                            double[] hsData;
+                            double hsMin = hillshadeSource.getDisplayMinimum();
+                            double hsRange = hillshadeSource.getDisplayMaximum() - hsMin;
+                            double hsNodata = hillshadeSource.getNoDataValue();
+                            double hsValue;
+                            int r, g, b, a, val;
+                            for (row = startRow; row <= endRow; row += resolutionFactor) {
+                                rawData = source.getRowValues(row); //sourceData.getRowValues(row);
+                                hsData = hillshadeSource.getRowValues(row);
+                                for (col = startCol; col <= endCol; col += resolutionFactor) {
+                                    value = rawData[col]; //sourceData.getValue(row, col);
+                                    hsValue = (hsData[col] - hsMin) / hsRange + 0.33;
+                                    if (hsValue < 0d) {
+                                        hsValue = 0d;
+                                    }
+                                    if (hsValue > 1d) {
+                                        hsValue = 1d;
+                                    }
+                                    if (value != noDataValue && hsData[col] != hsNodata) {
+                                        if (gamma == 1) {
+                                            entryNum = (int) ((value - minVal) / range * numPaletteEntriesLessOne);
+                                        } else {
+                                            entryNum = (int) (Math.pow(((value - minVal) / range), gamma) * numPaletteEntriesLessOne);
+                                        }
+                                        if (entryNum < 0) {
+                                            entryNum = 0;
+                                        }
+                                        if (entryNum > numPaletteEntriesLessOne) {
+                                            entryNum = numPaletteEntriesLessOne;
+                                        }
 
-            } else if (dataScale == WhiteboxRaster.DataScale.CATEGORICAL) {
-                for (row = startRow; row <= endRow; row += resolutionFactor) {
-                    rawData = sourceData.getRowValues(row);
-                    for (col = startCol; col <= endCol; col += resolutionFactor) {
-                        value = rawData[col]; //sourceData.getValue(row, col);
-                        if (value != noDataValue) {
-                            entryNum = (int) (value - minVal) % numPaletteEntries;
-                            if (entryNum < 0) {
-                                entryNum = 0;
+                                        val = paletteData[entryNum];
+                                        a = ((val >> 24) & 0xFF);
+                                        r = (int) (((val >> 16) & 0xFF) * hsValue);
+                                        g = (int) (((val >> 8) & 0xFF) * hsValue);
+                                        b = (int) ((val & 0xFF) * hsValue);
+                                        pixelData[i] = (a << 24) | (r << 16) | (g << 8) | b;
+                                    } else {
+                                        pixelData[i] = backgroundColour;
+                                    }
+                                    data[i] = value;
+                                    i++;
+                                }
                             }
-                            if (entryNum > numPaletteEntriesLessOne) {
-                                entryNum = numPaletteEntriesLessOne;
+                        }
+                        break;
+                    case CATEGORICAL:
+                        if (hillshadeSource == null) {
+                            for (row = startRow; row <= endRow; row += resolutionFactor) {
+                                rawData = source.getRowValues(row); //sourceData.getRowValues(row);
+                                for (col = startCol; col <= endCol; col += resolutionFactor) {
+                                    value = rawData[col]; //sourceData.getValue(row, col);
+                                    if (value != noDataValue) {
+                                        entryNum = (int) (value - minVal) % numPaletteEntries;
+                                        if (entryNum < 0) {
+                                            entryNum = 0;
+                                        }
+                                        if (entryNum > numPaletteEntriesLessOne) {
+                                            entryNum = numPaletteEntriesLessOne;
+                                        }
+                                        pixelData[i] = paletteData[entryNum];
+                                    } else {
+                                        pixelData[i] = backgroundColour;
+                                    }
+                                    data[i] = value;
+                                    i++;
+                                }
                             }
-                            pixelData[i] = paletteData[entryNum];
-                        } else {
-                            pixelData[i] = backgroundColour;
-                        }
-                        data[i] = value;
-                        i++;
-                    }
-                }
-            } else if (dataScale == WhiteboxRaster.DataScale.BOOLEAN) {
-                for (row = startRow; row <= endRow; row += resolutionFactor) {
-                    rawData = sourceData.getRowValues(row);
-                    for (col = startCol; col <= endCol; col += resolutionFactor) {
-                        value = rawData[col]; //sourceData.getValue(row, col);
-                        if (value != noDataValue) {
-                            if (value > 0) {
-                                entryNum = numPaletteEntriesLessOne;
-                            } else {
-                                entryNum = 0;
+                        } else { // render with hillshade
+                            double[] hsData;
+                            double hsMin = hillshadeSource.getDisplayMinimum();
+                            double hsRange = hillshadeSource.getDisplayMaximum() - hsMin;
+                            double hsValue;
+                            double hsNodata = hillshadeSource.getNoDataValue();
+                            int r, g, b, a, val;
+                            for (row = startRow; row <= endRow; row += resolutionFactor) {
+                                rawData = source.getRowValues(row); //sourceData.getRowValues(row);
+                                hsData = hillshadeSource.getRowValues(row);
+                                for (col = startCol; col <= endCol; col += resolutionFactor) {
+                                    value = rawData[col]; //sourceData.getValue(row, col);
+                                    hsValue = (hsData[col] - hsMin) / hsRange + 0.33;
+                                    if (hsValue < 0.25) {
+                                        hsValue = 0.25;
+                                    }
+                                    if (hsValue > 1.0) {
+                                        hsValue = 1.0;
+                                    }
+                                    if (value != noDataValue && hsData[col] != hsNodata) {
+                                        entryNum = (int) (value - minVal) % numPaletteEntries;
+                                        if (entryNum < 0) {
+                                            entryNum = 0;
+                                        }
+                                        if (entryNum > numPaletteEntriesLessOne) {
+                                            entryNum = numPaletteEntriesLessOne;
+                                        }
+
+                                        val = paletteData[entryNum];
+                                        a = ((val >> 24) & 0xFF);
+                                        r = (int) (((val >> 16) & 0xFF) * hsValue);
+                                        g = (int) (((val >> 8) & 0xFF) * hsValue);
+                                        b = (int) ((val & 0xFF) * hsValue);
+                                        pixelData[i] = (a << 24) | (r << 16) | (g << 8) | b;
+                                    } else {
+                                        pixelData[i] = backgroundColour;
+                                    }
+                                    data[i] = value;
+                                    i++;
+                                }
                             }
-                            pixelData[i] = paletteData[entryNum];
-                        } else {
-                            pixelData[i] = backgroundColour;
                         }
-                        data[i] = value;
-                        i++;
-                    }
-                }
-            } else if (dataScale == WhiteboxRaster.DataScale.RGB) {
-                int r, g, b, a, val;
-                for (row = startRow; row <= endRow; row += resolutionFactor) {
-                    rawData = sourceData.getRowValues(row);
-                    for (col = startCol; col <= endCol; col += resolutionFactor) {
-                        value = rawData[col]; //sourceData.getValue(row, col);
-                        if (value != noDataValue) {
-                            val = (int) value;
-                            a = (val >> 24) & 0xFF;
-                            a = (int) (a * alpha / 255d);
-                            b = (val >> 16) & 0xFF;
-                            g = (val >> 8) & 0xFF;
-                            r = val & 0xFF;
-                            pixelData[i] = (a << 24) | (r << 16) | (g << 8) | b;
-                        } else {
-                            pixelData[i] = backgroundColour;
+                        break;
+                    case BOOLEAN:
+                        if (hillshadeSource == null) {
+                            for (row = startRow; row <= endRow; row += resolutionFactor) {
+                                rawData = source.getRowValues(row); //sourceData.getRowValues(row);
+                                for (col = startCol; col <= endCol; col += resolutionFactor) {
+                                    value = rawData[col]; //sourceData.getValue(row, col);
+                                    if (value != noDataValue) {
+                                        if (value > 0) {
+                                            entryNum = numPaletteEntriesLessOne;
+                                        } else {
+                                            entryNum = 0;
+                                        }
+                                        pixelData[i] = paletteData[entryNum];
+                                    } else {
+                                        pixelData[i] = backgroundColour;
+                                    }
+                                    data[i] = value;
+                                    i++;
+                                }
+                            }
+                        } else { // render with hillshade
+                            double[] hsData;
+                            double hsMin = hillshadeSource.getDisplayMinimum();
+                            double hsRange = hillshadeSource.getDisplayMaximum() - hsMin;
+                            double hsNodata = hillshadeSource.getNoDataValue();
+                            double hsValue;
+                            int r, g, b, a, val;
+                            for (row = startRow; row <= endRow; row += resolutionFactor) {
+                                rawData = source.getRowValues(row); //sourceData.getRowValues(row);
+                                hsData = hillshadeSource.getRowValues(row);
+                                for (col = startCol; col <= endCol; col += resolutionFactor) {
+                                    value = rawData[col]; //sourceData.getValue(row, col);
+                                    hsValue = (hsData[col] - hsMin) / hsRange + 0.33;
+                                    if (hsValue < 0.25) {
+                                        hsValue = 0.25;
+                                    }
+                                    if (hsValue > 1.0) {
+                                        hsValue = 1.0;
+                                    }
+                                    if (value != noDataValue && hsData[col] != hsNodata) {
+                                        if (value > 0) {
+                                            entryNum = numPaletteEntriesLessOne;
+                                        } else {
+                                            entryNum = 0;
+                                        }
+
+                                        val = paletteData[entryNum];
+                                        a = ((val >> 24) & 0xFF);
+                                        r = (int) (((val >> 16) & 0xFF) * hsValue);
+                                        g = (int) (((val >> 8) & 0xFF) * hsValue);
+                                        b = (int) ((val & 0xFF) * hsValue);
+                                        pixelData[i] = (a << 24) | (r << 16) | (g << 8) | b;
+                                    } else {
+                                        pixelData[i] = backgroundColour;
+                                    }
+                                    data[i] = value;
+                                    i++;
+                                }
+                            }
                         }
-                        data[i] = value;
-                        i++;
-                    }
+                        break;
+                    case RGB:
+                        int r,
+                         g,
+                         b,
+                         a,
+                         val;
+                        for (row = startRow; row <= endRow; row += resolutionFactor) {
+                            rawData = source.getRowValues(row); //sourceData.getRowValues(row);
+                            for (col = startCol; col <= endCol; col += resolutionFactor) {
+                                value = rawData[col]; //sourceData.getValue(row, col);
+                                if (value != noDataValue) {
+                                    val = (int) value;
+                                    a = (val >> 24) & 0xFF;
+                                    a = (int) (a * alpha / 255d);
+                                    b = (val >> 16) & 0xFF;
+                                    g = (val >> 8) & 0xFF;
+                                    r = val & 0xFF;
+                                    pixelData[i] = (a << 24) | (r << 16) | (g << 8) | b;
+                                
+                                } else {
+                                    pixelData[i] = backgroundColour;
+                                }
+                                data[i] = value;
+                                i++;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
 
-            sourceData.close();
-            sourceData = null;
-
+//            sourceData.close();
+//            sourceData = null;
             dirty = false;
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -657,13 +835,21 @@ public class RasterLayerInfo implements MapLayer {
             // see if the file exists, if not, set it to the default palette.
             File file = new File(paletteFile);
             if (!file.exists()) {
-                if (source.getDataScale() == WhiteboxRaster.DataScale.CONTINUOUS) {
-                    this.paletteFile = paletteDirectory + defaultPalettes[0];
-                } else if (source.getDataScale() == WhiteboxRaster.DataScale.CATEGORICAL
-                        || source.getDataScale() == WhiteboxRaster.DataScale.BOOLEAN) {
-                    this.paletteFile = paletteDirectory + defaultPalettes[1];
-                } else {
+                if (null == source.getDataScale()) {
                     this.paletteFile = paletteDirectory + defaultPalettes[3];
+                } else {
+                    switch (source.getDataScale()) {
+                        case CONTINUOUS:
+                            this.paletteFile = paletteDirectory + defaultPalettes[0];
+                            break;
+                        case CATEGORICAL:
+                        case BOOLEAN:
+                            this.paletteFile = paletteDirectory + defaultPalettes[1];
+                            break;
+                        default:
+                            this.paletteFile = paletteDirectory + defaultPalettes[3];
+                            break;
+                    }
                 }
             }
 

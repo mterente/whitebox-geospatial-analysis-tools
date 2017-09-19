@@ -221,6 +221,7 @@ public class ConditionalEvaluation implements ActionListener {
 
 			ScriptEngineManager mgr = new ScriptEngineManager();
    			ScriptEngine engine = mgr.getEngineByName("groovy");
+   			pluginHost.showFeedback(engine.NAME);
    			//ScriptEngine engine = mgr.getEngineByName("python");
    			//ScriptEngine engine = mgr.getEngineByName("javascript");
    			String expression = conStatement.replace("\"Value\"", "value").replace("\'Value\'", "value").replace("\"value\"", "value").replace("\'value\'", "value").replace("VALUE", "value").replace("NoData", "nodata").replace("NODATA", "nodata").replace("Null", "nodata").replace("NULL", "nodata").replace("null", "nodata").replace(";", "");

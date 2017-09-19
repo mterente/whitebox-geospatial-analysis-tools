@@ -210,7 +210,7 @@ public class DifferenceFromMeanElevation implements ActionListener {
 			double a, b, c, d, outValue
 			int numNoDataVals
 			for (int row = 0; row < rows; row++) {
-				y1 = row - neighbourhoodSize
+				y1 = row - neighbourhoodSize - 1
 				if (y1 < 0) { y1 = 0 }
 				if (y1 >= rows) { y1 = rows - 1 }
 
@@ -222,7 +222,7 @@ public class DifferenceFromMeanElevation implements ActionListener {
   					z = image.getValue(row, col)
 
   					if (z != nodata) {
-	  					x1 = col - neighbourhoodSize
+	  					x1 = col - neighbourhoodSize - 1
 						if (x1 < 0) { x1 = 0 }
 						if (x1 >= cols) { x1 = cols - 1 }
 	

@@ -28,29 +28,29 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                wantTo = "isolate features from"<br>
-                thisFile1 = wd + "input1.dep"<br>
-                that = "intersect"<br>
-                thisFile2 = wd + "input2.dep"<br>
-                output = wd + "output.dep"<br>
-                dist = "not specified"<br>
-                args = [wantTo, thisFile1, that, thisFile2, output, dist]<br>
-                pluginHost.runPlugin("IsolateRasterFeaturesByLocation", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                wantTo = "isolate features from"&#10;<br>
+                thisFile1 = wd + "input1.dep"&#10;<br>
+                that = "intersect"&#10;<br>
+                thisFile2 = wd + "input2.dep"&#10;<br>
+                output = wd + "output.dep"&#10;<br>
+                dist = "not specified"&#10;<br>
+                args = [wantTo, thisFile1, that, thisFile2, output, dist]&#10;<br>
+                pluginHost.runPlugin("IsolateRasterFeaturesByLocation", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def wantTo = "isolate features from"<br>
-                def thisFile1 = wd + "input1.dep"<br>
-                def that = "are within a distance of"<br>
-                def thisFile2 = wd + "input2.dep"<br>
-                def output = wd + "output.dep"<br>
-                def dist = "1000.0"<br>
-                String[] args = [wantTo, thisFile1, that, thisFile2, output, dist]<br>
-                pluginHost.runPlugin("IsolateRasterFeaturesByLocation", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def wantTo = "isolate features from"&#10;<br>
+                def thisFile1 = wd + "input1.dep"&#10;<br>
+                def that = "are within a distance of"&#10;<br>
+                def thisFile2 = wd + "input2.dep"&#10;<br>
+                def output = wd + "output.dep"&#10;<br>
+                def dist = "1000.0"&#10;<br>
+                String[] args = [wantTo, thisFile1, that, thisFile2, output, dist]&#10;<br>
+                pluginHost.runPlugin("IsolateRasterFeaturesByLocation", args, false)&#10;<br>
             </code>
         </p>
 

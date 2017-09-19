@@ -22,15 +22,15 @@
             text file for a 9 x 9 rounded filter:</p>
 
         <div><p><code>
-                    X, X, 1, 1, 1, 1, 1, X, X<br>
-                    X, 1, 2, 3, 3, 3, 2, 1, X<br>
-                    1, 2, 3, 6, 7, 6, 3, 2, 1<br>
-                    1, 3, 6, 9, 11, 9, 6, 3, 1<br>
-                    1, 3, 7, 11, 12, 11, 7, 3, 1<br>
-                    1, 3, 6, 9, 11, 9, 6, 3, 1<br>
-                    1, 2, 3, 6, 7, 6, 3, 2, 1<br>
-                    X, 1, 2, 3, 3, 3, 2, 1, X<br>
-                    X, X, 1, 1, 1, 1, 1, X, X<br>
+                    X, X, 1, 1, 1, 1, 1, X, X&#10;<br>
+                    X, 1, 2, 3, 3, 3, 2, 1, X&#10;<br>
+                    1, 2, 3, 6, 7, 6, 3, 2, 1&#10;<br>
+                    1, 3, 6, 9, 11, 9, 6, 3, 1&#10;<br>
+                    1, 3, 7, 11, 12, 11, 7, 3, 1&#10;<br>
+                    1, 3, 6, 9, 11, 9, 6, 3, 1&#10;<br>
+                    1, 2, 3, 6, 7, 6, 3, 2, 1&#10;<br>
+                    X, 1, 2, 3, 3, 3, 2, 1, X&#10;<br>
+                    X, X, 1, 1, 1, 1, 1, X, X&#10;<br>
                 </code></p></div>
 
         <p><b><i>NoData</i></b> values in the input image are ignored during the convolution operation. This can 
@@ -56,16 +56,16 @@
 
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                input_file = wd + "input.dep"<br>
-                output_file = wd + "output.dep"<br>
-                kernel_file = wd + "filter_kernel.txt"<br>
-                kernel_origin = "kernel center" <br>
-                reflect_edges = "true"<br>
-                normalize = "true"<br>
-                parallel_proc = "true"<br>
-                args = [input_file, output_file, kernel_file, kernel_origin, reflect_edges, normalize, parallel_proc]<br>
-                pluginHost.runPlugin("FilterUserDefinedWeights", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                input_file = wd + "input.dep"&#10;<br>
+                output_file = wd + "output.dep"&#10;<br>
+                kernel_file = wd + "filter_kernel.txt"&#10;<br>
+                kernel_origin = "kernel center" &#10;<br>
+                reflect_edges = "true"&#10;<br>
+                normalize = "true"&#10;<br>
+                parallel_proc = "true"&#10;<br>
+                args = [input_file, output_file, kernel_file, kernel_origin, reflect_edges, normalize, parallel_proc]&#10;<br>
+                pluginHost.runPlugin("FilterUserDefinedWeights", args, False)&#10;<br>
 
             </code>
         </p>
@@ -74,16 +74,16 @@
 
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "input.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                def kernelFile = wd + "filter_kernel.txt"<br>
-                def kernelOrigin = "kernel center"<br>
-                def reflectEdges = "true"<br>
-                def normalize = "true"<br>
-                def parallelProc = "true"<br>
-                String[] args = [inputFile, outputFile, kernelFile, kernelOrigin, reflectEdges, normalize, parallelProc]<br>
-                pluginHost.runPlugin("FilterUserDefinedWeights", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "input.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def kernelFile = wd + "filter_kernel.txt"&#10;<br>
+                def kernelOrigin = "kernel center"&#10;<br>
+                def reflectEdges = "true"&#10;<br>
+                def normalize = "true"&#10;<br>
+                def parallelProc = "true"&#10;<br>
+                String[] args = [inputFile, outputFile, kernelFile, kernelOrigin, reflectEdges, normalize, parallelProc]&#10;<br>
+                pluginHost.runPlugin("FilterUserDefinedWeights", args, false)&#10;<br>
 
             </code>
         </p>

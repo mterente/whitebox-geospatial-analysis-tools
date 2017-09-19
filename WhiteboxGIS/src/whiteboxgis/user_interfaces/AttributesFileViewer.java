@@ -232,7 +232,8 @@ public class AttributesFileViewer extends JDialog implements ActionListener, Pro
                 this.getRootPane().putClientProperty("apple.awt.brushMetalLook", Boolean.TRUE);
             }
 
-            graphicsDirectory = host.getApplicationDirectory() + File.separator + "resources" + File.separator + "Images" + File.separator;;
+            //graphicsDirectory = host.getApplicationDirectory() + File.separator + "resources" + File.separator + "Images" + File.separator;;
+            graphicsDirectory = host.getResourcesDirectory() + File.separator + "Images" + File.separator;;
 
             File file = new File(dbfFileName);
             String shortFileName = file.getName();

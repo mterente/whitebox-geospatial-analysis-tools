@@ -30,27 +30,27 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                inputFiles = wd + "input1.csv" + ";" + wd + "input2.csv" + ";" + wd + "input3.csv"<br>
-                args = [inputFiles]<br>
-                pluginHost.runPlugin("ImportCSV", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputFiles = wd + "input1.csv" + ";" + wd + "input2.csv" + ";" + wd + "input3.csv"&#10;<br>
+                args = [inputFiles]&#10;<br>
+                pluginHost.runPlugin("ImportCSV", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def inputFiles = wd + "input1.csv" + ";" + wd + "input2.csv" + ";" + wd + "input3.csv"<br>
-                def firstColumnDef = "x"<br>
-                def secondColumnDef = "y"<br>
-                def thirdColumnDef = "numerical"<br>
-                def fourthColumnDef = "string"<br>
-                String[] args = [inputFiles, firstColumnDef, secondColumnDef, thirdColumnDef, fourthColumnDef]<br>
-                pluginHost.runPlugin("ImportCSV", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputFiles = wd + "input1.csv" + ";" + wd + "input2.csv" + ";" + wd + "input3.csv"&#10;<br>
+                def firstColumnDef = "x"&#10;<br>
+                def secondColumnDef = "y"&#10;<br>
+                def thirdColumnDef = "numerical"&#10;<br>
+                def fourthColumnDef = "string"&#10;<br>
+                String[] args = [inputFiles, firstColumnDef, secondColumnDef, thirdColumnDef, fourthColumnDef]&#10;<br>
+                pluginHost.runPlugin("ImportCSV", args, false)&#10;<br>
             </code>
         </p>
 

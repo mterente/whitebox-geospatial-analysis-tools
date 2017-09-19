@@ -24,29 +24,29 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                inputFiles = wd + "input1.txt" + ";" + wd + "input2.txt" + ";" + wd + "input3.txt"<br>
-                fistLineHeader = "false"<br>
-                output = wd + "output.dep"<br>
-                gridRes = "10.0"<br>
-                args = [inputFiles, fistLineHeader, output, gridRes]<br>
-                pluginHost.runPlugin("PointDensity", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputFiles = wd + "input1.txt" + ";" + wd + "input2.txt" + ";" + wd + "input3.txt"&#10;<br>
+                fistLineHeader = "false"&#10;<br>
+                output = wd + "output.dep"&#10;<br>
+                gridRes = "10.0"&#10;<br>
+                args = [inputFiles, fistLineHeader, output, gridRes]&#10;<br>
+                pluginHost.runPlugin("PointDensity", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def inputFiles = wd + "input1.txt" + ";" + wd + "input2.txt" + ";" + wd + "input3.txt"<br>
-                def fistLineHeader = "false"<br>
-                def output = wd + "output.dep"<br>
-                def gridRes = "10.0"<br>
-                String[] args = [inputFiles, fistLineHeader, output, gridRes]<br>
-                pluginHost.runPlugin("PointDensity", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputFiles = wd + "input1.txt" + ";" + wd + "input2.txt" + ";" + wd + "input3.txt"&#10;<br>
+                def fistLineHeader = "false"&#10;<br>
+                def output = wd + "output.dep"&#10;<br>
+                def gridRes = "10.0"&#10;<br>
+                String[] args = [inputFiles, fistLineHeader, output, gridRes]&#10;<br>
+                pluginHost.runPlugin("PointDensity", args, false)&#10;<br>
             </code>
         </p>
 

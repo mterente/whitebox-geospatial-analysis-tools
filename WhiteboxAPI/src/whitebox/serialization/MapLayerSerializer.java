@@ -52,6 +52,8 @@ public class MapLayerSerializer implements JsonSerializer<MapLayer> {
             jo.addProperty("paletteFile", rli.getPaletteFile());
             jo.addProperty("alpha", rli.getAlpha());
             jo.addProperty("isPaletteReversed", rli.isPaletteReversed());
+            jo.addProperty("cartographicGeneralization", rli.getCartographicGeneralizationLevel());
+            jo.addProperty("hillshadeSource", rli.getHillshadeSource());
         } else if (t.getLayerType() == MapLayer.MapLayerType.VECTOR) {
             VectorLayerInfo vli = (VectorLayerInfo)t;
             jo.addProperty("fileName", vli.getFileName());
@@ -74,6 +76,7 @@ public class MapLayerSerializer implements JsonSerializer<MapLayer> {
             jo.add("fillColour", gson.toJsonTree(vli.getFillColour()));
             jo.add("lineColour", gson.toJsonTree(vli.getLineColour()));
             jo.addProperty("markerStyle", vli.getMarkerStyle().toString());
+            jo.addProperty("cartographicGeneralization", vli.getCartographicGeneralizationLevel());
         }
 
         return jo;

@@ -87,7 +87,7 @@ public class RetrieveSRTMData implements ActionListener {
 			}
             sd.addDialogComboBox("Starting latitude", "Starting Latitude:", lats, 18)
             sd.addDialogComboBox("Ending latitude", "Ending Latitude:", lats, 17)
-
+			
             String[] longs = new String[361]
             for (int a in 0..360) {
 				int k = -1 * (a - 180)
@@ -97,6 +97,7 @@ public class RetrieveSRTMData implements ActionListener {
             sd.addDialogComboBox("Ending longitude", "Ending Longitude:", longs, 260)
             
             sd.addDialogCheckBox("Fill missing data holes?", "Fill missing data holes?", true)
+			sd.addDialogCheckBox("Replace ocean values with nodata?", "Replace ocean values with nodata", true)
 			DialogCheckBox cb = sd.addDialogCheckBox("Mosaic DEM tiles?", "Mosaic DEM tiles?", true)
 			DialogFile df = sd.addDialogFile("Output raster file", "Output Raster File:", "save", "Raster Files (*.dep), DEP", true, false)
 
@@ -143,16 +144,20 @@ public class RetrieveSRTMData implements ActionListener {
 			
 			boolean fillDataHoles = true
 			boolean mosaicImages = true
+			boolean fixElevationsBool = true
 
 			if (args.length >= 6) {
 				fillDataHoles = Boolean.parseBoolean(args[5])
 			}
 			if (args.length >= 7) {
-				mosaicImages = Boolean.parseBoolean(args[6])
+				fixElevationsBool = Boolean.parseBoolean(args[6])
+			}
+			if (args.length >= 8) {
+				mosaicImages = Boolean.parseBoolean(args[7])
 			}
 			String outputFile = wd + "SRTM mosaic.dep"
-			if (args.length >= 8) {
-				outputFile = args[7]
+			if (args.length >= 9) {
+				outputFile = args[8]
 			}
 
 			if (startingLat < endingLat) {
@@ -349,7 +354,9 @@ public class RetrieveSRTMData implements ActionListener {
 
 			if (!fillDataHoles && !mosaicImages) {
 				for (String ifile : importedFiles) {
-					fixElevations(ifile)
+					if (fixElevationsBool) {
+					  fixElevations(ifile);
+					}
 					pluginHost.returnData(ifile) 
 					pluginHost.zoomToFullExtent()
 				}
@@ -365,7 +372,9 @@ public class RetrieveSRTMData implements ActionListener {
 					(new File(f)).delete()
 					(new File(f.replace(".dep", ".tas"))).delete()
 					if (!mosaicImages || numTiles == 1) {
-						fixElevations(fillFile)
+						if (fixElevationsBool) {
+							fixElevations(fillFile)
+						}
 						pluginHost.returnData(fillFile)
 						pluginHost.zoomToFullExtent()
 					}
@@ -398,7 +407,9 @@ public class RetrieveSRTMData implements ActionListener {
 					(new File(filledFiles.get(k))).delete()
 					(new File(filledFiles.get(k).replace(".dep", ".tas"))).delete()
 				}
-				fixElevations(outputFile)
+				if (fixElevationsBool) {
+					fixElevations(outputFile)
+				}
 				pluginHost.returnData(outputFile)
 				//pluginHost.zoomToFullExtent()
 			}

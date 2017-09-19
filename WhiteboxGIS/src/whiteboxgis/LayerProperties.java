@@ -41,6 +41,7 @@ import whitebox.interfaces.WhiteboxPluginHost;
 import whitebox.geospatialfiles.VectorLayerInfo;
 import whitebox.geospatialfiles.LasLayerInfo;
 import whitebox.geospatialfiles.shapefile.ShapeTypeDimension;
+import whitebox.ui.plugin_dialog.DialogFile;
 
 /**
  *
@@ -55,42 +56,43 @@ public class LayerProperties extends JDialog implements ActionListener, Adjustme
     private JButton close = new JButton("Close");
     private JTextField minVal = null;
     private JTextField maxVal = null;
-    private JScrollBar scrollAlpha = new JScrollBar(Adjustable.HORIZONTAL, 0, 0, 0, 255);
-    private JLabel labelAlpha = new JLabel();
+    private final JScrollBar scrollAlpha = new JScrollBar(Adjustable.HORIZONTAL, 0, 0, 0, 255);
+    private final JLabel labelAlpha = new JLabel();
     private JCheckBox checkVisible = null;
     private JCheckBox checkReversePalette = null;
     private JCheckBox checkScalePalette = null;
-    private JScrollBar scrollNonlinearity = new JScrollBar(Adjustable.HORIZONTAL, 0, 0, 0, 200);
-    private JLabel labelNonlinearity = new JLabel();
-    private DecimalFormat df = new DecimalFormat("#0.00");
+    private final JScrollBar scrollNonlinearity = new JScrollBar(Adjustable.HORIZONTAL, 0, 0, 0, 200);
+    private final JLabel labelNonlinearity = new JLabel();
+    private final DecimalFormat df = new DecimalFormat("#0.00");
     private JTextField titleText = null;
+    private DialogFile hillshadeText = null;
     private JButton minValButton = null;
     private JButton maxValButton = null;
     private WhiteboxPluginHost host = null;
-    private PaletteImage paletteImage = new PaletteImage();
-    private JButton paletteButton = new JButton("...");
+    private final PaletteImage paletteImage = new PaletteImage();
+    private final JButton paletteButton = new JButton("...");
     private JButton clipUpperTail = new JButton("Clip");
     private JButton clipLowerTail = new JButton("Clip");
     private JTextField clipAmountLower = null;
     private JTextField clipAmountUpper = null;
     private JCheckBox checkFilled = null;
     private JCheckBox checkOutlined = null;
-    private JLabel labelLineThickness = new JLabel();
-    private int scrollbarMax = 200;
-    private JScrollBar scrollLineThickness = new JScrollBar(Adjustable.HORIZONTAL, 0, 0, 0, scrollbarMax);
-    private float minLineThickness = 0.00f;
-    private float maxLineThickness = 10.0f;
+    private final JLabel labelLineThickness = new JLabel();
+    private final int scrollbarMax = 200;
+    private final JScrollBar scrollLineThickness = new JScrollBar(Adjustable.HORIZONTAL, 0, 0, 0, scrollbarMax);
+    private final float minLineThickness = 0.00f;
+    private final float maxLineThickness = 10.0f;
     private SampleColour sampleColourPanelLine;
     private SampleColour sampleColourPanelLine2;
-    private int sampleWidth = 30;
-    private int sampleHeight = 15;
+    private final int sampleWidth = 30;
+    private final int sampleHeight = 15;
     private Color sampleColourLine = new Color(0, 0, 255);
     private SampleColour sampleColourPanelFill;
     private Color sampleColourFill = null;
-    private JLabel labelMarkerSize = new JLabel();
+    private final JLabel labelMarkerSize = new JLabel();
     private JScrollBar scrollMarkerSize = new JScrollBar(Adjustable.HORIZONTAL, 0, 0, 0, 40);
     private JComboBox dashCombo = new JComboBox();
-    private float[][] dashArray = new float[][]{{-1}, {12}, {4}, {12, 4, 12, 4},
+    private final float[][] dashArray = new float[][]{{-1}, {12}, {4}, {12, 4, 12, 4},
     {4, 4, 12, 4}, {16}, {2}, {2, 4}, {4, 12}, {12, 4, 2, 4}};
     private JComboBox markerCombo = new JComboBox();
     private float markerSize;
@@ -103,16 +105,16 @@ public class LayerProperties extends JDialog implements ActionListener, Adjustme
     private JPanel scalePaletteBox;
     private JPanel minBox;
     private JPanel maxBox;
-    private JButton viewAttributesTable = new JButton("View Attributes");
+    private final JButton viewAttributesTable = new JButton("View Attributes");
     private JComboBox valueFieldCombo;
     private JTabbedPane tabs;
-    private Color backColour = new Color(225, 245, 255); //210, 230, 255);
+    private final Color backColour = new Color(225, 245, 255); //210, 230, 255);
     private JTextField noDataText;
     private JTextField XYUnitsText;
     private JTextField ZUnitsText;
     private boolean updatedFileHeader = false;
-    private JScrollBar scrollGeneralizeLevel = new JScrollBar(Adjustable.HORIZONTAL, 0, 0, 0, 100);
-    private ResourceBundle bundle;
+    private final JScrollBar scrollGeneralizeLevel = new JScrollBar(Adjustable.HORIZONTAL, 0, 0, 0, 100);
+    private final ResourceBundle bundle;
 
     public LayerProperties(Frame owner, boolean modal, MapLayer layer, MapInfo map) {
         super(owner, modal);
@@ -369,7 +371,7 @@ public class LayerProperties extends JDialog implements ActionListener, Adjustme
             scrollAlpha.addAdjustmentListener(this);
             alphaBox.add(scrollAlpha);
             alphaBox.add(Box.createHorizontalStrut(10));
-            
+
             JPanel generalizedBox = new JPanel();
             generalizedBox.setLayout(new BoxLayout(generalizedBox, BoxLayout.X_AXIS));
             generalizedBox.add(Box.createHorizontalStrut(10));
@@ -388,6 +390,29 @@ public class LayerProperties extends JDialog implements ActionListener, Adjustme
             generalizedBox.add(Box.createHorizontalStrut(10));
             generalizedBox.setBackground(Color.WHITE);
 
+            JPanel hillshadeBox = new JPanel();
+            hillshadeBox.setLayout(new BoxLayout(hillshadeBox, BoxLayout.X_AXIS));
+            hillshadeBox.setBackground(backColour);
+//            hillshadeBox.add(Box.createHorizontalStrut(10));
+//            label = new JLabel("Hillshade Source");
+//            label.setPreferredSize(new Dimension(180, 24));
+//            hillshadeBox.add(label);
+            hillshadeBox.add(Box.createHorizontalGlue());
+            hillshadeText = new DialogFile(host); //new JTextField(rli.getHillshadeSource(), 20);
+            String[] args = new String[7];
+            args[0] = "file";
+            args[1] = "Select a file to use for hillshading";
+            args[2] = "Hillshade Source";
+            args[3] = "0"; // whitebox.ui.plugin_dialog.DialogFile.MODE_OPEN
+            args[4] = "true"; // show button
+            args[5] = "Raster Files (*.dep), DEP"; // filter for raster files
+            args[6] = "true"; // make optional
+            hillshadeText.setArgs(args);
+            hillshadeText.setValue(rli.getHillshadeSource());
+//            hillshadeText.setMaximumSize(new Dimension(600, 22));
+            hillshadeBox.add(hillshadeText);
+//            hillshadeBox.add(Box.createHorizontalStrut(10));
+
             if (!isRGBlayer) {
                 mainBox.add(titleBox);
                 mainBox.add(minBox);
@@ -400,6 +425,7 @@ public class LayerProperties extends JDialog implements ActionListener, Adjustme
                 mainBox.add(visibleBox);
                 mainBox.add(alphaBox);
                 mainBox.add(generalizedBox);
+                mainBox.add(hillshadeBox);
             } else {
                 mainBox.add(titleBox);
                 mainBox.add(overlayBox);
@@ -407,6 +433,7 @@ public class LayerProperties extends JDialog implements ActionListener, Adjustme
                 mainBox.add(alphaBox);
                 mainBox.add(Box.createVerticalStrut(160));
                 mainBox.add(generalizedBox);
+//                mainBox.add(hillshadeBox);
             }
 
         } else if (layer instanceof VectorLayerInfo) {
@@ -721,7 +748,7 @@ public class LayerProperties extends JDialog implements ActionListener, Adjustme
                 checkScalePalette.setSelected(false);
             }
             checkScalePalette.addActionListener(this);
-            checkScalePalette.addActionListener(ae -> { 
+            checkScalePalette.addActionListener(ae -> {
                 String fc = (String) valueFieldCombo.getSelectedItem();
                 vli.updateMinAndMaxForAttribute(fc);
                 minVal.setText(Double.toString(vli.getDisplayMinValue()));
@@ -2064,6 +2091,20 @@ public class LayerProperties extends JDialog implements ActionListener, Adjustme
             }
             rli.setCartographicGeneralizationLevel(scrollGeneralizeLevel.getValue() / 100.0 * 50.0);
             rli.setPaletteReversed(checkReversePalette.isSelected());
+//            if (!hillshadeText.getText().isEmpty()) {
+            if (!"not specified".equals(hillshadeText.getValue())) {
+                String value = hillshadeText.getValue(); // .getText();
+                if (!value.contains(File.separator)) {
+                    // add the working directory to the file name
+                    value = host.getWorkingDirectory() + value;
+                }
+                if (!value.contains(".dep")) {
+                    value += ".dep";
+                }
+                rli.setHillshadeSource(value);
+            } else if (!rli.getHillshadeSource().isEmpty()) {
+                rli.setHillshadeSource("");
+            }
             rli.update();
             host.refreshMap(true);
             updatePaletteImage();
@@ -2148,7 +2189,7 @@ public class LayerProperties extends JDialog implements ActionListener, Adjustme
                     vli.setFillAttribute("");
                 }
             }
-            
+
             if (vli.getNonlinearity() != scrollNonlinearity.getValue() / 10d) {
                 vli.setNonlinearity(scrollNonlinearity.getValue() / 10d);
                 updateColours = true;

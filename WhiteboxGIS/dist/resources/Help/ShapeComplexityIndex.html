@@ -53,23 +53,23 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "polygons.shp" # vector input<br>
-                outputFile = "" # ignored for vector input<br>
-                textOutput = "false" # also ignored<br>
-                args = [inputFile, outputFile, textOutput]<br>
-                pluginHost.runPlugin("ShapeComplexityIndex", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "polygons.shp" # vector input&#10;<br>
+                outputFile = "" # ignored for vector input&#10;<br>
+                textOutput = "false" # also ignored&#10;<br>
+                args = [inputFile, outputFile, textOutput]&#10;<br>
+                pluginHost.runPlugin("ShapeComplexityIndex", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "polygons.dep" // raster input<br>
-                def outputFile = wd + "output.dep"<br>
-                def textOutput = "true"<br>
-                String[] args = [inputFile, outputFile, textOutput]<br>
-                pluginHost.runPlugin("ShapeComplexityIndex", args, False)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "polygons.dep" // raster input&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def textOutput = "true"&#10;<br>
+                String[] args = [inputFile, outputFile, textOutput]&#10;<br>
+                pluginHost.runPlugin("ShapeComplexityIndex", args, False)&#10;<br>
             </code>
         </p>
         

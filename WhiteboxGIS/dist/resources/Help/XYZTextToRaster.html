@@ -33,31 +33,31 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                inputFiles = wd + "input1.txt" + ";" + wd + "input2.txt" + ";" + wd + "input3.txt"<br>
-                firstLineIsHeader = "false"<br>
-                outputFile = wd + "output.dep"<br>
-                baseFile = wd + "base.dep"<br>
-                dataType = "float"<br>
-                args = [inputFiles, firstLineIsHeader, outputFile, baseFile, dataType]<br>
-                pluginHost.runPlugin("XYZTextToRaster", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputFiles = wd + "input1.txt" + ";" + wd + "input2.txt" + ";" + wd + "input3.txt"&#10;<br>
+                firstLineIsHeader = "false"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                baseFile = wd + "base.dep"&#10;<br>
+                dataType = "float"&#10;<br>
+                args = [inputFiles, firstLineIsHeader, outputFile, baseFile, dataType]&#10;<br>
+                pluginHost.runPlugin("XYZTextToRaster", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def inputFiles = wd + "input1.txt" + ";" + wd + "input2.txt" + ";" + wd + "input3.txt"<br>
-                def firstLineIsHeader = "true"<br>
-                def outputFile = wd + "output.dep"<br>
-                def baseFile = wd + "base.dep"<br>
-                def dataType = "integer"<br>
-                String[] args = [inputFiles, firstLineIsHeader, outputFile, baseFile, dataType]<br>
-                pluginHost.runPlugin("XYZTextToRaster", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputFiles = wd + "input1.txt" + ";" + wd + "input2.txt" + ";" + wd + "input3.txt"&#10;<br>
+                def firstLineIsHeader = "true"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def baseFile = wd + "base.dep"&#10;<br>
+                def dataType = "integer"&#10;<br>
+                String[] args = [inputFiles, firstLineIsHeader, outputFile, baseFile, dataType]&#10;<br>
+                pluginHost.runPlugin("XYZTextToRaster", args, false)&#10;<br>
             </code>
         </p>
 

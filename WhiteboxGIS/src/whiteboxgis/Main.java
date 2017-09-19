@@ -18,12 +18,15 @@ package whiteboxgis;
 
 import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.management.*;
 //import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 //import javax.swing.UIManager;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.*;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -35,12 +38,14 @@ public class Main {
     private String[] args;
     private String applicationDirectory;
     private String pathSep;
+    private static boolean networkedFlag = false;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         try {
+            
 //            //setLookAndFeel("Nimbus");
 //            setLookAndFeel("systemLAF");
 ////
@@ -114,7 +119,35 @@ public class Main {
             if (!applicationDirectory.endsWith(pathSep)) {
                 applicationDirectory += pathSep;
             }
-            findFile(new File(applicationDirectory), "logs");
+            
+            String networkPropsFile = applicationDirectory + "resources" + pathSep + "networkProps.txt";
+            File propertiesFile = new File(networkPropsFile);
+            if (propertiesFile.exists()) {
+                Properties props = new Properties();
+                FileInputStream in = new FileInputStream(networkPropsFile);
+                props.load(in);
+                if (props.containsKey("networkedMode")) {
+                    networkedFlag = Boolean.parseBoolean(props.getProperty("networkedMode"));
+                }
+                in.close();
+            }
+            
+            //String logDirectory = "";
+            String usersApplicationDirectory = "";
+            if ((new File(applicationDirectory)).canWrite() && !networkedFlag) {
+                usersApplicationDirectory = applicationDirectory;
+            } else {
+                String homeDir = System.getProperty("user.home");
+                if ((new File(homeDir)).canWrite()) {
+                    usersApplicationDirectory = homeDir + pathSep + "WhiteboxGAT" + pathSep;
+                    if (!(new File(usersApplicationDirectory)).exists()) {
+                        // copy the resources folders over to this user home directory
+                        FileUtils.copyDirectory(new File(applicationDirectory + "resources"), new File(usersApplicationDirectory + "resources"));
+                    }
+                }
+            }
+//            findFile(new File(applicationDirectory), "logs");
+            findFile(new File(usersApplicationDirectory), "logs");
             if (retFile != null && !retFile.isEmpty()) {
                 String logDirectory = retFile + pathSep;
                 // set up the logger

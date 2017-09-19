@@ -65,29 +65,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                redFile = wd + "red_band.dep"<br>
-                greenFile = wd + "green_band.dep"<br>
-                blueFile = wd + "blue_band.dep"<br>
-                outIntensityFile = wd + "intensity.dep"<br>
-                outHueFile = wd + "hue.dep"<br>
-                outSaturationFile = wd + "saturation.dep"<br>
-                args = [redFile, greenFile, blueFile, outIntensityFile, outHueFile, outSaturationFile]<br>
-                pluginHost.runPlugin("RGBtoIHS", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                redFile = wd + "red_band.dep"&#10;<br>
+                greenFile = wd + "green_band.dep"&#10;<br>
+                blueFile = wd + "blue_band.dep"&#10;<br>
+                outIntensityFile = wd + "intensity.dep"&#10;<br>
+                outHueFile = wd + "hue.dep"&#10;<br>
+                outSaturationFile = wd + "saturation.dep"&#10;<br>
+                args = [redFile, greenFile, blueFile, outIntensityFile, outHueFile, outSaturationFile]&#10;<br>
+                pluginHost.runPlugin("RGBtoIHS", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def redFile = wd + "red_band.dep"<br>
-                def greenFile = wd + "green_band.dep"<br>
-                def blueFile = wd + "blue_band.dep"<br>
-                def outIntensityFile = wd + "intensity.dep"<br>
-                def outHueFile = wd + "hue.dep"<br>
-                def outSaturationFile = wd + "saturation.dep"<br>
-                String[] args = [redFile, greenFile, blueFile, outIntensityFile, outHueFile, outSaturationFile]<br>
-                pluginHost.runPlugin("RGBtoIHS", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def redFile = wd + "red_band.dep"&#10;<br>
+                def greenFile = wd + "green_band.dep"&#10;<br>
+                def blueFile = wd + "blue_band.dep"&#10;<br>
+                def outIntensityFile = wd + "intensity.dep"&#10;<br>
+                def outHueFile = wd + "hue.dep"&#10;<br>
+                def outSaturationFile = wd + "saturation.dep"&#10;<br>
+                String[] args = [redFile, greenFile, blueFile, outIntensityFile, outHueFile, outSaturationFile]&#10;<br>
+                pluginHost.runPlugin("RGBtoIHS", args, false)&#10;<br>
             </code>
         </p>
         

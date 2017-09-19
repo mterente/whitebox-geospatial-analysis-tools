@@ -1,3 +1,7 @@
+/* This was an experiment and never produced a tool intended for widespread use.
+   Instead, see the Rust developed LiDAR segmentation tool contained in the 
+   whitebox_tools suite.
+*/
 /*
  * Copyright (C) 2014 Dr. John Lindsay <jlindsay@uoguelph.ca>
  *
@@ -351,105 +355,106 @@ public class LiDAR_segmentation implements WhiteboxPlugin {
                 }
             }
 
-//            // calculate the weight value for the point
-//            for (a = 0; a < numPoints; a++) {
-//                z = data[a].maxDownwardAngle;
-//                if (data[a].maxDownwardAngle > 0) {
-//                    x = data[a].x;
-//                    y = data[a].y;
-//                    entry = new double[]{x, y};
-//                    List<KdTree.Entry<Integer>> results = pointsTree.neighborsWithinRange(entry, searchDist);
-//                    double sum = 0;
-//                    for (int i = 0; i < results.size(); i++) {
-//                        int pointNum = results.get(i).value;
-//                        double dist =((data[pointNum].x - x) * (data[pointNum].x - x) + (data[pointNum].y - y) * (data[pointNum].y - y) + data[pointNum].maxDownwardAngle * data[pointNum].maxDownwardAngle);
-//                        sum += 1 / dist;
-//                    }
-//                    double w = (1 / (data[a].maxDownwardAngle * data[a].maxDownwardAngle)) / sum;
-//                    data[a].w = w; //(1 / (data[a].maxDownwardAngle * data[a].maxDownwardAngle)) / sum;
-//                } else {
-//                    data[a].w = 1.0;
-//                }
-//
-//                progress = (int) (100f * a / numPoints);
-//                if (progress != oldProgress) {
-//                    oldProgress = progress;
-//                    updateProgress("Calculating weights:", progress);
-//                    if (cancelOp) {
-//                        cancelOperation();
-//                        return;
-//                    }
-//                }
-//            }
+            // calculate the weight value for the point
+            for (a = 0; a < numPoints; a++) {
+                z = data[a].maxDownwardAngle;
+                if (data[a].maxDownwardAngle > 0) {
+                    x = data[a].x;
+                    y = data[a].y;
+                    entry = new double[]{x, y};
+                    List<KdTree.Entry<Integer>> results = pointsTree.neighborsWithinRange(entry, searchDist);
+                    double sum = 0;
+                    for (int i = 0; i < results.size(); i++) {
+                        int pointNum = results.get(i).value;
+                        double dist =((data[pointNum].x - x) * (data[pointNum].x - x) + (data[pointNum].y - y) * (data[pointNum].y - y) + data[pointNum].maxDownwardAngle * data[pointNum].maxDownwardAngle);
+                        sum += 1 / dist;
+                    }
+                    double w = (1 / (data[a].maxDownwardAngle * data[a].maxDownwardAngle)) / sum;
+                    data[a].w = w; //(1 / (data[a].maxDownwardAngle * data[a].maxDownwardAngle)) / sum;
+                } else {
+                    data[a].w = 1.0;
+                }
+
+                progress = (int) (100f * a / numPoints);
+                if (progress != oldProgress) {
+                    oldProgress = progress;
+                    updateProgress("Calculating weights:", progress);
+                    if (cancelOp) {
+                        cancelOperation();
+                        return;
+                    }
+                }
+            }
             
             
             
             
 
-//            // perform the segmentation
-//            int currentClass = 0;
-//
-////            long oldNumClassifiedPoints = 0;
-////            List<Long> histo = new ArrayList<>();
-//            do {
-//                // find the lowest unclassified point
-//                int startingPoint = -1;
-//                lowestPointZ = Double.POSITIVE_INFINITY;
-//                for (a = 0; a < numPoints; a++) {
-//                    if (data[a].classValue == -1 && data[a].z < lowestPointZ) {
-//                        lowestPointZ = data[a].z;
-//                        startingPoint = a;
-////                        currentClass++;
-////                        break;
-//                    }
-//                }
-//                if (startingPoint == -1) {
-//                    break;
-//                }
-//
-//                currentClass++;
-//
-//                List<Integer> seeds = new ArrayList<>();
-//                seeds.add(startingPoint);
-//                boolean flag = false;
-//
-//                do {
-//                    flag = false;
-//                    for (Integer s : seeds) {
-//                        if (!done.getValue(s)) {
-//                            data[s].setClassValue(currentClass);
-//                            scanNeighbours(s);
+            // perform the segmentation
+            int currentClass = 0;
+
+//            long oldNumClassifiedPoints = 0;
+//            List<Long> histo = new ArrayList<>();
+            do {
+                // find the lowest unclassified point
+                int startingPoint = -1;
+                lowestPointZ = Double.POSITIVE_INFINITY;
+                for (a = 0; a < numPoints; a++) {
+                    if (data[a].classValue == -1 && data[a].z < lowestPointZ) {
+                        lowestPointZ = data[a].z;
+                        startingPoint = a;
+//                        currentClass++;
+//                        break;
+                    }
+                }
+                if (startingPoint == -1) {
+                    break;
+                }
+
+                currentClass++;
+
+                List<Integer> seeds = new ArrayList<>();
+                seeds.add(startingPoint);
+                boolean flag = false;
+
+                do {
+                    flag = false;
+                    for (Integer s : seeds) {
+                        if (!done.getValue(s)) {
+                            data[s].setClassValue(currentClass);
+                            scanNeighbours(s);
+                        }
+                    }
+                    seeds.clear();
+                    if (seedPoints.size() > 0) {
+                        flag = true;
+                        seedPoints.stream().forEach((s) -> {
+                            if (!done.getValue(s)) {
+                                seeds.add(s);
+                            }
+                        });
+                        seedPoints.clear();
+                    }
+
+                    startingPoint = -1;
+//                    progress = (int) (100f * numClassifiedPoints / numPoints);
+//                    if (progress != oldProgress) {
+//                        oldProgress = progress;
+//                        updateProgress(progress);
+//                        if (cancelOp) {
+//                            cancelOperation();
+//                            return;
 //                        }
 //                    }
-//                    seeds.clear();
-//                    if (seedPoints.size() > 0) {
-//                        flag = true;
-//                        seedPoints.stream().forEach((s) -> {
-//                            if (!done.getValue(s)) {
-//                                seeds.add(s);
-//                            }
-//                        });
-//                        seedPoints.clear();
-//                    }
-//
-//                    startingPoint = -1;
-////                    progress = (int) (100f * numClassifiedPoints / numPoints);
-////                    if (progress != oldProgress) {
-////                        oldProgress = progress;
-////                        updateProgress(progress);
-////                        if (cancelOp) {
-////                            cancelOperation();
-////                            return;
-////                        }
-////                    }
-//                } while (flag);
-////                histo.add(numClassifiedPoints - oldNumClassifiedPoints);
-////                oldNumClassifiedPoints = numClassifiedPoints;
-//            } while (numClassifiedPoints < numPoints);
+                } while (flag);
+//                histo.add(numClassifiedPoints - oldNumClassifiedPoints);
+//                oldNumClassifiedPoints = numClassifiedPoints;
+            } while (numClassifiedPoints < numPoints);
 //            int classVal = 1;
 //            for (Long val : histo) {
 //                System.out.println("Class " + String.valueOf(classVal) + ": " + String.valueOf(val));
 //            }
+            
             // output
             DBFField fields[] = new DBFField[5];
 
@@ -611,30 +616,32 @@ public class LiDAR_segmentation implements WhiteboxPlugin {
         }
     }
 
-//    /**
-//     * This method is only used for debugging the tool.
-//     * @param args 
-//     */
-//    //this is only used for debugging the tool
-//    public static void main(String[] args) {
-//        LiDAR_segmentation seg = new LiDAR_segmentation();
-//        args = new String[4];
-////        args[0] = "/Users/jlindsay/Documents/Data/Rashaad's Sites/CVC_all.las";
-////        args[1] = "/Users/jlindsay/Documents/Data/Rashaad's Sites/CVC ground points.shp";
-////        args[2] = "15.0"; // degree slope
-////        args[3] = "0.25"; // meter search window
-//
-////        args[0] = "/Users/jlindsay/Documents/Data/LAS classified/416_4696.las"; //423_4695.las";
-////        args[1] = "/Users/jlindsay/Documents/Data/LAS classified/416_4696 ground points.shp";
-////        args[2] = "20.0"; // degree slope
-////        args[3] = "2.0"; // meter search window
-//        args[0] = "/Users/johnlindsay/Documents/Data/Rashaads Sites/CVC/CVC_all_Row5_Col6.shp";
-//        args[1] = "/Users/johnlindsay/Documents/Data/Rashaads Sites/CVC/tmp3.shp";
-//        args[2] = "5"; // degree slope
+    /**
+     * This method is only used for debugging the tool.
+     * @param args 
+     */
+    //this is only used for debugging the tool
+    public static void main(String[] args) {
+        LiDAR_segmentation seg = new LiDAR_segmentation();
+        args = new String[4];
+//        args[0] = "/Users/jlindsay/Documents/Data/Rashaad's Sites/CVC_all.las";
+//        args[1] = "/Users/jlindsay/Documents/Data/Rashaad's Sites/CVC ground points.shp";
+//        args[2] = "15.0"; // degree slope
 //        args[3] = "0.25"; // meter search window
-//
-//        seg.setArgs(args);
-//        seg.run();
-//    }
+
+//        args[0] = "/Users/jlindsay/Documents/Data/LAS classified/416_4696.las"; //423_4695.las";
+//        args[1] = "/Users/jlindsay/Documents/Data/LAS classified/416_4696 ground points.shp";
+//        args[2] = "20.0"; // degree slope
+//        args[3] = "2.0"; // meter search window
+        //args[0] = "/Users/johnlindsay/Documents/Data/Rashaads Sites/CVC/CVC_all_Row5_Col6.shp";
+        //args[1] = "/Users/johnlindsay/Documents/Data/Rashaads Sites/CVC/tmp3.shp";
+        args[0] = "/Users/johnlindsay/Documents/Data/JohnstonGreen/JGreenCombined.las";
+        args[1] = "/Users/johnlindsay/Documents/Data/JohnstonGreen/JG_segmented.shp";
+        args[2] = "5"; // degree slope
+        args[3] = "0.2"; // meter search window
+
+        seg.setArgs(args);
+        seg.run();
+    }
 
 }

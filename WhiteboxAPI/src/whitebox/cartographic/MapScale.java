@@ -62,7 +62,7 @@ public class MapScale implements CartographicElement, Comparable<CartographicEle
     private ScaleStyle scaleStyle = ScaleStyle.STANDARD;
     
     public enum ScaleStyle {
-        STANDARD, SIMPLE, COMPLEX;
+        STANDARD, SIMPLE, COMPLEX, COMPACT;
     }
 
     public MapScale(String name) {

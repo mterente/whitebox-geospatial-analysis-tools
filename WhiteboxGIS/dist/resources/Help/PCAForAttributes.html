@@ -91,29 +91,29 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # Input data has the shapefile name followed<br>
-                # by each attribute included in the analysis, <br>
-                # separated by semicolons.<br>
-                inputData = wd + "neighbourhoods.shp" + ";" + "NUM_SCHOOLS" + ";" + "INCOME" + ";" + "POP_DENSITY"<br>
-                standardized = "true"<br>
-                numOutputComponents = "not specified"<br>
-                args = [inputData, standardized, numOutputComponents]<br>
-                pluginHost.runPlugin("PCAForAttributes", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # Input data has the shapefile name followed&#10;<br>
+                # by each attribute included in the analysis, &#10;<br>
+                # separated by semicolons.&#10;<br>
+                inputData = wd + "neighbourhoods.shp" + ";" + "NUM_SCHOOLS" + ";" + "INCOME" + ";" + "POP_DENSITY"&#10;<br>
+                standardized = "true"&#10;<br>
+                numOutputComponents = "not specified"&#10;<br>
+                args = [inputData, standardized, numOutputComponents]&#10;<br>
+                pluginHost.runPlugin("PCAForAttributes", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // Input data has the shapefile name followed <br>
-                // by each attribute included in the analysis, <br>
-                // separated by semicolons.<br>
-                def inputData = wd + "neighbourhoods.shp" + ";" + "NUM_SCHOOLS" + ";" + "INCOME" + ";" + "POP_DENSITY"<br>
-                def standardized = "true"<br>
-                def numOutputComponents = "2"<br>
-                String[] args = [inputData, standardized, numOutputComponents]<br>
-                pluginHost.runPlugin("PCAForAttributes", args, False)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // Input data has the shapefile name followed &#10;<br>
+                // by each attribute included in the analysis, &#10;<br>
+                // separated by semicolons.&#10;<br>
+                def inputData = wd + "neighbourhoods.shp" + ";" + "NUM_SCHOOLS" + ";" + "INCOME" + ";" + "POP_DENSITY"&#10;<br>
+                def standardized = "true"&#10;<br>
+                def numOutputComponents = "2"&#10;<br>
+                String[] args = [inputData, standardized, numOutputComponents]&#10;<br>
+                pluginHost.runPlugin("PCAForAttributes", args, False)&#10;<br>
             </code>
         </p>
 

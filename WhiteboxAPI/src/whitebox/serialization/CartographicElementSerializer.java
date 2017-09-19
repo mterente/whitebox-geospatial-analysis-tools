@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import whitebox.cartographic.*;
 import whitebox.interfaces.CartographicElement;
-import whitebox.interfaces.CartographicElement.CartographicElementType.*;
+//import whitebox.interfaces.CartographicElement.CartographicElementType.*;
 import static whitebox.interfaces.CartographicElement.CartographicElementType.MAP_TITLE;
 import whitebox.interfaces.MapLayer;
 
@@ -171,6 +171,20 @@ public class CartographicElementSerializer implements JsonSerializer<Cartographi
                     jo.add("outlineColour", gson.toJsonTree(ms.getOutlineColour()));
                     jo.addProperty("mapAreaElementNumber", ms.getMapAreaElementNumber());
                     jo.add("labelFont", gson.toJsonTree(ms.getLabelFont()));
+                    switch (ms.getScaleStyle()) {
+                        case COMPLEX:
+                            jo.addProperty("scaleStyle", "COMPLEX");
+                            break;
+                        case SIMPLE:
+                            jo.addProperty("scaleStyle", "SIMPLE");
+                            break;
+                        case COMPACT:
+                            jo.addProperty("scaleStyle", "COMPACT");
+                            break;
+                        default:
+                            jo.addProperty("scaleStyle", "STANDARD");
+                            break;
+                    }
                     break;
                 case LEGEND:
                     Legend l = (Legend) t;

@@ -20,7 +20,9 @@
         <p>If an output image name is specified, the tool will assign the descriptive
             statistic value to each of the spatial entities defined in the <i><b>Feature
                     Definition Image</b></i>. If text output is selected, a table will be output, which can
-            then be readily copied into a spreadsheet program for further analysis. This is
+            then be readily copied into a spreadsheet program for further analysis. If a 
+            text output file name is specified (optional), the text summary data will be 
+            saved to the newly created file. This is
             a very powerful and useful tool for creating numerical summary data from
             spatial data which can then be interrogated using statistical analyses. At
             least one output type (image or text) must be specified for the tool to
@@ -44,7 +46,8 @@
                 outputFile = wd + "output.dep"&#10;<br>
                 stat = "average"&#10;<br>
                 textOutput = "true"&#10;<br>
-                args = [dataFile, featureFile, outputFile, stat, textOutput]&#10;<br>
+                textFile = wd + "text_output.txt"&#10;<br>
+                args = [dataFile, featureFile, outputFile, stat, textOutput, textFile]&#10;<br>
                 pluginHost.runPlugin("ExtractStatistics", args, False)&#10;<br>
             </code>
         </p>

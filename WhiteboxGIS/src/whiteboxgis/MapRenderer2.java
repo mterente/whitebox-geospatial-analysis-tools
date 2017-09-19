@@ -718,6 +718,8 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
 
     private void drawMapScale(Graphics2D g2, MapScale mapScale, BasicStroke dashed) {
         if (mapScale.isVisible()) {
+            ScaleStyle styleType = mapScale.getScaleStyle();
+
             if (mapScale.getMapArea() != null) {
                 mapScale.setScale();
             }
@@ -813,7 +815,7 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
                         + (mapScale.getHeight() - contentHeight) / 2.0
                         + contentHeight);
 
-                if (mapScale.isGraphicalScaleVisible()) {
+                if (mapScale.isGraphicalScaleVisible() && styleType != ScaleStyle.COMPACT) {
                     // draw the units label to the scale
                     label = mapScale.getUnits();
                     if (label.toLowerCase().contains("deg")) {
@@ -833,7 +835,6 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
 
                 if (mapScale.isGraphicalScaleVisible()) {
                     g2.setStroke(new BasicStroke(0.5f));
-                    ScaleStyle styleType = mapScale.getScaleStyle();
                     float halfBarHeight = barHeight / 2.0f;
                     y = contentBottomY - fontHeight - spacingBetweenElements - barHeight;
                     switch (styleType) {
@@ -890,6 +891,19 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
                                 }
                             }
                             break;
+                        case COMPACT:
+                            for (int k = 0; k < mapScale.getNumberDivisions(); k++) {
+                                x = (float) (k * barLengthInMapUnits + barStartingX);
+                                polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 4);
+                                polyline.moveTo(x, y);
+                                polyline.lineTo(x, y + barHeight);
+                                polyline.lineTo(x + barLengthInMapUnits, y + barHeight);
+                                polyline.lineTo(x + barLengthInMapUnits, y);
+                                g2.draw(polyline);
+
+                            }
+                            break;
+
                     }
                 }
 
@@ -903,7 +917,15 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
 
                     adv = metrics.stringWidth(mapScale.getUpperLabel());
                     x = (int) (barStartingX + barLengthInMapUnits * mapScale.getNumberDivisions() - adv / 2.0);
-                    g2.drawString(mapScale.getUpperLabel(), x, y);
+                    if (styleType != ScaleStyle.COMPACT) {
+                        g2.drawString(mapScale.getUpperLabel(), x, y);
+                    } else {
+                        label = mapScale.getUnits();
+                        if (label.toLowerCase().contains("deg")) {
+                            label = "km";
+                        }
+                        g2.drawString(mapScale.getUpperLabel() + " " + label, x, y);
+                    }
                 }
 
                 // label the representative fraction
@@ -1951,183 +1973,669 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
                 mapArea.setCurrentMapExtent(mapExtent);
 
                 for (int i = 0; i < numLayers; i++) {
-                    if (mapArea.getLayer(i).getLayerType() == MapLayer.MapLayerType.RASTER) {
-                        RasterLayerInfo layer = (RasterLayerInfo) mapArea.getLayer(i);
-                        if (mapArea.getXYUnits().trim().equals("")) {
-                            if (layer.getXYUnits().toLowerCase().contains("met")) {
-                                XYUnits = " m";
-                            } else if (layer.getXYUnits().toLowerCase().contains("deg")) {
-                                XYUnits = "\u00B0";
-                            } else if (!layer.getXYUnits().toLowerCase().contains("not specified")) {
-                                XYUnits = " " + layer.getXYUnits();
+                    if (null != mapArea.getLayer(i).getLayerType()) {
+                        switch (mapArea.getLayer(i).getLayerType()) {
+                            case RASTER: {
+                                RasterLayerInfo layer = (RasterLayerInfo) mapArea.getLayer(i);
+                                if (mapArea.getXYUnits().trim().equals("")) {
+                                    if (layer.getXYUnits().toLowerCase().contains("met")) {
+                                        XYUnits = " m";
+                                    } else if (layer.getXYUnits().toLowerCase().contains("deg")) {
+                                        XYUnits = "\u00B0";
+                                    } else if (!layer.getXYUnits().toLowerCase().contains("not specified")) {
+                                        XYUnits = " " + layer.getXYUnits();
+                                    }
+                                    mapArea.setXYUnits(XYUnits);
+                                }
+                                if (layer.isVisible()) {
+
+                                    BoundingBox fe = layer.getFullExtent();
+                                    if (fe.overlaps(mapExtent)) {
+                                        BoundingBox layerCE = fe.intersect(mapExtent);
+                                        layer.setCurrentExtent(layerCE);
+                                        x = (int) (viewAreaULX + (layerCE.getMinX() - mapExtent.getMinX()) * mapScale);
+                                        y = (int) (viewAreaULY + (mapExtent.getMaxY() - layerCE.getMaxY()) * mapScale);
+                                        int layerWidth = (int) ((Math.abs(layerCE.getMaxX() - layerCE.getMinX())) * mapScale);
+                                        int layerHeight = (int) ((Math.abs(layerCE.getMaxY() - layerCE.getMinY())) * mapScale);
+
+                                        int startR = (int) (Math.abs(layer.fullExtent.getMaxY() - layerCE.getMaxY()) / layer.getCellSizeY());
+                                        int endR = (int) (layer.getNumberRows() - (Math.abs(layer.fullExtent.getMinY() - layerCE.getMinY()) / layer.getCellSizeY()));
+                                        int startC = (int) (Math.abs(layer.fullExtent.getMinX() - layerCE.getMinX()) / layer.getCellSizeX());
+                                        int endC = (int) (layer.getNumberColumns() - (Math.abs(layer.fullExtent.getMaxX() - layerCE.getMaxX()) / layer.getCellSizeX()));
+                                        int numRows = endR - startR;
+                                        int numCols = endC - startC;
+
+                                        //if (!printingMap) {
+                                        int cartoGeneralization = (int) layer.getCartographicGeneralizationLevel();
+                                        int res = (int) (Math.min(numRows / (double) layerHeight, numCols / (double) layerWidth));
+                                        if (res > cartoGeneralization) {
+                                            res = cartoGeneralization;
+                                        }
+                                        layer.setResolutionFactor(res);
+                                        //} else {
+                                        //    layer.setResolutionFactor(1);
+                                        //}
+
+                                        if (layer.isDirty()) {
+                                            layer.createPixelData();
+                                        }
+
+                                        width = layer.getImageWidth();
+                                        height = layer.getImageHeight();
+                                        Image image = createImage(new MemoryImageSource(width, height, layer.getPixelData(), 0, width));
+                                        if (!g2.drawImage(image, x, y, layerWidth, layerHeight, this)) {
+                                            g2.drawImage(image, x, y, layerWidth, layerHeight, this);
+                                        }
+
+                                    }
+                                }
+                                break;
                             }
-                            mapArea.setXYUnits(XYUnits);
-                        }
-
-                        if (layer.isVisible()) {
-
-                            BoundingBox fe = layer.getFullExtent();
-                            if (fe.overlaps(mapExtent)) {
-                                BoundingBox layerCE = fe.intersect(mapExtent);
-                                layer.setCurrentExtent(layerCE);
-                                x = (int) (viewAreaULX + (layerCE.getMinX() - mapExtent.getMinX()) * mapScale);
-                                y = (int) (viewAreaULY + (mapExtent.getMaxY() - layerCE.getMaxY()) * mapScale);
-                                int layerWidth = (int) ((Math.abs(layerCE.getMaxX() - layerCE.getMinX())) * mapScale);
-                                int layerHeight = (int) ((Math.abs(layerCE.getMaxY() - layerCE.getMinY())) * mapScale);
-
-                                int startR = (int) (Math.abs(layer.fullExtent.getMaxY() - layerCE.getMaxY()) / layer.getCellSizeY());
-                                int endR = (int) (layer.getNumberRows() - (Math.abs(layer.fullExtent.getMinY() - layerCE.getMinY()) / layer.getCellSizeY()));
-                                int startC = (int) (Math.abs(layer.fullExtent.getMinX() - layerCE.getMinX()) / layer.getCellSizeX());
-                                int endC = (int) (layer.getNumberColumns() - (Math.abs(layer.fullExtent.getMaxX() - layerCE.getMaxX()) / layer.getCellSizeX()));
-                                int numRows = endR - startR;
-                                int numCols = endC - startC;
-
-                                //if (!printingMap) {
-                                int cartoGeneralization = (int) layer.getCartographicGeneralizationLevel();
-                                int res = (int) (Math.min(numRows / (double) layerHeight, numCols / (double) layerWidth));
-                                if (res > cartoGeneralization) {
-                                    res = cartoGeneralization;
+                            case VECTOR: {
+                                Rectangle2D rect = new Rectangle2D.Float();
+                                rect.setRect(viewAreaULX, viewAreaULY, viewAreaWidth, viewAreaHeight);
+                                Shape oldClip = null;
+                                VectorLayerInfo layer = (VectorLayerInfo) mapArea.getLayer(i);
+                                if (mapArea.getXYUnits().trim().equals("")) {
+                                    if (layer.getXYUnits().toLowerCase().contains("met")) {
+                                        XYUnits = " m";
+                                    } else if (layer.getXYUnits().toLowerCase().contains("deg")) {
+                                        XYUnits = "\u00B0";
+                                    } else if (!layer.getXYUnits().toLowerCase().contains("not specified")) {
+                                        XYUnits = " " + layer.getXYUnits();
+                                    }
+                                    mapArea.setXYUnits(XYUnits);
+                                }       // is it the active layer?
+                                //int selectedFeature = -1;
+                                boolean activeLayerBool = false;
+                                //if (backgroundMouseMode == MOUSE_MODE_FEATURE_SELECT && mapArea.getActiveLayerOverlayNumber() == layer.getOverlayNumber()) {
+                                if (mapArea.getActiveLayerOverlayNumber() == layer.getOverlayNumber()) {
+                                    //selectedFeature = layer.getSelectedFeatureNumber();
+                                    activeLayerBool = true;
+                                } else { // if (layer.getSelectedFeatureNumber() >= 0) {
+                                    //layer.setSelectedFeatureNumber(-1);
+                                    layer.clearSelectedFeatures();
                                 }
-                                layer.setResolutionFactor(res);
-                                //} else {
-                                //    layer.setResolutionFactor(1);
-                                //}
+                                float xPoint, yPoint;
+                                /*
+                            * minDistinguishableLength is used to
+                            * speed up the drawing of vectors. Any
+                            * feature that is smaller than this
+                            * value will be excluded from the map.
+                            * This is an example of cartographic
+                            * generalization.
+                                 */
+                                double minDistinguishableLength = layer.getCartographicGeneralizationLevel() / mapScale; //scale;
+                                int r;
+                                if (layer.isVisible()) {
+                                    BoundingBox fe = layer.getFullExtent();
+                                    if (fe.overlaps(mapExtent)) {
+                                        // only set the clip region if this layer's bounding box actually intersects the
+                                        // boundary of the mapExtent.
+                                        boolean isClipped = false;
+                                        if (!fe.entirelyContainedWithin(mapExtent)) {
+                                            oldClip = g2.getClip();
+                                            g2.setClip(rect);
+                                            isClipped = true;
+                                        }
+                                        BoundingBox layerCE = fe.intersect(mapExtent);
+                                        layer.setCurrentExtent(layerCE, minDistinguishableLength);
+                                        int a1 = layer.getAlpha();
+                                        //Color fillColour = new Color(r1, g1, b1, a1);
+                                        int r1 = layer.getLineColour().getRed();
+                                        int g1 = layer.getLineColour().getGreen();
+                                        int b1 = layer.getLineColour().getBlue();
+                                        Color lineColour = new Color(r1, g1, b1, a1);
 
-                                if (layer.isDirty()) {
-                                    layer.createPixelData();
+                                        ShapeType shapeType = layer.getShapeType();
+                                        //ShapeFileRecord[] records = layer.getGeometry();
+                                        ArrayList<ShapeFileRecord> records = layer.getData();
+                                        double x1, y1;
+                                        //int xInt, yInt, x2Int, y2Int;
+                                        double topCoord = mapExtent.getMaxY();
+                                        double bottomCoord = mapExtent.getMinY();
+                                        double leftCoord = mapExtent.getMinX();
+                                        double rightCoord = mapExtent.getMaxX();
+                                        double EWRange = rightCoord - leftCoord;
+                                        double NSRange = topCoord - bottomCoord;
+
+                                        double[][] xyData;
+                                        GeneralPath gp;
+                                        BasicStroke myStroke;
+                                        Color[] colours = layer.getColourData();
+                                        boolean isFilled = layer.isFilled();
+                                        boolean isOutlined = layer.isOutlined();
+                                        double[][] recPoints;
+
+                                        int[] partStart;
+                                        double[][] points;
+                                        int pointSt;
+                                        int pointEnd;
+                                        float xPoints[] = new float[0];
+                                        float yPoints[] = new float[0];
+                                        GeneralPath polyline;
+
+                                        boolean isActivelyEdited = layer.isActivelyEdited();
+
+                                        float markerSize;
+                                        int maxNumDisplayedPoints, skipVal;
+
+                                        switch (shapeType) {
+
+                                            case POINT:
+                                            case POINTZ:
+                                            case POINTM:
+                                                xyData = PointMarkers.getMarkerData(layer.getMarkerStyle(), layer.getMarkerSize());
+                                                myStroke = new BasicStroke(layer.getLineThickness());
+                                                oldStroke = g2.getStroke();
+                                                g2.setStroke(myStroke);
+
+                                                markerSize = layer.getMarkerSize();
+                                                maxNumDisplayedPoints = (int) ((viewAreaHeight / markerSize * viewAreaWidth / markerSize) * 1.25);
+                                                skipVal = (int) (Math.ceil(records.size() / maxNumDisplayedPoints));
+                                                if (skipVal < 1) {
+                                                    skipVal = 1;
+                                                }
+
+                                                for (int q = 0; q < records.size(); q += skipVal) {
+                                                    //for (ShapeFileRecord record : records) {
+                                                    ShapeFileRecord record = records.get(q);
+                                                    r = record.getRecordNumber() - 1;
+                                                    if (record.getShapeType() != ShapeType.NULLSHAPE) {
+//                                                whitebox.geospatialfiles.shapefile.Point rec = (whitebox.geospatialfiles.shapefile.Point) (record.getGeometry());
+//                                                x1 = rec.getX();
+//                                                y1 = rec.getY();
+                                                        recPoints = record.getGeometry().getPoints();
+                                                        x1 = recPoints[0][0];
+                                                        y1 = recPoints[0][1];
+                                                        if (y1 < bottomCoord || x1 < leftCoord
+                                                                || y1 > topCoord || x1 > rightCoord) {
+                                                            // It's not within the map area; do nothing.
+                                                        } else {
+                                                            x1 = (viewAreaULX + (x1 - leftCoord) / EWRange * viewAreaWidth);
+                                                            y1 = (viewAreaULY + (topCoord - y1) / NSRange * viewAreaHeight);
+                                                            gp = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 1);
+                                                            for (int a = 0; a < xyData.length; a++) {
+                                                                if (xyData[a][0] == 0) { // moveTo
+                                                                    gp.moveTo(x1 + xyData[a][1], y1 + xyData[a][2]);
+                                                                } else if (xyData[a][0] == 1) { // lineTo
+                                                                    gp.lineTo(x1 + xyData[a][1], y1 + xyData[a][2]);
+                                                                } else if (xyData[a][0] == 2) { // elipse2D
+                                                                    Ellipse2D circle = new Ellipse2D.Double((x1 - xyData[a][1]), (y1 - xyData[a][1]), xyData[a][2], xyData[a][2]);
+
+                                                                    gp.append(circle, true);
+                                                                }
+                                                            }
+                                                            if (activeLayerBool && isActivelyEdited) {
+                                                                g2.setColor(Color.RED);
+                                                                GeneralPath polyline2;
+                                                                float xSize = 2.5f;
+                                                                oldStroke = g2.getStroke();
+                                                                g2.setStroke(new BasicStroke(0.5f));
+                                                                polyline2 = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 4);
+                                                                polyline2.moveTo(x1 - xSize, y1 - xSize);
+                                                                polyline2.lineTo(x1 + xSize, y1 + xSize);
+                                                                polyline2.moveTo(x1 + xSize, y1 - xSize);
+                                                                polyline2.lineTo(x1 - xSize, y1 + xSize);
+                                                                g2.draw(polyline2);
+                                                                g2.setStroke(oldStroke);
+                                                            } else {
+                                                                if (isFilled) {
+                                                                    g2.setColor(colours[r]);
+                                                                    g2.fill(gp);
+                                                                }
+                                                                if (isOutlined) {
+                                                                    g2.setColor(lineColour);
+                                                                    g2.draw(gp);
+                                                                }
+                                                                if (activeLayerBool && layer.getNumSelectedFeatures() > 0
+                                                                        && layer.isFeatureSelected(record.getRecordNumber())) { //record.getRecordNumber() == selectedFeature) {
+                                                                    g2.setColor(selectedFeatureColour);
+                                                                    g2.draw(gp);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                g2.setStroke(oldStroke);
+                                                break;
+
+                                            case MULTIPOINT:
+                                            case MULTIPOINTZ:
+                                            case MULTIPOINTM:
+                                                markerSize = layer.getMarkerSize();
+                                                maxNumDisplayedPoints = (int) ((viewAreaHeight / markerSize * viewAreaWidth / markerSize) * 1.25);
+
+                                                xyData = PointMarkers.getMarkerData(layer.getMarkerStyle(), layer.getMarkerSize());
+                                                myStroke = new BasicStroke(layer.getLineThickness());
+                                                oldStroke = g2.getStroke();
+                                                g2.setStroke(myStroke);
+                                                int s = 0;
+                                                for (ShapeFileRecord record : records) {
+                                                    //r = record.getRecordNumber() - 1;
+                                                    if (record.getShapeType() != ShapeType.NULLSHAPE) {
+                                                        //MultiPoint rec = (MultiPoint) (record.getGeometry());
+                                                        recPoints = record.getGeometry().getPoints();
+                                                        int numPointsInExtent = 0;
+                                                        switch (shapeType) {
+                                                            case MULTIPOINT:
+                                                                numPointsInExtent = ((MultiPoint) (record.getGeometry())).numberOfPointsInExtent(layerCE);
+                                                                break;
+                                                            case MULTIPOINTM:
+                                                                numPointsInExtent = ((MultiPointM) (record.getGeometry())).numberOfPointsInExtent(layerCE);
+                                                                break;
+                                                            case MULTIPOINTZ:
+                                                                numPointsInExtent = ((MultiPointZ) (record.getGeometry())).numberOfPointsInExtent(layerCE);
+                                                                break;
+                                                        }
+                                                        skipVal = (int) (Math.ceil(numPointsInExtent / maxNumDisplayedPoints));
+                                                        if (skipVal < 1) {
+                                                            skipVal = 1;
+                                                        }
+
+                                                        for (int p = 0; p < recPoints.length; p += skipVal) {
+                                                            x1 = recPoints[p][0];
+                                                            y1 = recPoints[p][1];
+                                                            if (y1 < bottomCoord || x1 < leftCoord
+                                                                    || y1 > topCoord || x1 > rightCoord) {
+                                                                // It's not within the map area; do nothing.
+                                                            } else {
+                                                                x1 = (viewAreaULX + (x1 - leftCoord) / EWRange * viewAreaWidth);
+                                                                y1 = (viewAreaULY + (topCoord - y1) / NSRange * viewAreaHeight);
+
+                                                                gp = new GeneralPath(GeneralPath.WIND_EVEN_ODD, xyData.length);
+                                                                for (int a = 0; a < xyData.length; a++) {
+                                                                    if (xyData[a][0] == 0) { // moveTo
+                                                                        gp.moveTo(x1 + xyData[a][1], y1 + xyData[a][2]);
+                                                                    } else if (xyData[a][0] == 1) { // lineTo
+                                                                        gp.lineTo(x1 + xyData[a][1], y1 + xyData[a][2]);
+                                                                    } else if (xyData[a][0] == 2) { // elipse2D
+                                                                        Ellipse2D circle = new Ellipse2D.Double((x1 - xyData[a][1]), (y1 - xyData[a][1]), xyData[a][2], xyData[a][2]);
+
+                                                                        gp.append(circle, true);
+                                                                    }
+                                                                }
+
+                                                                if (activeLayerBool && isActivelyEdited) {
+                                                                    g2.setColor(Color.RED);
+                                                                    GeneralPath polyline2;
+                                                                    float xSize = 2.5f;
+                                                                    oldStroke = g2.getStroke();
+                                                                    g2.setStroke(new BasicStroke(0.5f));
+                                                                    polyline2 = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 4);
+                                                                    polyline2.moveTo(x1 - xSize, y1 - xSize);
+                                                                    polyline2.lineTo(x1 + xSize, y1 + xSize);
+                                                                    polyline2.moveTo(x1 + xSize, y1 - xSize);
+                                                                    polyline2.lineTo(x1 - xSize, y1 + xSize);
+                                                                    g2.draw(polyline2);
+                                                                    g2.setStroke(oldStroke);
+                                                                } else {
+                                                                    if (isFilled) {
+                                                                        g2.setColor(colours[p]); //s]);
+                                                                        g2.fill(gp);
+                                                                    }
+                                                                    if (isOutlined) {
+                                                                        g2.setColor(lineColour);
+                                                                        g2.draw(gp);
+                                                                    }
+                                                                    if (activeLayerBool && layer.getNumSelectedFeatures() > 0 && layer.isFeatureSelected(record.getRecordNumber())) { //record.getRecordNumber() == selectedFeature) {
+                                                                        g2.setColor(selectedFeatureColour);
+                                                                        g2.draw(gp);
+                                                                    }
+                                                                }
+                                                            }
+                                                            //s++;
+                                                        }
+                                                    }
+                                                }
+                                                g2.setStroke(oldStroke);
+                                                break;
+
+                                            case POLYLINE:
+                                            case POLYLINEZ:
+                                            case POLYLINEM:
+                                                //g2.setColor(lineColour);
+                                                myStroke = new BasicStroke(layer.getLineThickness(), BasicStroke.CAP_BUTT,
+                                                        BasicStroke.JOIN_ROUND);
+                                                if (layer.isDashed()) {
+                                                    myStroke
+                                                            = new BasicStroke(layer.getLineThickness(),
+                                                                    BasicStroke.CAP_BUTT,
+                                                                    BasicStroke.JOIN_ROUND,
+                                                                    10.0f, layer.getDashArray(), 0.0f);
+                                                }
+                                                oldStroke = g2.getStroke();
+                                                g2.setStroke(myStroke);
+
+                                                for (ShapeFileRecord record : records) {
+                                                    r = record.getRecordNumber() - 1;
+                                                    if (record.getShapeType() != ShapeType.NULLSHAPE) {
+                                                        partStart = record.getGeometry().getParts();
+                                                        points = record.getGeometry().getPoints();
+                                                        int numParts = partStart.length;
+                                                        for (int p = 0; p < numParts; p++) {
+                                                            pointSt = partStart[p];
+                                                            if (p < numParts - 1) {
+                                                                pointEnd = partStart[p + 1];
+                                                            } else {
+                                                                pointEnd = points.length;
+                                                            }
+                                                            xPoints = new float[pointEnd - pointSt];
+                                                            yPoints = new float[pointEnd - pointSt];
+                                                            for (int k = pointSt; k < pointEnd; k++) {
+                                                                xPoint = (float) (viewAreaULX + (points[k][0] - leftCoord) / EWRange * viewAreaWidth);
+                                                                yPoint = (float) (viewAreaULY + (topCoord - points[k][1]) / NSRange * viewAreaHeight);
+                                                                xPoints[k - pointSt] = xPoint;
+                                                                yPoints[k - pointSt] = yPoint;
+                                                            }
+                                                            polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, xPoints.length);
+
+                                                            polyline.moveTo(xPoints[0], yPoints[0]);
+
+                                                            for (int index = 1; index < xPoints.length; index++) {
+                                                                polyline.lineTo(xPoints[index], yPoints[index]);
+                                                            }
+                                                            if (activeLayerBool && isActivelyEdited) {
+                                                                if (activeLayerBool && layer.isFeatureSelected(record.getRecordNumber())) {
+                                                                    g2.setColor(selectedFeatureColour);
+                                                                } else {
+                                                                    g2.setColor(colours[r]);
+                                                                }
+                                                                g2.draw(polyline);
+                                                                g2.setColor(Color.RED);
+                                                                GeneralPath polyline2;
+                                                                float xSize = 2.5f;
+                                                                oldStroke = g2.getStroke();
+                                                                g2.setStroke(new BasicStroke(0.5f));
+                                                                for (int index = 0; index < xPoints.length; index++) {
+                                                                    polyline2 = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 4);
+                                                                    polyline2.moveTo(xPoints[index] - xSize, yPoints[index] - xSize);
+                                                                    polyline2.lineTo(xPoints[index] + xSize, yPoints[index] + xSize);
+                                                                    polyline2.moveTo(xPoints[index] + xSize, yPoints[index] - xSize);
+                                                                    polyline2.lineTo(xPoints[index] - xSize, yPoints[index] + xSize);
+                                                                    g2.draw(polyline2);
+                                                                }
+                                                                g2.setStroke(oldStroke);
+                                                            } else if ((activeLayerBool && layer.isFeatureSelected(record.getRecordNumber()))
+                                                                    && !isActivelyEdited) { //record.getRecordNumber() == selectedFeature)
+                                                                g2.setColor(selectedFeatureColour);
+                                                                g2.draw(polyline);
+                                                            } else {
+                                                                g2.setColor(colours[r]);
+                                                                g2.draw(polyline);
+                                                            }
+                                                        }
+
+                                                        if (activeLayerBool && backgroundMouseMode == MOUSE_MODE_FEATURE_SELECT) {
+                                                            //&& layer.getNumSelectedFeatures() > 0) {
+                                                            BoundingBox bb = record.getGeometry().getBox();
+                                                            if (bb.isPointInBox(mapX, mapY)) {
+                                                                g2.setColor(selectionBoxColour);
+                                                                polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 5);
+                                                                xPoint = (float) (viewAreaULX + (bb.getMinX() - leftCoord) / EWRange * viewAreaWidth);
+                                                                yPoint = (float) (viewAreaULY + (topCoord - bb.getMinY()) / NSRange * viewAreaHeight);
+                                                                float xPoint2 = (float) (viewAreaULX + (bb.getMaxX() - leftCoord) / EWRange * viewAreaWidth);
+                                                                float yPoint2 = (float) (viewAreaULY + (topCoord - bb.getMaxY()) / NSRange * viewAreaHeight);
+                                                                polyline.moveTo(xPoint, yPoint);
+                                                                polyline.lineTo(xPoint, yPoint2);
+                                                                polyline.lineTo(xPoint2, yPoint2);
+                                                                polyline.lineTo(xPoint2, yPoint);
+                                                                polyline.lineTo(xPoint, yPoint);
+
+                                                                g2.draw(polyline);
+
+                                                                Ellipse2D circle = new Ellipse2D.Double(xPoint + (xPoint2 - xPoint) / 2 - 2, yPoint + (yPoint2 - yPoint) / 2 - 2, 4, 4);
+                                                                g2.fill(circle);
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                g2.setStroke(oldStroke);
+                                                break;
+
+                                            case POLYGON:
+                                            case POLYGONZ:
+                                            case POLYGONM:
+
+                                                colours = layer.getColourData();
+                                                for (ShapeFileRecord record : records) {
+                                                    r = record.getRecordNumber() - 1;
+                                                    if (record.getShapeType() != ShapeType.NULLSHAPE) {
+
+                                                        partStart = record.getGeometry().getParts();
+                                                        points = record.getGeometry().getPoints();
+                                                        int numParts = partStart.length;
+
+                                                        if (layer.isFilled()) {
+                                                            polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, points.length);
+                                                            for (int p = 0; p < numParts; p++) {
+                                                                pointSt = partStart[p];
+                                                                if (p < numParts - 1) {
+                                                                    pointEnd = partStart[p + 1];
+                                                                } else {
+                                                                    pointEnd = points.length;
+                                                                }
+                                                                xPoints = new float[pointEnd - pointSt];
+                                                                yPoints = new float[pointEnd - pointSt];
+                                                                for (int k = pointSt; k < pointEnd; k++) {
+                                                                    xPoints[k - pointSt] = (float) (viewAreaULX + (points[k][0] - leftCoord) / EWRange * viewAreaWidth);
+                                                                    yPoints[k - pointSt] = (float) (viewAreaULY + (topCoord - points[k][1]) / NSRange * viewAreaHeight);
+                                                                }
+                                                                //System.out.println(r + " " + p);
+                                                                polyline.moveTo(xPoints[0], yPoints[0]);
+
+                                                                for (int index = 1; index < xPoints.length; index++) {
+                                                                    polyline.lineTo(xPoints[index], yPoints[index]);
+                                                                }
+                                                                polyline.closePath();
+                                                            }
+                                                            g2.setColor(colours[r]);
+                                                            g2.fill(polyline);
+                                                        }
+
+                                                        if ((layer.isOutlined() || (activeLayerBool && isActivelyEdited))
+                                                                && !(layer.isFeatureSelected(record.getRecordNumber()) & activeLayerBool)) {
+                                                            g2.setColor(lineColour);
+                                                            myStroke = new BasicStroke(layer.getLineThickness(), BasicStroke.CAP_BUTT,
+                                                                    BasicStroke.JOIN_ROUND);
+                                                            if (layer.isDashed()) {
+                                                                myStroke
+                                                                        = new BasicStroke(layer.getLineThickness(),
+                                                                                BasicStroke.CAP_BUTT,
+                                                                                BasicStroke.JOIN_ROUND,
+                                                                                10.0f, layer.getDashArray(), 0.0f);
+                                                            }
+                                                            oldStroke = g2.getStroke();
+                                                            g2.setStroke(myStroke);
+
+                                                            for (int p = 0; p < numParts; p++) {
+                                                                pointSt = partStart[p];
+                                                                if (p < numParts - 1) {
+                                                                    pointEnd = partStart[p + 1];
+                                                                } else {
+                                                                    pointEnd = points.length;
+                                                                }
+                                                                xPoints = new float[pointEnd - pointSt];
+                                                                yPoints = new float[pointEnd - pointSt];
+                                                                for (int k = pointSt; k < pointEnd; k++) {
+                                                                    xPoints[k - pointSt] = (float) (viewAreaULX + (points[k][0] - leftCoord) / EWRange * viewAreaWidth);
+                                                                    yPoints[k - pointSt] = (float) (viewAreaULY + (topCoord - points[k][1]) / NSRange * viewAreaHeight);
+                                                                }
+                                                                polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, xPoints.length);
+                                                                polyline.moveTo(xPoints[0], yPoints[0]);
+
+                                                                for (int index = 1; index < xPoints.length; index++) {
+                                                                    polyline.lineTo(xPoints[index], yPoints[index]);
+                                                                }
+                                                                g2.draw(polyline);
+                                                            }
+
+                                                            if (activeLayerBool && isActivelyEdited) {
+                                                                if (xPoints.length > 0) {
+                                                                    g2.setColor(Color.RED);
+                                                                    GeneralPath polyline2;
+                                                                    float xSize = 2.5f;
+                                                                    oldStroke = g2.getStroke();
+                                                                    g2.setStroke(new BasicStroke(0.5f));
+                                                                    for (int index = 0; index < xPoints.length; index++) {
+                                                                        polyline2 = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 4);
+                                                                        polyline2.moveTo(xPoints[index] - xSize, yPoints[index] - xSize);
+                                                                        polyline2.lineTo(xPoints[index] + xSize, yPoints[index] + xSize);
+                                                                        polyline2.moveTo(xPoints[index] + xSize, yPoints[index] - xSize);
+                                                                        polyline2.lineTo(xPoints[index] - xSize, yPoints[index] + xSize);
+                                                                        g2.draw(polyline2);
+                                                                    }
+                                                                    g2.setStroke(oldStroke);
+                                                                    g2.setColor(lineColour);
+                                                                }
+                                                            }
+                                                            g2.setStroke(oldStroke);
+                                                        }
+                                                    }
+                                                }
+
+                                                if (activeLayerBool) { // && layer.getNumSelectedFeatures() > 0) { //backgroundMouseMode == MOUSE_MODE_FEATURE_SELECT &&
+                                                    g2.setColor(selectedFeatureColour);
+                                                    myStroke = new BasicStroke(layer.getLineThickness(), BasicStroke.CAP_BUTT,
+                                                            BasicStroke.JOIN_ROUND);
+                                                    oldStroke = g2.getStroke();
+                                                    g2.setStroke(myStroke);
+                                                    for (ShapeFileRecord record : records) {
+                                                        if (layer.isFeatureSelected(record.getRecordNumber())) {
+                                                            partStart = record.getGeometry().getParts();
+                                                            points = record.getGeometry().getPoints();
+                                                            int numParts = partStart.length;
+                                                            for (int p = 0; p < numParts; p++) {
+                                                                pointSt = partStart[p];
+                                                                if (p < numParts - 1) {
+                                                                    pointEnd = partStart[p + 1];
+                                                                } else {
+                                                                    pointEnd = points.length;
+                                                                }
+                                                                xPoints = new float[pointEnd - pointSt];
+                                                                yPoints = new float[pointEnd - pointSt];
+                                                                for (int k = pointSt; k < pointEnd; k++) {
+                                                                    xPoints[k - pointSt] = (float) (viewAreaULX + (points[k][0] - leftCoord) / EWRange * viewAreaWidth);
+                                                                    yPoints[k - pointSt] = (float) (viewAreaULY + (topCoord - points[k][1]) / NSRange * viewAreaHeight);
+                                                                }
+                                                                polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, xPoints.length);
+                                                                polyline.moveTo(xPoints[0], yPoints[0]);
+
+                                                                for (int index = 1; index < xPoints.length; index++) {
+                                                                    polyline.lineTo(xPoints[index], yPoints[index]);
+                                                                }
+                                                                g2.draw(polyline);
+                                                            }
+                                                        }
+
+                                                        if (backgroundMouseMode == MOUSE_MODE_FEATURE_SELECT) {
+                                                            BoundingBox bb = record.getGeometry().getBox();
+
+                                                            if (bb.isPointInBox(mapX, mapY)) {
+                                                                g2.setColor(selectionBoxColour);
+                                                                polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 5);
+                                                                xPoint = (float) (viewAreaULX + (bb.getMinX() - leftCoord) / EWRange * viewAreaWidth);
+                                                                yPoint = (float) (viewAreaULY + (topCoord - bb.getMinY()) / NSRange * viewAreaHeight);
+                                                                float xPoint2 = (float) (viewAreaULX + (bb.getMaxX() - leftCoord) / EWRange * viewAreaWidth);
+                                                                float yPoint2 = (float) (viewAreaULY + (topCoord - bb.getMaxY()) / NSRange * viewAreaHeight);
+                                                                polyline.moveTo(xPoint, yPoint);
+                                                                polyline.lineTo(xPoint, yPoint2);
+                                                                polyline.lineTo(xPoint2, yPoint2);
+                                                                polyline.lineTo(xPoint2, yPoint);
+                                                                polyline.lineTo(xPoint, yPoint);
+
+                                                                g2.draw(polyline);
+
+                                                                Ellipse2D circle = new Ellipse2D.Double(xPoint + (xPoint2 - xPoint) / 2 - 2, yPoint + (yPoint2 - yPoint) / 2 - 2, 4, 4);
+                                                                g2.fill(circle);
+
+                                                                g2.setColor(selectedFeatureColour);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    g2.setStroke(oldStroke);
+                                                }
+                                                break;
+
+                                            case MULTIPATCH:
+                                                // this vector type is unsupported
+                                                break;
+                                        }
+                                        if (isClipped) {
+                                            g2.setClip(oldClip);
+                                        }
+                                    }
                                 }
-
-                                width = layer.getImageWidth();
-                                height = layer.getImageHeight();
-                                Image image = createImage(new MemoryImageSource(width, height, layer.getPixelData(), 0, width));
-                                if (!g2.drawImage(image, x, y, layerWidth, layerHeight, this)) {
-                                    g2.drawImage(image, x, y, layerWidth, layerHeight, this);
-                                }
-
+                                break;
                             }
-                        }
-                    } else if (mapArea.getLayer(i).getLayerType() == MapLayer.MapLayerType.VECTOR) {
-
-                        Rectangle2D rect = new Rectangle2D.Float();
-                        rect.setRect(viewAreaULX, viewAreaULY, viewAreaWidth, viewAreaHeight);
-                        Shape oldClip = null;
-
-                        VectorLayerInfo layer = (VectorLayerInfo) mapArea.getLayer(i);
-                        if (mapArea.getXYUnits().trim().equals("")) {
-                            if (layer.getXYUnits().toLowerCase().contains("met")) {
-                                XYUnits = " m";
-                            } else if (layer.getXYUnits().toLowerCase().contains("deg")) {
-                                XYUnits = "\u00B0";
-                            } else if (!layer.getXYUnits().toLowerCase().contains("not specified")) {
-                                XYUnits = " " + layer.getXYUnits();
-                            }
-                            mapArea.setXYUnits(XYUnits);
-                        }
-                        // is it the active layer?
-                        //int selectedFeature = -1;
-                        boolean activeLayerBool = false;
-                        //if (backgroundMouseMode == MOUSE_MODE_FEATURE_SELECT && mapArea.getActiveLayerOverlayNumber() == layer.getOverlayNumber()) {
-                        if (mapArea.getActiveLayerOverlayNumber() == layer.getOverlayNumber()) {
-                            //selectedFeature = layer.getSelectedFeatureNumber();
-                            activeLayerBool = true;
-                        } else { // if (layer.getSelectedFeatureNumber() >= 0) {
-                            //layer.setSelectedFeatureNumber(-1);
-                            layer.clearSelectedFeatures();
-                        }
-                        float xPoint, yPoint;
-                        /*
-                         * minDistinguishableLength is used to
-                         * speed up the drawing of vectors. Any
-                         * feature that is smaller than this
-                         * value will be excluded from the map.
-                         * This is an example of cartographic
-                         * generalization.
-                         */
-                        double minDistinguishableLength = layer.getCartographicGeneralizationLevel() / mapScale; //scale;
-
-                        int r;
-
-                        if (layer.isVisible()) {
-                            BoundingBox fe = layer.getFullExtent();
-                            if (fe.overlaps(mapExtent)) {
-                                // only set the clip region if this layer's bounding box actually intersects the
-                                // boundary of the mapExtent.
-                                boolean isClipped = false;
-                                if (!fe.entirelyContainedWithin(mapExtent)) {
-                                    oldClip = g2.getClip();
-                                    g2.setClip(rect);
-                                    isClipped = true;
+                            case LAS: {
+                                Rectangle2D rect = new Rectangle2D.Float();
+                                rect.setRect(viewAreaULX, viewAreaULY, viewAreaWidth, viewAreaHeight);
+                                Shape oldClip = null;
+                                LasLayerInfo layer = (LasLayerInfo) mapArea.getLayer(i);
+                                if (mapArea.getXYUnits().trim().equals("")) {
+//                            if (layer.getXYUnits().toLowerCase().contains("met")) {
+                                    XYUnits = " m";
+//                            } else if (layer.getXYUnits().toLowerCase().contains("deg")) {
+//                                XYUnits = "\u00B0";
+//                            } else if (!layer.getXYUnits().toLowerCase().contains("not specified")) {
+//                                XYUnits = " " + layer.getXYUnits();
+//                            }
+                                    mapArea.setXYUnits(XYUnits);
+                                }       // is it the active layer?
+                                boolean activeLayerBool = false;
+                                if (mapArea.getActiveLayerOverlayNumber() == layer.getOverlayNumber()) {
+                                    activeLayerBool = true;
+                                } else {
+                                    layer.clearSelectedFeatures();
                                 }
-                                BoundingBox layerCE = fe.intersect(mapExtent);
-                                layer.setCurrentExtent(layerCE, minDistinguishableLength);
-                                int a1 = layer.getAlpha();
-                                //Color fillColour = new Color(r1, g1, b1, a1);
-                                int r1 = layer.getLineColour().getRed();
-                                int g1 = layer.getLineColour().getGreen();
-                                int b1 = layer.getLineColour().getBlue();
-                                Color lineColour = new Color(r1, g1, b1, a1);
-
-                                ShapeType shapeType = layer.getShapeType();
-                                //ShapeFileRecord[] records = layer.getGeometry();
-                                ArrayList<ShapeFileRecord> records = layer.getData();
-                                double x1, y1;
-                                //int xInt, yInt, x2Int, y2Int;
-                                double topCoord = mapExtent.getMaxY();
-                                double bottomCoord = mapExtent.getMinY();
-                                double leftCoord = mapExtent.getMinX();
-                                double rightCoord = mapExtent.getMaxX();
-                                double EWRange = rightCoord - leftCoord;
-                                double NSRange = topCoord - bottomCoord;
-
-                                double[][] xyData;
-                                GeneralPath gp;
-                                BasicStroke myStroke;
-                                Color[] colours = layer.getColourData();
-                                boolean isFilled = layer.isFilled();
-                                boolean isOutlined = layer.isOutlined();
-                                double[][] recPoints;
-
-                                int[] partStart;
-                                double[][] points;
-                                int pointSt;
-                                int pointEnd;
-                                float xPoints[] = new float[0];
-                                float yPoints[] = new float[0];
-                                GeneralPath polyline;
-
-                                boolean isActivelyEdited = layer.isActivelyEdited();
-
-                                float markerSize;
-                                int maxNumDisplayedPoints, skipVal;
-
-                                switch (shapeType) {
-
-                                    case POINT:
-                                    case POINTZ:
-                                    case POINTM:
-                                        xyData = PointMarkers.getMarkerData(layer.getMarkerStyle(), layer.getMarkerSize());
-                                        myStroke = new BasicStroke(layer.getLineThickness());
-                                        oldStroke = g2.getStroke();
-                                        g2.setStroke(myStroke);
-
-                                        markerSize = layer.getMarkerSize();
-                                        maxNumDisplayedPoints = (int) ((viewAreaHeight / markerSize * viewAreaWidth / markerSize) * 1.25);
-                                        skipVal = (int) (Math.ceil(records.size() / maxNumDisplayedPoints));
+                                float markerSize = layer.getMarkerSize();
+                                int maxNumDisplayedPoints = (int) ((viewAreaHeight / markerSize * viewAreaWidth / markerSize) * 1.25);
+                                if (layer.isVisible()) {
+                                    BoundingBox fe = layer.getFullExtent();
+                                    if (fe.overlaps(mapExtent)) {
+                                        // only set the clip region if this layer's bounding box actually intersects the
+                                        // boundary of the mapExtent.
+                                        boolean isClipped = false;
+                                        if (!fe.entirelyContainedWithin(mapExtent)) {
+                                            oldClip = g2.getClip();
+                                            g2.setClip(rect);
+                                            isClipped = true;
+                                        }
+                                        BoundingBox layerCE = fe.intersect(mapExtent);
+                                        layer.setCurrentExtent(layerCE);
+                                        //int a1 = layer.getAlpha();
+                                        //Color fillColour = new Color(r1, g1, b1, a1);
+                                        ArrayList<XYPoint> records = layer.getPointXYData();
+                                        // skipVal is used to speed up the display of LAS points.
+                                        // If there are more points in the extent that can be displayed,
+                                        // some will be ignored when drawing.
+                                        int skipVal = (int) (Math.ceil(records.size() / maxNumDisplayedPoints));
                                         if (skipVal < 1) {
                                             skipVal = 1;
                                         }
 
-                                        for (int q = 0; q < records.size(); q += skipVal) {
-                                            //for (ShapeFileRecord record : records) {
-                                            ShapeFileRecord record = records.get(q);
-                                            r = record.getRecordNumber() - 1;
-                                            if (record.getShapeType() != ShapeType.NULLSHAPE) {
-//                                                whitebox.geospatialfiles.shapefile.Point rec = (whitebox.geospatialfiles.shapefile.Point) (record.getGeometry());
-//                                                x1 = rec.getX();
-//                                                y1 = rec.getY();
-                                                recPoints = record.getGeometry().getPoints();
-                                                x1 = recPoints[0][0];
-                                                y1 = recPoints[0][1];
+                                        double x1, y1;
+                                        //int xInt, yInt, x2Int, y2Int;
+                                        double topCoord = mapExtent.getMaxY();
+                                        double bottomCoord = mapExtent.getMinY();
+                                        double leftCoord = mapExtent.getMinX();
+                                        double rightCoord = mapExtent.getMaxX();
+                                        double EWRange = rightCoord - leftCoord;
+                                        double NSRange = topCoord - bottomCoord;
+
+                                        GeneralPath gp;
+
+                                        XYPoint record;
+                                        ArrayList<Color> colours = layer.getColourData();
+                                        if (colours.size() == 1) {
+                                            Color fillColour = colours.get(0);
+                                            for (int r = 0; r < records.size(); r += skipVal) {
+                                                record = records.get(r);
+                                                x1 = record.x;
+                                                y1 = record.y;
                                                 if (y1 < bottomCoord || x1 < leftCoord
                                                         || y1 > topCoord || x1 > rightCoord) {
                                                     // It's not within the map area; do nothing.
@@ -2135,539 +2643,54 @@ public class MapRenderer2 extends JPanel implements Printable, MouseMotionListen
                                                     x1 = (viewAreaULX + (x1 - leftCoord) / EWRange * viewAreaWidth);
                                                     y1 = (viewAreaULY + (topCoord - y1) / NSRange * viewAreaHeight);
                                                     gp = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 1);
-                                                    for (int a = 0; a < xyData.length; a++) {
-                                                        if (xyData[a][0] == 0) { // moveTo
-                                                            gp.moveTo(x1 + xyData[a][1], y1 + xyData[a][2]);
-                                                        } else if (xyData[a][0] == 1) { // lineTo
-                                                            gp.lineTo(x1 + xyData[a][1], y1 + xyData[a][2]);
-                                                        } else if (xyData[a][0] == 2) { // elipse2D
-                                                            Ellipse2D circle = new Ellipse2D.Double((x1 - xyData[a][1]), (y1 - xyData[a][1]), xyData[a][2], xyData[a][2]);
+                                                    Ellipse2D circle = new Ellipse2D.Double((x1 - markerSize / 2f), (y1 - markerSize / 2f), markerSize, markerSize);
 
-                                                            gp.append(circle, true);
-                                                        }
-                                                    }
-                                                    if (activeLayerBool && isActivelyEdited) {
-                                                        g2.setColor(Color.RED);
-                                                        GeneralPath polyline2;
-                                                        float xSize = 2.5f;
-                                                        oldStroke = g2.getStroke();
-                                                        g2.setStroke(new BasicStroke(0.5f));
-                                                        polyline2 = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 4);
-                                                        polyline2.moveTo(x1 - xSize, y1 - xSize);
-                                                        polyline2.lineTo(x1 + xSize, y1 + xSize);
-                                                        polyline2.moveTo(x1 + xSize, y1 - xSize);
-                                                        polyline2.lineTo(x1 - xSize, y1 + xSize);
-                                                        g2.draw(polyline2);
-                                                        g2.setStroke(oldStroke);
-                                                    } else {
-                                                        if (isFilled) {
-                                                            g2.setColor(colours[r]);
-                                                            g2.fill(gp);
-                                                        }
-                                                        if (isOutlined) {
-                                                            g2.setColor(lineColour);
-                                                            g2.draw(gp);
-                                                        }
-                                                        if (activeLayerBool && layer.getNumSelectedFeatures() > 0
-                                                                && layer.isFeatureSelected(record.getRecordNumber())) { //record.getRecordNumber() == selectedFeature) {
-                                                            g2.setColor(selectedFeatureColour);
-                                                            g2.draw(gp);
-                                                        }
-                                                    }
+                                                    gp.append(circle, true);
+
+                                                    g2.setColor(fillColour);
+                                                    g2.fill(gp);
+                                                    //                                                        if (activeLayerBool && layer.getNumSelectedFeatures() > 0
+                                                    //                                                                && layer.isFeatureSelected(record.getRecordNumber())) {
+                                                    //                                                            g2.setColor(selectedFeatureColour);
+                                                    //                                                            g2.draw(gp);
+                                                    //                                                        }
                                                 }
                                             }
-                                        }
-                                        g2.setStroke(oldStroke);
-                                        break;
-
-                                    case MULTIPOINT:
-                                    case MULTIPOINTZ:
-                                    case MULTIPOINTM:
-                                        markerSize = layer.getMarkerSize();
-                                        maxNumDisplayedPoints = (int) ((viewAreaHeight / markerSize * viewAreaWidth / markerSize) * 1.25);
-
-                                        xyData = PointMarkers.getMarkerData(layer.getMarkerStyle(), layer.getMarkerSize());
-                                        myStroke = new BasicStroke(layer.getLineThickness());
-                                        oldStroke = g2.getStroke();
-                                        g2.setStroke(myStroke);
-                                        int s = 0;
-                                        for (ShapeFileRecord record : records) {
-                                            //r = record.getRecordNumber() - 1;
-                                            if (record.getShapeType() != ShapeType.NULLSHAPE) {
-                                                //MultiPoint rec = (MultiPoint) (record.getGeometry());
-                                                recPoints = record.getGeometry().getPoints();
-                                                int numPointsInExtent = 0;
-                                                switch (shapeType) {
-                                                    case MULTIPOINT:
-                                                        numPointsInExtent = ((MultiPoint) (record.getGeometry())).numberOfPointsInExtent(layerCE);
-                                                        break;
-                                                    case MULTIPOINTM:
-                                                        numPointsInExtent = ((MultiPointM) (record.getGeometry())).numberOfPointsInExtent(layerCE);
-                                                        break;
-                                                    case MULTIPOINTZ:
-                                                        numPointsInExtent = ((MultiPointZ) (record.getGeometry())).numberOfPointsInExtent(layerCE);
-                                                        break;
-                                                }
-                                                skipVal = (int) (Math.ceil(numPointsInExtent / maxNumDisplayedPoints));
-                                                if (skipVal < 1) {
-                                                    skipVal = 1;
-                                                }
-
-                                                for (int p = 0; p < recPoints.length; p += skipVal) {
-                                                    x1 = recPoints[p][0];
-                                                    y1 = recPoints[p][1];
-                                                    if (y1 < bottomCoord || x1 < leftCoord
-                                                            || y1 > topCoord || x1 > rightCoord) {
-                                                        // It's not within the map area; do nothing.
-                                                    } else {
-                                                        x1 = (viewAreaULX + (x1 - leftCoord) / EWRange * viewAreaWidth);
-                                                        y1 = (viewAreaULY + (topCoord - y1) / NSRange * viewAreaHeight);
-
-                                                        gp = new GeneralPath(GeneralPath.WIND_EVEN_ODD, xyData.length);
-                                                        for (int a = 0; a < xyData.length; a++) {
-                                                            if (xyData[a][0] == 0) { // moveTo
-                                                                gp.moveTo(x1 + xyData[a][1], y1 + xyData[a][2]);
-                                                            } else if (xyData[a][0] == 1) { // lineTo
-                                                                gp.lineTo(x1 + xyData[a][1], y1 + xyData[a][2]);
-                                                            } else if (xyData[a][0] == 2) { // elipse2D
-                                                                Ellipse2D circle = new Ellipse2D.Double((x1 - xyData[a][1]), (y1 - xyData[a][1]), xyData[a][2], xyData[a][2]);
-
-                                                                gp.append(circle, true);
-                                                            }
-                                                        }
-
-                                                        if (activeLayerBool && isActivelyEdited) {
-                                                            g2.setColor(Color.RED);
-                                                            GeneralPath polyline2;
-                                                            float xSize = 2.5f;
-                                                            oldStroke = g2.getStroke();
-                                                            g2.setStroke(new BasicStroke(0.5f));
-                                                            polyline2 = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 4);
-                                                            polyline2.moveTo(x1 - xSize, y1 - xSize);
-                                                            polyline2.lineTo(x1 + xSize, y1 + xSize);
-                                                            polyline2.moveTo(x1 + xSize, y1 - xSize);
-                                                            polyline2.lineTo(x1 - xSize, y1 + xSize);
-                                                            g2.draw(polyline2);
-                                                            g2.setStroke(oldStroke);
-                                                        } else {
-                                                            if (isFilled) {
-                                                                g2.setColor(colours[p]); //s]);
-                                                                g2.fill(gp);
-                                                            }
-                                                            if (isOutlined) {
-                                                                g2.setColor(lineColour);
-                                                                g2.draw(gp);
-                                                            }
-                                                            if (activeLayerBool && layer.getNumSelectedFeatures() > 0 && layer.isFeatureSelected(record.getRecordNumber())) { //record.getRecordNumber() == selectedFeature) {
-                                                                g2.setColor(selectedFeatureColour);
-                                                                g2.draw(gp);
-                                                            }
-                                                        }
-                                                    }
-                                                    //s++;
-                                                }
-                                            }
-                                        }
-                                        g2.setStroke(oldStroke);
-                                        break;
-
-                                    case POLYLINE:
-                                    case POLYLINEZ:
-                                    case POLYLINEM:
-                                        //g2.setColor(lineColour);
-                                        myStroke = new BasicStroke(layer.getLineThickness(), BasicStroke.CAP_BUTT,
-                                                BasicStroke.JOIN_ROUND);
-                                        if (layer.isDashed()) {
-                                            myStroke
-                                                    = new BasicStroke(layer.getLineThickness(),
-                                                            BasicStroke.CAP_BUTT,
-                                                            BasicStroke.JOIN_ROUND,
-                                                            10.0f, layer.getDashArray(), 0.0f);
-                                        }
-                                        oldStroke = g2.getStroke();
-                                        g2.setStroke(myStroke);
-
-                                        for (ShapeFileRecord record : records) {
-                                            r = record.getRecordNumber() - 1;
-                                            if (record.getShapeType() != ShapeType.NULLSHAPE) {
-                                                partStart = record.getGeometry().getParts();
-                                                points = record.getGeometry().getPoints();
-                                                int numParts = partStart.length;
-                                                for (int p = 0; p < numParts; p++) {
-                                                    pointSt = partStart[p];
-                                                    if (p < numParts - 1) {
-                                                        pointEnd = partStart[p + 1];
-                                                    } else {
-                                                        pointEnd = points.length;
-                                                    }
-                                                    xPoints = new float[pointEnd - pointSt];
-                                                    yPoints = new float[pointEnd - pointSt];
-                                                    for (int k = pointSt; k < pointEnd; k++) {
-                                                        xPoint = (float) (viewAreaULX + (points[k][0] - leftCoord) / EWRange * viewAreaWidth);
-                                                        yPoint = (float) (viewAreaULY + (topCoord - points[k][1]) / NSRange * viewAreaHeight);
-                                                        xPoints[k - pointSt] = xPoint;
-                                                        yPoints[k - pointSt] = yPoint;
-                                                    }
-                                                    polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, xPoints.length);
-
-                                                    polyline.moveTo(xPoints[0], yPoints[0]);
-
-                                                    for (int index = 1; index < xPoints.length; index++) {
-                                                        polyline.lineTo(xPoints[index], yPoints[index]);
-                                                    }
-                                                    if (activeLayerBool && isActivelyEdited) {
-                                                        if (activeLayerBool && layer.isFeatureSelected(record.getRecordNumber())) {
-                                                            g2.setColor(selectedFeatureColour);
-                                                        } else {
-                                                            g2.setColor(colours[r]);
-                                                        }
-                                                        g2.draw(polyline);
-                                                        g2.setColor(Color.RED);
-                                                        GeneralPath polyline2;
-                                                        float xSize = 2.5f;
-                                                        oldStroke = g2.getStroke();
-                                                        g2.setStroke(new BasicStroke(0.5f));
-                                                        for (int index = 0; index < xPoints.length; index++) {
-                                                            polyline2 = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 4);
-                                                            polyline2.moveTo(xPoints[index] - xSize, yPoints[index] - xSize);
-                                                            polyline2.lineTo(xPoints[index] + xSize, yPoints[index] + xSize);
-                                                            polyline2.moveTo(xPoints[index] + xSize, yPoints[index] - xSize);
-                                                            polyline2.lineTo(xPoints[index] - xSize, yPoints[index] + xSize);
-                                                            g2.draw(polyline2);
-                                                        }
-                                                        g2.setStroke(oldStroke);
-                                                    } else if ((activeLayerBool && layer.isFeatureSelected(record.getRecordNumber()))
-                                                            && !isActivelyEdited) { //record.getRecordNumber() == selectedFeature)
-                                                        g2.setColor(selectedFeatureColour);
-                                                        g2.draw(polyline);
-                                                    } else {
-                                                        g2.setColor(colours[r]);
-                                                        g2.draw(polyline);
-                                                    }
-                                                }
-
-                                                if (activeLayerBool && backgroundMouseMode == MOUSE_MODE_FEATURE_SELECT) {
-                                                    //&& layer.getNumSelectedFeatures() > 0) {
-                                                    BoundingBox bb = record.getGeometry().getBox();
-                                                    if (bb.isPointInBox(mapX, mapY)) {
-                                                        g2.setColor(selectionBoxColour);
-                                                        polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 5);
-                                                        xPoint = (float) (viewAreaULX + (bb.getMinX() - leftCoord) / EWRange * viewAreaWidth);
-                                                        yPoint = (float) (viewAreaULY + (topCoord - bb.getMinY()) / NSRange * viewAreaHeight);
-                                                        float xPoint2 = (float) (viewAreaULX + (bb.getMaxX() - leftCoord) / EWRange * viewAreaWidth);
-                                                        float yPoint2 = (float) (viewAreaULY + (topCoord - bb.getMaxY()) / NSRange * viewAreaHeight);
-                                                        polyline.moveTo(xPoint, yPoint);
-                                                        polyline.lineTo(xPoint, yPoint2);
-                                                        polyline.lineTo(xPoint2, yPoint2);
-                                                        polyline.lineTo(xPoint2, yPoint);
-                                                        polyline.lineTo(xPoint, yPoint);
-
-                                                        g2.draw(polyline);
-
-                                                        Ellipse2D circle = new Ellipse2D.Double(xPoint + (xPoint2 - xPoint) / 2 - 2, yPoint + (yPoint2 - yPoint) / 2 - 2, 4, 4);
-                                                        g2.fill(circle);
-
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        g2.setStroke(oldStroke);
-                                        break;
-
-                                    case POLYGON:
-                                    case POLYGONZ:
-                                    case POLYGONM:
-
-                                        colours = layer.getColourData();
-                                        for (ShapeFileRecord record : records) {
-                                            r = record.getRecordNumber() - 1;
-                                            if (record.getShapeType() != ShapeType.NULLSHAPE) {
-
-                                                partStart = record.getGeometry().getParts();
-                                                points = record.getGeometry().getPoints();
-                                                int numParts = partStart.length;
-
-                                                if (layer.isFilled()) {
-                                                    polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, points.length);
-                                                    for (int p = 0; p < numParts; p++) {
-                                                        pointSt = partStart[p];
-                                                        if (p < numParts - 1) {
-                                                            pointEnd = partStart[p + 1];
-                                                        } else {
-                                                            pointEnd = points.length;
-                                                        }
-                                                        xPoints = new float[pointEnd - pointSt];
-                                                        yPoints = new float[pointEnd - pointSt];
-                                                        for (int k = pointSt; k < pointEnd; k++) {
-                                                            xPoints[k - pointSt] = (float) (viewAreaULX + (points[k][0] - leftCoord) / EWRange * viewAreaWidth);
-                                                            yPoints[k - pointSt] = (float) (viewAreaULY + (topCoord - points[k][1]) / NSRange * viewAreaHeight);
-                                                        }
-                                                        //System.out.println(r + " " + p);
-                                                        polyline.moveTo(xPoints[0], yPoints[0]);
-
-                                                        for (int index = 1; index < xPoints.length; index++) {
-                                                            polyline.lineTo(xPoints[index], yPoints[index]);
-                                                        }
-                                                        polyline.closePath();
-                                                    }
-                                                    g2.setColor(colours[r]);
-                                                    g2.fill(polyline);
-                                                }
-
-                                                if ((layer.isOutlined() || (activeLayerBool && isActivelyEdited))
-                                                        && !(layer.isFeatureSelected(record.getRecordNumber()) & activeLayerBool)) {
-                                                    g2.setColor(lineColour);
-                                                    myStroke = new BasicStroke(layer.getLineThickness(), BasicStroke.CAP_BUTT,
-                                                            BasicStroke.JOIN_ROUND);
-                                                    if (layer.isDashed()) {
-                                                        myStroke
-                                                                = new BasicStroke(layer.getLineThickness(),
-                                                                        BasicStroke.CAP_BUTT,
-                                                                        BasicStroke.JOIN_ROUND,
-                                                                        10.0f, layer.getDashArray(), 0.0f);
-                                                    }
-                                                    oldStroke = g2.getStroke();
-                                                    g2.setStroke(myStroke);
-
-                                                    for (int p = 0; p < numParts; p++) {
-                                                        pointSt = partStart[p];
-                                                        if (p < numParts - 1) {
-                                                            pointEnd = partStart[p + 1];
-                                                        } else {
-                                                            pointEnd = points.length;
-                                                        }
-                                                        xPoints = new float[pointEnd - pointSt];
-                                                        yPoints = new float[pointEnd - pointSt];
-                                                        for (int k = pointSt; k < pointEnd; k++) {
-                                                            xPoints[k - pointSt] = (float) (viewAreaULX + (points[k][0] - leftCoord) / EWRange * viewAreaWidth);
-                                                            yPoints[k - pointSt] = (float) (viewAreaULY + (topCoord - points[k][1]) / NSRange * viewAreaHeight);
-                                                        }
-                                                        polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, xPoints.length);
-                                                        polyline.moveTo(xPoints[0], yPoints[0]);
-
-                                                        for (int index = 1; index < xPoints.length; index++) {
-                                                            polyline.lineTo(xPoints[index], yPoints[index]);
-                                                        }
-                                                        g2.draw(polyline);
-                                                    }
-
-                                                    if (activeLayerBool && isActivelyEdited) {
-                                                        if (xPoints.length > 0) {
-                                                            g2.setColor(Color.RED);
-                                                            GeneralPath polyline2;
-                                                            float xSize = 2.5f;
-                                                            oldStroke = g2.getStroke();
-                                                            g2.setStroke(new BasicStroke(0.5f));
-                                                            for (int index = 0; index < xPoints.length; index++) {
-                                                                polyline2 = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 4);
-                                                                polyline2.moveTo(xPoints[index] - xSize, yPoints[index] - xSize);
-                                                                polyline2.lineTo(xPoints[index] + xSize, yPoints[index] + xSize);
-                                                                polyline2.moveTo(xPoints[index] + xSize, yPoints[index] - xSize);
-                                                                polyline2.lineTo(xPoints[index] - xSize, yPoints[index] + xSize);
-                                                                g2.draw(polyline2);
-                                                            }
-                                                            g2.setStroke(oldStroke);
-                                                            g2.setColor(lineColour);
-                                                        }
-                                                    }
-                                                    g2.setStroke(oldStroke);
-                                                }
-                                            }
-                                        }
-
-                                        if (activeLayerBool) { // && layer.getNumSelectedFeatures() > 0) { //backgroundMouseMode == MOUSE_MODE_FEATURE_SELECT && 
-                                            g2.setColor(selectedFeatureColour);
-                                            myStroke = new BasicStroke(layer.getLineThickness(), BasicStroke.CAP_BUTT,
-                                                    BasicStroke.JOIN_ROUND);
-                                            oldStroke = g2.getStroke();
-                                            g2.setStroke(myStroke);
-                                            for (ShapeFileRecord record : records) {
-                                                if (layer.isFeatureSelected(record.getRecordNumber())) {
-                                                    partStart = record.getGeometry().getParts();
-                                                    points = record.getGeometry().getPoints();
-                                                    int numParts = partStart.length;
-                                                    for (int p = 0; p < numParts; p++) {
-                                                        pointSt = partStart[p];
-                                                        if (p < numParts - 1) {
-                                                            pointEnd = partStart[p + 1];
-                                                        } else {
-                                                            pointEnd = points.length;
-                                                        }
-                                                        xPoints = new float[pointEnd - pointSt];
-                                                        yPoints = new float[pointEnd - pointSt];
-                                                        for (int k = pointSt; k < pointEnd; k++) {
-                                                            xPoints[k - pointSt] = (float) (viewAreaULX + (points[k][0] - leftCoord) / EWRange * viewAreaWidth);
-                                                            yPoints[k - pointSt] = (float) (viewAreaULY + (topCoord - points[k][1]) / NSRange * viewAreaHeight);
-                                                        }
-                                                        polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, xPoints.length);
-                                                        polyline.moveTo(xPoints[0], yPoints[0]);
-
-                                                        for (int index = 1; index < xPoints.length; index++) {
-                                                            polyline.lineTo(xPoints[index], yPoints[index]);
-                                                        }
-                                                        g2.draw(polyline);
-                                                    }
-                                                }
-
-                                                if (backgroundMouseMode == MOUSE_MODE_FEATURE_SELECT) {
-                                                    BoundingBox bb = record.getGeometry().getBox();
-
-                                                    if (bb.isPointInBox(mapX, mapY)) {
-                                                        g2.setColor(selectionBoxColour);
-                                                        polyline = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 5);
-                                                        xPoint = (float) (viewAreaULX + (bb.getMinX() - leftCoord) / EWRange * viewAreaWidth);
-                                                        yPoint = (float) (viewAreaULY + (topCoord - bb.getMinY()) / NSRange * viewAreaHeight);
-                                                        float xPoint2 = (float) (viewAreaULX + (bb.getMaxX() - leftCoord) / EWRange * viewAreaWidth);
-                                                        float yPoint2 = (float) (viewAreaULY + (topCoord - bb.getMaxY()) / NSRange * viewAreaHeight);
-                                                        polyline.moveTo(xPoint, yPoint);
-                                                        polyline.lineTo(xPoint, yPoint2);
-                                                        polyline.lineTo(xPoint2, yPoint2);
-                                                        polyline.lineTo(xPoint2, yPoint);
-                                                        polyline.lineTo(xPoint, yPoint);
-
-                                                        g2.draw(polyline);
-
-                                                        Ellipse2D circle = new Ellipse2D.Double(xPoint + (xPoint2 - xPoint) / 2 - 2, yPoint + (yPoint2 - yPoint) / 2 - 2, 4, 4);
-                                                        g2.fill(circle);
-
-                                                        g2.setColor(selectedFeatureColour);
-                                                    }
-                                                }
-                                            }
-
-                                            g2.setStroke(oldStroke);
-                                        }
-                                        break;
-
-                                    case MULTIPATCH:
-                                        // this vector type is unsupported
-                                        break;
-                                }
-                                if (isClipped) {
-                                    g2.setClip(oldClip);
-                                }
-                            }
-                        }
-                    } else if (mapArea.getLayer(i).getLayerType() == MapLayer.MapLayerType.LAS) {
-                        Rectangle2D rect = new Rectangle2D.Float();
-                        rect.setRect(viewAreaULX, viewAreaULY, viewAreaWidth, viewAreaHeight);
-                        Shape oldClip = null;
-
-                        LasLayerInfo layer = (LasLayerInfo) mapArea.getLayer(i);
-                        if (mapArea.getXYUnits().trim().equals("")) {
-//                            if (layer.getXYUnits().toLowerCase().contains("met")) {
-                            XYUnits = " m";
-//                            } else if (layer.getXYUnits().toLowerCase().contains("deg")) {
-//                                XYUnits = "\u00B0";
-//                            } else if (!layer.getXYUnits().toLowerCase().contains("not specified")) {
-//                                XYUnits = " " + layer.getXYUnits();
-//                            }
-                            mapArea.setXYUnits(XYUnits);
-                        }
-                        // is it the active layer?
-                        boolean activeLayerBool = false;
-                        if (mapArea.getActiveLayerOverlayNumber() == layer.getOverlayNumber()) {
-                            activeLayerBool = true;
-                        } else {
-                            layer.clearSelectedFeatures();
-                        }
-
-                        float markerSize = layer.getMarkerSize();
-                        int maxNumDisplayedPoints = (int) ((viewAreaHeight / markerSize * viewAreaWidth / markerSize) * 1.25);
-
-                        if (layer.isVisible()) {
-                            BoundingBox fe = layer.getFullExtent();
-                            if (fe.overlaps(mapExtent)) {
-                                // only set the clip region if this layer's bounding box actually intersects the
-                                // boundary of the mapExtent.
-                                boolean isClipped = false;
-                                if (!fe.entirelyContainedWithin(mapExtent)) {
-                                    oldClip = g2.getClip();
-                                    g2.setClip(rect);
-                                    isClipped = true;
-                                }
-                                BoundingBox layerCE = fe.intersect(mapExtent);
-                                layer.setCurrentExtent(layerCE);
-                                //int a1 = layer.getAlpha();
-                                //Color fillColour = new Color(r1, g1, b1, a1);
-                                ArrayList<XYPoint> records = layer.getPointXYData();
-                                // skipVal is used to speed up the display of LAS points.
-                                // If there are more points in the extent that can be displayed,
-                                // some will be ignored when drawing.
-                                int skipVal = (int) (Math.ceil(records.size() / maxNumDisplayedPoints));
-                                if (skipVal < 1) {
-                                    skipVal = 1;
-                                }
-
-                                double x1, y1;
-                                //int xInt, yInt, x2Int, y2Int;
-                                double topCoord = mapExtent.getMaxY();
-                                double bottomCoord = mapExtent.getMinY();
-                                double leftCoord = mapExtent.getMinX();
-                                double rightCoord = mapExtent.getMaxX();
-                                double EWRange = rightCoord - leftCoord;
-                                double NSRange = topCoord - bottomCoord;
-
-                                GeneralPath gp;
-
-                                XYPoint record;
-                                ArrayList<Color> colours = layer.getColourData();
-                                if (colours.size() == 1) {
-                                    Color fillColour = colours.get(0);
-                                    for (int r = 0; r < records.size(); r += skipVal) {
-                                        record = records.get(r);
-                                        x1 = record.x;
-                                        y1 = record.y;
-                                        if (y1 < bottomCoord || x1 < leftCoord
-                                                || y1 > topCoord || x1 > rightCoord) {
-                                            // It's not within the map area; do nothing.
                                         } else {
-                                            x1 = (viewAreaULX + (x1 - leftCoord) / EWRange * viewAreaWidth);
-                                            y1 = (viewAreaULY + (topCoord - y1) / NSRange * viewAreaHeight);
-                                            gp = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 1);
-                                            Ellipse2D circle = new Ellipse2D.Double((x1 - markerSize / 2f), (y1 - markerSize / 2f), markerSize, markerSize);
+                                            for (int r = 0; r < records.size(); r += skipVal) {
+                                                record = records.get(r);
+                                                x1 = record.x;
+                                                y1 = record.y;
+                                                if (y1 < bottomCoord || x1 < leftCoord
+                                                        || y1 > topCoord || x1 > rightCoord) {
+                                                    // It's not within the map area; do nothing.
+                                                } else {
+                                                    x1 = (viewAreaULX + (x1 - leftCoord) / EWRange * viewAreaWidth);
+                                                    y1 = (viewAreaULY + (topCoord - y1) / NSRange * viewAreaHeight);
+                                                    gp = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 1);
+                                                    Ellipse2D circle = new Ellipse2D.Double((x1 - markerSize / 2f), (y1 - markerSize / 2f), markerSize, markerSize);
 
-                                            gp.append(circle, true);
+                                                    gp.append(circle, true);
 
-                                            g2.setColor(fillColour);
-                                            g2.fill(gp);
-                                            //                                                        if (activeLayerBool && layer.getNumSelectedFeatures() > 0 
-                                            //                                                                && layer.isFeatureSelected(record.getRecordNumber())) { 
-                                            //                                                            g2.setColor(selectedFeatureColour);
-                                            //                                                            g2.draw(gp);
-                                            //                                                        }
+                                                    g2.setColor(colours.get(r));
+                                                    g2.fill(gp);
+                                                    //                                                        if (activeLayerBool && layer.getNumSelectedFeatures() > 0
+                                                    //                                                                && layer.isFeatureSelected(record.getRecordNumber())) {
+                                                    //                                                            g2.setColor(selectedFeatureColour);
+                                                    //                                                            g2.draw(gp);
+                                                    //                                                        }
+                                                }
+                                            }
                                         }
-                                    }
-                                } else {
-                                    for (int r = 0; r < records.size(); r += skipVal) {
-                                        record = records.get(r);
-                                        x1 = record.x;
-                                        y1 = record.y;
-                                        if (y1 < bottomCoord || x1 < leftCoord
-                                                || y1 > topCoord || x1 > rightCoord) {
-                                            // It's not within the map area; do nothing.
-                                        } else {
-                                            x1 = (viewAreaULX + (x1 - leftCoord) / EWRange * viewAreaWidth);
-                                            y1 = (viewAreaULY + (topCoord - y1) / NSRange * viewAreaHeight);
-                                            gp = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 1);
-                                            Ellipse2D circle = new Ellipse2D.Double((x1 - markerSize / 2f), (y1 - markerSize / 2f), markerSize, markerSize);
-
-                                            gp.append(circle, true);
-
-                                            g2.setColor(colours.get(r));
-                                            g2.fill(gp);
-                                            //                                                        if (activeLayerBool && layer.getNumSelectedFeatures() > 0 
-                                            //                                                                && layer.isFeatureSelected(record.getRecordNumber())) { 
-                                            //                                                            g2.setColor(selectedFeatureColour);
-                                            //                                                            g2.draw(gp);
-                                            //                                                        }
+                                        if (isClipped) {
+                                            g2.setClip(oldClip);
                                         }
                                     }
                                 }
-                                if (isClipped) {
-                                    g2.setClip(oldClip);
-                                }
+                                break;
                             }
+                            default:
+                                break;
                         }
                     }
                 }

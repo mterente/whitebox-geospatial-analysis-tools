@@ -29,28 +29,33 @@
             <li><a href="FastBreachDepressions.html">Breach Depressions (Fast)</a></li>
             <li><a href="FillDepressions.html">Fill depressions</a></li>
         </ul>
-
+        
+        <h2 class="SeeAlso">References:</h2>
+	    <ol>
+        	  <li>O'Callaghan J. and Mark, D. 1984. The Extraction of Drainage Networks From Digital Elevation Data. <i>Computer Vision Graphics and Image Processing</i>, 27(3): 323-344.</li>
+	    </ol>
+        
         <h2 class="SeeAlso">Scripting:</h2>
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                demFile = wd + "DEM.dep"<br>
-                outputFile = wd + "pointer.dep"<br>
-                runParallel = "true"<br>
-                args = [demFile, outputFile, runParallel]<br>
-                pluginHost.runPlugin("D8FlowAccum", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                demFile = wd + "DEM.dep"&#10;<br>
+                outputFile = wd + "pointer.dep"&#10;<br>
+                runParallel = "true"&#10;<br>
+                args = [demFile, outputFile, runParallel]&#10;<br>
+                pluginHost.runPlugin("D8FlowAccum", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def demFile = wd + "DEM.dep"<br>
-                def outputFile = wd + "pointer.dep"<br>
-                def runParallel = "true"<br>
-                String[] args = [demFile, outputFile, runParallel]<br>
-                pluginHost.runPlugin("D8FlowAccum", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def demFile = wd + "DEM.dep"&#10;<br>
+                def outputFile = wd + "pointer.dep"&#10;<br>
+                def runParallel = "true"&#10;<br>
+                String[] args = [demFile, outputFile, runParallel]&#10;<br>
+                pluginHost.runPlugin("D8FlowAccum", args, false)&#10;<br>
             </code>
         </p>
 

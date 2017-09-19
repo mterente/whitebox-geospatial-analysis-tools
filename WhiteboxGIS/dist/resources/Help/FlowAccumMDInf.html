@@ -70,33 +70,33 @@ flow-accumulation image. The output raster is of the <i>float</i> data type and
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-			 dem = wd + dem.dep"<br>
-			 upslope = wd + "fcc.dep"<br>
-			 streams = wd + "streams.dep"<br>
-			 localIn = wd + "localIn.dep"<br>
-			 expParameter = "1"<br>
-			 outType = "Specific catchment area (sca)" <br>
-			 logTrans = "false"<br>
-			 dispersThresh = "5000"<br>
-			 args = [dem, upslope, streams, localIn, expParameter, outType, logTrans, dispersThresh]<br>
-			 pluginHost.runPlugin("FlowAccumMDInf", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+			 dem = wd + dem.dep"&#10;<br>
+			 upslope = wd + "fcc.dep"&#10;<br>
+			 streams = wd + "streams.dep"&#10;<br>
+			 localIn = wd + "localIn.dep"&#10;<br>
+			 expParameter = "1"&#10;<br>
+			 outType = "Specific catchment area (sca)" &#10;<br>
+			 logTrans = "false"&#10;<br>
+			 dispersThresh = "5000"&#10;<br>
+			 args = [dem, upslope, streams, localIn, expParameter, outType, logTrans, dispersThresh]&#10;<br>
+			 pluginHost.runPlugin("FlowAccumMDInf", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-			 def dem = wd + dem.dep"<br>
-			 def upslope = wd + "fcc.dep"<br>
-			 def streams = wd + "streams.dep"<br>
-			 def localIn = wd + "localIn.dep"<br>
-			 def expParameter = "1"<br>
-			 def outType = "Specific catchment area (sca)" <br>
-			 def logTrans = "false"<br>
-			 def dispersThresh = "5000"<br>
-			 String[] args = [dem, upslope, streams, localIn, expParameter, outType, logTrans, dispersThresh]<br>
-			 pluginHost.runPlugin("FlowAccumMDInf", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+			 def dem = wd + dem.dep"&#10;<br>
+			 def upslope = wd + "fcc.dep"&#10;<br>
+			 def streams = wd + "streams.dep"&#10;<br>
+			 def localIn = wd + "localIn.dep"&#10;<br>
+			 def expParameter = "1"&#10;<br>
+			 def outType = "Specific catchment area (sca)" &#10;<br>
+			 def logTrans = "false"&#10;<br>
+			 def dispersThresh = "5000"&#10;<br>
+			 String[] args = [dem, upslope, streams, localIn, expParameter, outType, logTrans, dispersThresh]&#10;<br>
+			 pluginHost.runPlugin("FlowAccumMDInf", args, false)&#10;<br>
             </code>
         </p>
         

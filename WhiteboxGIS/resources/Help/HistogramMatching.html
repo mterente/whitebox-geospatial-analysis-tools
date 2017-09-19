@@ -56,7 +56,7 @@
             <code>
                 wd = pluginHost.getWorkingDirectory()&#10;<br>
                 inputRaster = wd + "input.dep"&#10;<br>
-                inputHisto = wd = "histo.txt"&#10;<br>
+                inputHisto = wd + "histo.txt"&#10;<br>
                 outputFile = wd + "output.dep"&#10;<br>
                 args = [inputFile, inputHisto, outputFile]&#10;<br>
                 pluginHost.runPlugin("HistogramMatching", args, False)&#10;<br>
@@ -67,7 +67,7 @@
             <code>
                 def wd = pluginHost.getWorkingDirectory()&#10;<br>
                 def inputFile = wd + "input.dep"&#10;<br>
-                def inputHisto = wd = "histo.txt"&#10;<br>
+                def inputHisto = wd + "histo.txt"&#10;<br>
                 def outputFile = wd + "output.dep"&#10;<br>
                 String[] args = [inputFile, inputHisto, outputFile]&#10;<br>
                 pluginHost.runPlugin("HistogramMatching", args, false)&#10;<br>

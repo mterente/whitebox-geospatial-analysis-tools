@@ -251,12 +251,13 @@ public class TangentialCurv implements WhiteboxPlugin {
                 for (col = 0; col < cols; col++) {
                     z = inputFile.getValue(row, col);
                     if (z != noData) {
+                        z = z * zConvFactor;
                         for (int i = 0; i < 8; i++) {
                             N[i] = inputFile.getValue(row + Dy[i], col + Dx[i]);
                             if (N[i] != noData) {
                                 N[i] = N[i] * zConvFactor;
                             } else {
-                                N[i] = z * zConvFactor;
+                                N[i] = z;
                             }
                         }
                         //calculate each of the terms
@@ -270,7 +271,7 @@ public class TangentialCurv implements WhiteboxPlugin {
                         p = Zx2 + Zy2;
                         q = p + 1;
                         if (p > 0) {
-                            curv = (Zxx * Zy2 - 2 * Zxy * Zx * Zy + Zyy * Zx2) /( p * Math.pow(q, 1.5));
+                            curv = (Zxx * Zy2 - 2 * Zxy * Zx * Zy + Zyy * Zx2) /(p * Math.sqrt(q));
                             outputFile.setValue(row, col, curv * radToDeg * 100);
                         } else {
                             outputFile.setValue(row,col, noData);

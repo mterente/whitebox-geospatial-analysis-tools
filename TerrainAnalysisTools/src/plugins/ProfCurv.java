@@ -249,12 +249,13 @@ public class ProfCurv implements WhiteboxPlugin {
                 for (col = 0; col < cols; col++) {
                     z = inputFile.getValue(row, col);
                     if (z != noData) {
+                        z = z * zConvFactor;
                         for (int i = 0; i < 8; i++) {
                             N[i] = inputFile.getValue(row + Dy[i], col + Dx[i]);
                             if (N[i] != noData) {
                                 N[i] = N[i] * zConvFactor;
                             } else {
-                                N[i] = z * zConvFactor;
+                                N[i] = z;
                             }
                         }
                         //calculate each of the terms

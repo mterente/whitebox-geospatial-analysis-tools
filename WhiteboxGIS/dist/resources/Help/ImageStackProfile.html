@@ -32,27 +32,27 @@ containing the pixel values cooresponding to the points.</p>
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # The names of the multiple input files must<br>
-                # be separated by semicolons in the string.<br>
-                inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                pointsFile = wd + "points.shp"<br>
-                textFile = "not specified"<br>
-                args = [inputFiles, pointsFile, textFile]<br>
-                pluginHost.runPlugin("ImageStackProfile", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # The names of the multiple input files must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                pointsFile = wd + "points.shp"&#10;<br>
+                textFile = "not specified"&#10;<br>
+                args = [inputFiles, pointsFile, textFile]&#10;<br>
+                pluginHost.runPlugin("ImageStackProfile", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // The names of the multiple input files must<br>
-                // be separated by semicolons in the string.<br>
-                def inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                def pointsFile = wd + "points.shp"<br>
-                def textFile = wd + "textOutput.txt"<br>
-                String[] args = [inputFiles, pointsFile, textFile]<br>
-                pluginHost.runPlugin("ImageStackProfile", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // The names of the multiple input files must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                def pointsFile = wd + "points.shp"&#10;<br>
+                def textFile = wd + "textOutput.txt"&#10;<br>
+                String[] args = [inputFiles, pointsFile, textFile]&#10;<br>
+                pluginHost.runPlugin("ImageStackProfile", args, false)&#10;<br>
             </code>
         </p>
         

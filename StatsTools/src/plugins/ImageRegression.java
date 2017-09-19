@@ -245,6 +245,9 @@ public class ImageRegression implements WhiteboxPlugin {
                 data1 = image1.getRowValues(row);
                 data2 = image2.getRowValues(row);
                 for (col = 0; col < cols; col++) {
+                    if (col == 655) {
+                        col = 655;
+                    }
                     x = data1[col];
                     y = data2[col];
                     if (x != noData1 && y != noData2) {
@@ -382,11 +385,11 @@ public class ImageRegression implements WhiteboxPlugin {
             
             if (intercept >= 0) {
                 retstr += "Regression Equation:\t\t" + image2.getShortHeaderFile() + " = " 
-                    + df.format(slope) + " \u00D7 " + image2.getShortHeaderFile() + " + " + df.format(intercept) + "\n";
+                    + df.format(slope) + " \u00D7 " + image1.getShortHeaderFile() + " + " + df.format(intercept) + "\n";
             
             } else {
                 retstr += "Regression Equation:\t\t" + image2.getShortHeaderFile() + " = " 
-                    + df.format(slope) + " \u00D7 " + image2.getShortHeaderFile() + " - " + df.format(-intercept) + "\n";
+                    + df.format(slope) + " \u00D7 " + image1.getShortHeaderFile() + " - " + df.format(-intercept) + "\n";
             
             }
             
@@ -417,8 +420,8 @@ public class ImageRegression implements WhiteboxPlugin {
 //    public static void main(String[] args) {
 //        ImageRegression ir = new ImageRegression();
 //        args = new String[3];
-//        args[0] = "/Users/johnlindsay/Documents/Data/LandsatData/band1.dep";
-//        args[1] = "/Users/johnlindsay/Documents/Data/LandsatData/band2_cropped.dep";
+//        args[0] = "/Users/johnlindsay/Documents/data/DanData/EP11.dep";
+//        args[1] = "/Users/johnlindsay/Documents/data/DanData/PER11.dep";
 //        args[2]= "not specified";
 //        
 //        ir.setArgs(args);

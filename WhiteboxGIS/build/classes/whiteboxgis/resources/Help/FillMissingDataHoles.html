@@ -44,7 +44,8 @@
                 wd = pluginHost.getWorkingDirectory()&#10;<br>
                 inputFile = wd + "input.dep"&#10;<br>
                 outputFile = wd + "output.dep"&#10;<br>
-                args = [inputFile, outputFile]&#10;<br>
+                fillInterior = "true"&#10;<br>
+                args = [inputFile, outputFile, fillInterior]&#10;<br>
                 pluginHost.runPlugin("FillMissingDataHoles", args, False)&#10;<br>
             </code>
         </p>
@@ -54,7 +55,8 @@
                 def wd = pluginHost.getWorkingDirectory()&#10;<br>
                 def inputFile = wd + "input.dep"&#10;<br>
                 def outputFile = wd + "output.dep"&#10;<br>
-                String[] args = [inputFile, outputFile]&#10;<br>
+                def fillInterior = "false"&#10;<br>
+                String[] args = [inputFile, outputFile, fillInterior]&#10;<br>
                 pluginHost.runPlugin("FillMissingDataHoles", args, false)&#10;<br>
             </code>
         </p>

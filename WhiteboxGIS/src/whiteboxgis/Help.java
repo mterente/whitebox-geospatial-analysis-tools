@@ -700,20 +700,17 @@ public class Help extends JDialog implements ActionListener, HyperlinkListener {
             }
 
 
-            Arrays.sort(searchCounts, new Comparator<int[]>() {
-                @Override
-                public int compare(int[] entry1, int[] entry2) {
-                    final int int1 = entry1[0];
-                    final int int2 = entry2[0];
-                    if (int1 > int2) {
-                        return -1;
-                    } else if (int1 == int2) {
-                        String str1 = allFiles[entry1[1]][1];
-                        String str2 = allFiles[entry2[1]][1];
-                        return str1.compareTo(str2);
-                    } else {
-                        return 1;
-                    }
+            Arrays.sort(searchCounts, (int[] entry1, int[] entry2) -> {
+                final int int1 = entry1[0];
+                final int int2 = entry2[0];
+                if (int1 > int2) {
+                    return -1;
+                } else if (int1 == int2) {
+                    String str1 = allFiles[entry1[1]][1];
+                    String str2 = allFiles[entry2[1]][1];
+                    return str1.compareTo(str2);
+                } else {
+                    return 1;
                 }
             });
 

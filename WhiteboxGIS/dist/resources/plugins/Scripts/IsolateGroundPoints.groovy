@@ -39,6 +39,8 @@ import whitebox.geospatialfiles.shapefile.attributes.DBFField;
 import whitebox.geospatialfiles.shapefile.attributes.*;
 import whitebox.ui.plugin_dialog.*
 import groovy.transform.CompileStatic
+import groovy.time.TimeDuration
+import groovy.time.TimeCategory
 
 // The following four variables are required for this 
 // script to be integrated into the tool tree panel. 
@@ -131,7 +133,8 @@ public class IsolateGroundPoints implements ActionListener {
 	// that of native Java code.
 	@CompileStatic
 	private void execute(String[] args) {
-		long start = System.currentTimeMillis()
+//		long start = System.currentTimeMillis()
+		Date start = new Date();
 		int progress = 0
 	    int oldProgress = -1
 	    double x, y, z, zN, dist, slope, maxDist, maxSlope
@@ -161,7 +164,9 @@ public class IsolateGroundPoints implements ActionListener {
 				maxSlope = Double.parseDouble(args[5]);
 		        slopeThreshold = Math.tan(Math.toRadians(maxSlope));
 		        minElevDiff = Double.parseDouble(args[6]);
-		        minElev = Double.parseDouble(args[7]);
+		        if (!args[7].toLowerCase().contains("not specified")) {
+		        	minElev = Double.parseDouble(args[7]);
+		        }
 		        displayOutput = Boolean.parseBoolean(args[8])
 			} else if (args.length == 8) {
 				outputFile = args[1]
@@ -170,7 +175,9 @@ public class IsolateGroundPoints implements ActionListener {
 				maxSlope = Double.parseDouble(args[4]);
 		        slopeThreshold = Math.tan(Math.toRadians(maxSlope));
 		        minElevDiff = Double.parseDouble(args[5]);
-		        minElev = Double.parseDouble(args[6]);
+		        if (!args[6].toLowerCase().contains("not specified")) {
+		        	minElev = Double.parseDouble(args[6]);
+		        }
 		        displayOutput = Boolean.parseBoolean(args[7])
 			} else {
 				pluginHost.showFeedback("Incorrect number of arguments given to tool.")
@@ -679,6 +686,10 @@ public class IsolateGroundPoints implements ActionListener {
 		            output.write()
 				}
 			}
+
+			Date stop = new Date()
+			TimeDuration td = TimeCategory.minus(stop, start)
+			pluginHost.showFeedback("Elapsed time: $td")
 
 			if (displayOutput) {
 				pluginHost.returnData(outputFile)

@@ -30,31 +30,31 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                # You may have multiple input files but they must<br>
-                # be separated by semicolons in the string.<br>
-                inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                outputSuffix = "bare earth"<br>
-                maxObjectSize = "250"<br>
-                minEdgeSlope = "15"<br>
-                iterate = "true"<br>
-                args = [inputFiles, outputSuffix, maxObjectSize, iterate]<br>
-                pluginHost.runPlugin("RemoveOffTerrainObjects", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                # You may have multiple input files but they must&#10;<br>
+                # be separated by semicolons in the string.&#10;<br>
+                inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                outputSuffix = "bare earth"&#10;<br>
+                maxObjectSize = "250"&#10;<br>
+                minEdgeSlope = "15"&#10;<br>
+                iterate = "true"&#10;<br>
+                args = [inputFiles, outputSuffix, maxObjectSize, iterate]&#10;<br>
+                pluginHost.runPlugin("RemoveOffTerrainObjects", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                // You may have multiple input files but they must<br>
-                // be separated by semicolons in the string.<br>
-                def inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"<br>
-                def outputSuffix = "bare earth"<br>
-                def maxObjectSize = "250"<br>
-                def minEdgeSlope = "15"<br>
-                def iterate = "true"<br>
-                String[] args = [inputFiles, outputSuffix, maxObjectSize, iterate]<br>
-                pluginHost.runPlugin("RemoveOffTerrainObjects", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                // You may have multiple input files but they must&#10;<br>
+                // be separated by semicolons in the string.&#10;<br>
+                def inputFiles = wd + "input1.dep" + ";" + wd + "input2.dep" + ";" + wd + "input3.dep"&#10;<br>
+                def outputSuffix = "bare earth"&#10;<br>
+                def maxObjectSize = "250"&#10;<br>
+                def minEdgeSlope = "15"&#10;<br>
+                def iterate = "true"&#10;<br>
+                String[] args = [inputFiles, outputSuffix, maxObjectSize, iterate]&#10;<br>
+                pluginHost.runPlugin("RemoveOffTerrainObjects", args, false)&#10;<br>
             </code>
         </p>
 

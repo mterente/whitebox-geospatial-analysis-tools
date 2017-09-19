@@ -37,7 +37,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import whitebox.interfaces.WhiteboxPluginHost;
-import static whiteboxgis.WhiteboxGui.logger;
+import static whiteboxgis.WhiteboxGui.LOGGER;
 
 /**
  *
@@ -253,6 +253,7 @@ public class ViewTextDialog extends JDialog implements ActionListener, KeyListen
 
     public void setText(String text) {
         textArea.setText(text);
+        textArea.setCaretPosition(0);
     }
 
     private void saveAs() {
@@ -366,7 +367,7 @@ public class ViewTextDialog extends JDialog implements ActionListener, KeyListen
                 br.close();
                 in.close();
             } catch (Exception e) {
-                logger.log(Level.SEVERE, "WhiteboxGui.openText", e);
+                LOGGER.log(Level.SEVERE, "WhiteboxGui.openText", e);
             }
         }
 

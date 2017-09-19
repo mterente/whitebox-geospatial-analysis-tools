@@ -41,24 +41,24 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                pointerFile = wd + "D8 pointer.dep"<br>
-                streams = wd + "streams.dep"<br>
-                dem = wd + "DEM.dep"<br>
-                args = [pointerFile, streams, dem]<br>
-                pluginHost.runPlugin("LongProfile", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                pointerFile = wd + "D8 pointer.dep"&#10;<br>
+                streams = wd + "streams.dep"&#10;<br>
+                dem = wd + "DEM.dep"&#10;<br>
+                args = [pointerFile, streams, dem]&#10;<br>
+                pluginHost.runPlugin("LongProfile", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def pointerFile = wd + "D8 pointer.dep"<br>
-                def streams = wd + "stream.dep"<br>
-                def dem = wd + "DEM.dep"<br>
-                def outFile = wd + "profile.csv"<br>
-                String[] args = [pointerFile, streams, dem, outFile]<br>
-                pluginHost.runPlugin("LongProfile", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def pointerFile = wd + "D8 pointer.dep"&#10;<br>
+                def streams = wd + "stream.dep"&#10;<br>
+                def dem = wd + "DEM.dep"&#10;<br>
+                def outFile = wd + "profile.csv"&#10;<br>
+                String[] args = [pointerFile, streams, dem, outFile]&#10;<br>
+                pluginHost.runPlugin("LongProfile", args, false)&#10;<br>
             </code>
         </p>
 

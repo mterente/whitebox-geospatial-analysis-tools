@@ -41,6 +41,7 @@ import java.nio.file.Paths;
 import javax.script.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
@@ -51,8 +52,8 @@ import javax.imageio.ImageIO;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
+//import javax.swing.filechooser.FileFilter;
+//import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 //import javax.swing.plaf.FontUIResource;
 //import javax.swing.tree.DefaultTreeCellRenderer;
@@ -64,6 +65,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -107,14 +109,14 @@ import whitebox.geospatialfiles.LasLayerInfo;
 @SuppressWarnings("unchecked")
 public class WhiteboxGui extends JFrame implements ThreadListener, ActionListener, WhiteboxPluginHost, Communicator {
 
-    public static final Logger logger = Logger.getLogger(WhiteboxGui.class.getPackage().getName());
+    public static final Logger LOGGER = Logger.getLogger(WhiteboxGui.class.getPackage().getName());
     private static PluginService pluginService = null;
     private StatusBar status;
     // common variables
-    private static final String versionName = "3.3 'Glasgow'";
-    public static final String versionNumber = "3.3.1";
+    private static final String VERSION_NAME = "3.4 'Montreal'";
+    public static final String VERSION_NUMBER = "3.4.1";
     public static String currentVersionNumber;
-    private String skipVersionNumber = versionNumber;
+    private String skipVersionNumber = VERSION_NUMBER;
     private ArrayList<PluginInfo> plugInfo = null;
     private String applicationDirectory;
     private String resourcesDirectory;
@@ -213,10 +215,14 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
     private boolean isPageVisible = true;
     private double rasterCartographicGeneralizationLevel = 10;
     private double vectorCartographicGeneralizationLevel = 0.5;
+    private String[] pluginNames = new String[0];
+    private String[] pluginUsage = new String[0];
+    private String[] pluginLastUse = new String[0];
+    private static boolean networkedFlag = false;
 
     public static void main(String[] args) {
         try {
-
+            
             //setLookAndFeel("Nimbus");
             setLookAndFeel("systemLAF");
             if (System.getProperty("os.name").contains("Mac")) {
@@ -270,9 +276,9 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 }
             }
 
-        } catch (ClassNotFoundException | InstantiationException |
-                IllegalAccessException | UnsupportedLookAndFeelException e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.setLookAndFeel", e);
+        } catch (ClassNotFoundException | InstantiationException
+                | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.setLookAndFeel", e);
             //System.err.println(e.getMessage());
         }
     }
@@ -289,14 +295,14 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 }
             }
             return name;
-        } catch (ClassNotFoundException | InstantiationException |
-                IllegalAccessException | UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | InstantiationException
+                | IllegalAccessException | UnsupportedLookAndFeelException e) {
             return null;
         }
     }
 
     public WhiteboxGui() {
-        super("Whitebox GAT " + versionName);
+        super("Whitebox GAT " + VERSION_NAME);
         this.getRootPane().putClientProperty("apple.awt.brushMetalLook", Boolean.TRUE);
         try {
             // initialize the pathSep and GraphicsDirectory variables
@@ -315,7 +321,37 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 applicationDirectory = new File(applicationDirectory).getParent();
             }
 
-            resourcesDirectory = applicationDirectory + pathSep + "resources" + pathSep;
+            // networked mode?
+            String networkPropsFile = applicationDirectory + pathSep + "resources" + pathSep + "networkProps.txt";
+            File propertiesFile = new File(networkPropsFile);
+            if (propertiesFile.exists()) {
+                Properties props = new Properties();
+                FileInputStream in = new FileInputStream(networkPropsFile);
+                props.load(in);
+                if (props.containsKey("networkedMode")) {
+                    networkedFlag = Boolean.parseBoolean(props.getProperty("networkedMode"));
+                }
+                in.close();
+            }
+            
+            // do we have write access to the applicationDirectory?
+            if ((new File(applicationDirectory)).canWrite() && !networkedFlag) {
+                resourcesDirectory = applicationDirectory + pathSep + "resources" + pathSep;
+                logDirectory = applicationDirectory + pathSep + "logs" + pathSep;
+            } else {
+                String homeDir = System.getProperty("user.home");
+                if ((new File(homeDir)).canWrite()) {
+                    String usersApplicationDirectory = homeDir + pathSep + "WhiteboxGAT";
+                    if (!(new File(usersApplicationDirectory)).exists()) {
+                        // copy the resources folders over to this user home directory
+                        FileUtils.copyDirectory(new File(applicationDirectory + pathSep + "resources"), new File(usersApplicationDirectory + pathSep + "resources"));
+                    }
+                    //applicationDirectory = usersApplicationDirectory;
+                    resourcesDirectory = usersApplicationDirectory + pathSep + "resources" + pathSep;
+                    logDirectory = usersApplicationDirectory + pathSep + "logs" + pathSep;
+                }
+            }
+
             graphicsDirectory = resourcesDirectory + "Images" + pathSep;
             helpDirectory = resourcesDirectory + "Help" + pathSep;
             pluginDirectory = resourcesDirectory + "plugins" + pathSep;
@@ -323,7 +359,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             propsFile = resourcesDirectory + "app.config";
             workingDirectory = resourcesDirectory + "samples" + pathSep;
             paletteDirectory = resourcesDirectory + "palettes" + pathSep;
-            logDirectory = applicationDirectory + pathSep + "logs" + pathSep;
+
             File ld = new File(logDirectory);
             if (!ld.exists()) {
                 ld.mkdirs();
@@ -335,7 +371,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             FileHandler fh = new FileHandler(logDirectory + "WhiteboxLog%g_%u.xml", limit, numLogFiles, true);
             fh.setFormatter(new XMLFormatter());
             //fh.setFormatter(new SimpleFormatter());
-            logger.addHandler(fh);
+            LOGGER.addHandler(fh);
 
             //this.loadPlugins();
             this.getApplicationProperties();
@@ -347,6 +383,27 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             messages = WhiteboxInternationalizationTools.getMessagesBundle(); //ResourceBundle.getBundle("whiteboxgis.i18n.messages", currentLocale);
             pluginBundle = WhiteboxInternationalizationTools.getPluginsBundle();
             this.loadPlugins();
+
+            String plugName;
+            DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss z");
+            Date lastUsed = null;
+            for (int i = 0; i < plugInfo.size(); i++) {
+                plugName = plugInfo.get(i).getName();
+                for (int j = 0; j < pluginNames.length; j++) {
+                    if (pluginNames[j].equals(plugName)) {
+                        try {
+                            lastUsed = df.parse(pluginLastUse[j]);
+                        } catch (ParseException ex) {
+                            Logger.getLogger(WhiteboxGui.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        plugInfo.get(i).setLastUsed(lastUsed);
+                        plugInfo.get(i).setNumTimesUsed(Integer.parseInt(pluginUsage[j]));
+                    }
+                }
+            }
+            pluginNames = new String[0];
+            pluginUsage = new String[0];
+            pluginLastUse = new String[0];
 
             boolean newInstall = checkForNewInstallation();
 
@@ -421,11 +478,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 //                    status.setMessage(str);
 //                }
 //            }
-
             pan();
 
         } catch (IOException | SecurityException e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.constructor", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.constructor", e);
             //System.out.println(e.getMessage());
         }
     }
@@ -487,7 +543,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 return true;
             }
 
-            if (Integer.parseInt(versionNumber.replace(".", ""))
+            if (Integer.parseInt(VERSION_NUMBER.replace(".", ""))
                     < Integer.parseInt(currentVersionNumber.replace(".", ""))) {
                 return false;
             }
@@ -496,10 +552,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             // no internet connection...no big deal.
             return true;
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.checkVersionIsUpToDate", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.checkVersionIsUpToDate", e);
             return true;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.checkVersionIsUpToDate", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.checkVersionIsUpToDate", e);
             return true;
         }
     }
@@ -598,7 +654,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                         }
 
                         if (checkForUpdates) {
-                            if (Integer.parseInt(versionNumber.replace(".", ""))
+                            if (Integer.parseInt(VERSION_NUMBER.replace(".", ""))
                                     < Integer.parseInt(currentVersionNumber.replace(".", ""))
                                     && Integer.parseInt(skipVersionNumber.replace(".", ""))
                                     < Integer.parseInt(currentVersionNumber.replace(".", ""))) {
@@ -608,8 +664,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                                         "A newer version is available. "
                                         + "Would you like to download Whitebox "
                                         + currentVersionName + " (" + currentVersionNumber
-                                        + ")?" + "\nYou are currently using Whitebox " + versionName
-                                        + " (" + versionNumber + ").",
+                                        + ")?" + "\nYou are currently using Whitebox " + VERSION_NAME
+                                        + " (" + VERSION_NUMBER + ").",
                                         "Whitebox Version",
                                         JOptionPane.YES_NO_CANCEL_OPTION,
                                         JOptionPane.QUESTION_MESSAGE,
@@ -630,10 +686,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                     // no internet connection...no big deal.
                     //return false;
                 } catch (IOException e) {
-                    logger.log(Level.SEVERE, "WhiteboxGui.checkVersionIsUpToDate", e);
+                    LOGGER.log(Level.SEVERE, "WhiteboxGui.checkVersionIsUpToDate", e);
                     //return false;
                 } catch (Exception e) {
-                    logger.log(Level.SEVERE, "WhiteboxGui.checkVersionIsUpToDate", e);
+                    LOGGER.log(Level.SEVERE, "WhiteboxGui.checkVersionIsUpToDate", e);
                     //return false;
                 }
             }
@@ -682,6 +738,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             userName = System.getProperty("user.name");
 
             final JDialog dialog = new JDialog(this, "", true);
+            dialog.setAlwaysOnTop(true);
 
             Box mainBox = Box.createVerticalBox();
             mainBox.add(Box.createVerticalStrut(15));
@@ -907,7 +964,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                         } else if (parentMenu.toLowerCase().contains("help")) {
                             me = new MenuExtension(menuLabel, MenuExtension.ParentMenu.HELP, str);
                         } else {
-                            logger.log(Level.SEVERE, "WhiteboxGui.loadScripts", "Error adding menu extension");
+                            LOGGER.log(Level.SEVERE, "WhiteboxGui.loadScripts", "Error adding menu extension");
                             me = null;
                         }
                         if (containsKeyStroke) {
@@ -951,10 +1008,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                             String[] str2 = strLine.split("=");
                             name = str2[str2.length - 1].replace("\"", "").replace("\'", "").trim();
                         } else if (strLine.toLowerCase().contains("toolname = \"") && name.isEmpty()) {
-                                containsName = true;
-                                // now retreive the name
-                                String[] str2 = strLine.split("=");
-                                name = str2[str2.length - 1].replace("\"", "").replace("\'", "").trim();
+                            containsName = true;
+                            // now retreive the name
+                            String[] str2 = strLine.split("=");
+                            name = str2[str2.length - 1].replace("\"", "").replace("\'", "").trim();
                         } else if (strLine.toLowerCase().contains("descriptivename = \"")) {
                             containsDescriptiveName = true;
                             String[] str2 = strLine.split("=");
@@ -1142,7 +1199,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                         } else if (parentMenu.toLowerCase().contains("help")) {
                             me = new MenuExtension(menuLabel, MenuExtension.ParentMenu.HELP, str);
                         } else {
-                            logger.log(Level.SEVERE, "WhiteboxGui.loadScripts", "Error adding menu extension");
+                            LOGGER.log(Level.SEVERE, "WhiteboxGui.loadScripts", "Error adding menu extension");
                             me = null;
                         }
                         if (containsKeyStroke) {
@@ -1152,7 +1209,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                     }
                 }
             } catch (IOException ioe) {
-                logger.log(Level.SEVERE, "WhiteboxGui.loadScripts", ioe);
+                LOGGER.log(Level.SEVERE, "WhiteboxGui.loadScripts", ioe);
             }
         }
     }
@@ -1174,8 +1231,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             PluginInfo pi = plugInfo.get(i);
             if (pi.getDescriptiveName().equals(pluginName)
                     || pi.getName().equals(pluginName)) {
-                pi.setLastUsedToNow();
-                pi.incrementNumTimesUsed();
+//                pi.setLastUsedToNow();
+//                pi.incrementNumTimesUsed();
                 if (pi.isScript()) {
                     isScript = true;
                 }
@@ -1195,8 +1252,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                     PluginInfo pi = plugInfo.get(i);
                     if (pi.getDescriptiveName().equals(pluginName)
                             || pi.getName().equals(pluginName)) {
-                        pi.setLastUsedToNow();
-                        pi.incrementNumTimesUsed();
+//                        pi.setLastUsedToNow();
+//                        pi.incrementNumTimesUsed();
                         if (pi.isScript()) {
                             isScript = true;
                             scriptFile = pi.getScriptFile();
@@ -1266,7 +1323,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             }
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.runPlugin", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.runPlugin", e);
         }
     }
 
@@ -1286,7 +1343,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             runPlugin(pluginName, args, runOnDedicatedThread);
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.runPlugin", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.runPlugin", e);
         }
     }
 
@@ -1299,8 +1356,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 PluginInfo pi = plugInfo.get(i);
                 if (pi.getDescriptiveName().equals(pluginName)
                         || pi.getName().equals(pluginName)) {
-                    pi.setLastUsedToNow();
-                    pi.incrementNumTimesUsed();
+//                    pi.setLastUsedToNow();
+//                    pi.incrementNumTimesUsed();
                     if (pi.isScript()) {
                         isScript = true;
                         scriptFile = pi.getScriptFile();
@@ -1379,7 +1436,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 
             //pool.submit(plug);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.runPlugin", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.runPlugin", e);
             //System.err.println(e.getLocalizedMessage());
         }
     }
@@ -1431,7 +1488,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                         try {
                             engine.eval(scriptContents);
                         } catch (ScriptException e) {
-                            logger.log(Level.SEVERE, "WhiteboxGui.executeScriptFile", e);
+                            LOGGER.log(Level.SEVERE, "WhiteboxGui.executeScriptFile", e);
                         }
                     }
                 };
@@ -1441,7 +1498,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 engine.eval(scriptContents);
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.executeScriptFile", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.executeScriptFile", e);
         }
     }
 
@@ -1463,6 +1520,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                         if (automaticallyDisplayReturns) {
                             addLayer(retStr);
                         }
+                    } else if (retStr.endsWith(".las") && retStr.contains(pathSep)) {
+                        if (automaticallyDisplayReturns) {
+                            addLayer(retStr);
+                        }
                     } else if (retStr.toLowerCase().endsWith(".dbf") && retStr.contains(pathSep)) {
                         AttributesFileViewer afv = new AttributesFileViewer(this, false, retStr.replace(".dbf", ".shp"));
                         int height = 500;
@@ -1476,7 +1537,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                             frame.setSize(600, 600);
                             frame.setVisible(true);
                         } catch (Exception e) {
-                            logger.log(Level.SEVERE, "WhiteboxGui.returnData", e);
+                            LOGGER.log(Level.SEVERE, "WhiteboxGui.returnData", e);
                         }
                     } else if (retStr.contains("<html") && retStr.contains("</html>")) {
                         // display this markup in a webbrowser component
@@ -1486,7 +1547,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                             frame.setSize(600, 600);
                             frame.setVisible(true);
                         } catch (Exception e) {
-                            logger.log(Level.SEVERE, "WhiteboxGui.returnData", e);
+                            LOGGER.log(Level.SEVERE, "WhiteboxGui.returnData", e);
                         }
                     } else if (retStr.toLowerCase().startsWith("newmap")) {
                         String mapName = "NewMap";
@@ -1530,7 +1591,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 }
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.returnData", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.returnData", e);
         } finally {
             suppressReturnedData = false;
             fireReturnedDataEvent(new ReturnedDataEvent(this, ret));
@@ -1552,7 +1613,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             frame.setSize(600, 600);
             frame.setVisible(true);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.returnData", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.returnData", e);
         }
     }
 
@@ -1588,8 +1649,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             PluginInfo pi = plugInfo.get(i);
             if (pi.getDescriptiveName().equals(pluginName)
                     || pi.getName().equals(pluginName)) {
-                pi.setLastUsedToNow();
-                pi.incrementNumTimesUsed();
+//                pi.setLastUsedToNow();
+//                pi.incrementNumTimesUsed();
                 if (pi.isScript()) {
                     isScript = true;
                 }
@@ -1605,8 +1666,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             PluginInfo pi = plugInfo.get(i);
             if (pi.getDescriptiveName().equals(pluginName)
                     || pi.getName().equals(pluginName)) {
-                pi.setLastUsedToNow();
-                pi.incrementNumTimesUsed();
+//                pi.setLastUsedToNow();
+//                pi.incrementNumTimesUsed();
                 if (pi.isScript()) {
                     scriptFile = pi.getScriptFile();
                 }
@@ -1618,8 +1679,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 
     @Override
     public void launchDialog(String pluginName) {
-        // update the tools lists
-        populateToolTabs();
+//        populateToolTabs();
 
         boolean isScript = false;
         String scriptFile = null;
@@ -1627,8 +1687,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             PluginInfo pi = plugInfo.get(i);
             if (pi.getDescriptiveName().equals(pluginName)
                     || pi.getName().equals(pluginName)) {
-                pi.setLastUsedToNow();
-                pi.incrementNumTimesUsed();
+                plugInfo.get(i).setLastUsedToNow();
+                plugInfo.get(i).incrementNumTimesUsed();
                 if (pi.isScript()) {
                     isScript = true;
                     scriptFile = pi.getScriptFile();
@@ -1636,6 +1696,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 break;
             }
         }
+        // update the tools lists
+        populateToolTabs();
 
         if (!isScript) {
 
@@ -1675,7 +1737,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                     }
                 }
             } catch (ParserConfigurationException | SAXException | IOException e) {
-                logger.log(Level.SEVERE, "WhiteboxGui.launchDialog", e);
+                LOGGER.log(Level.SEVERE, "WhiteboxGui.launchDialog", e);
                 //System.out.println(e.getMessage());
             }
 
@@ -1772,8 +1834,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
         }
         return ma.getActiveLayer();
     }
-    
-    @Override 
+
+    @Override
     public void setActiveMapLayer(int layerNumber) {
         selectedMapAndLayer[1] = layerNumber;
         MapArea ma = openMaps.get(activeMap).getActiveMapArea();
@@ -1821,6 +1883,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 
     /**
      * Used to communicate a request to cancel an operation
+     *
      * @return boolean
      */
     @Override
@@ -1871,7 +1934,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 updateLayersTab();
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.refreshMap", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.refreshMap", e);
             //showFeedback(e.getStackTrace().toString());
         }
     }
@@ -1928,15 +1991,23 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 //String[] ret = new String[myLayers.size()];
                 int i = 0;
                 for (MapLayer maplayer : myLayers) {
-                    if (maplayer.getLayerType() == MapLayer.MapLayerType.RASTER) {
-                        RasterLayerInfo raster = (RasterLayerInfo) maplayer;
-                        displayedLayers.add(raster.getHeaderFile());
-                    } else if (maplayer.getLayerType() == MapLayer.MapLayerType.VECTOR) {
-                        VectorLayerInfo vector = (VectorLayerInfo) maplayer;
-                        displayedLayers.add(vector.getFileName());
-                    } else if (maplayer.getLayerType() == MapLayer.MapLayerType.LAS) {
-                        LasLayerInfo las = (LasLayerInfo) maplayer;
-                        displayedLayers.add(las.getLASFile().getFileName());
+                    if (null != maplayer.getLayerType()) {
+                        switch (maplayer.getLayerType()) {
+                            case RASTER:
+                                RasterLayerInfo raster = (RasterLayerInfo) maplayer;
+                                displayedLayers.add(raster.getHeaderFile());
+                                break;
+                            case VECTOR:
+                                VectorLayerInfo vector = (VectorLayerInfo) maplayer;
+                                displayedLayers.add(vector.getFileName());
+                                break;
+                            case LAS:
+                                LasLayerInfo las = (LasLayerInfo) maplayer;
+                                displayedLayers.add(las.getLASFile().getFileName());
+                                break;
+                            default:
+                                break;
+                        }
                     }
                     i++;
                 }
@@ -2085,43 +2156,50 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                         setScrollZoomDirection(MapRenderer2.ScrollZoomDirection.REVERSE);
                     }
                 }
-                
+
                 // check for the page visible setting
                 if (props.containsKey("pageVisible")) {
                     isPageVisible = Boolean.parseBoolean(props.getProperty("pageVisible"));
                 }
-                
+
                 if (props.containsKey("rasterCartographicGeneralizationLevel")) {
                     rasterCartographicGeneralizationLevel = Double.parseDouble(props.getProperty("rasterCartographicGeneralizationLevel"));
                 }
-                
+
                 if (props.containsKey("vectorCartographicGeneralizationLevel")) {
                     vectorCartographicGeneralizationLevel = Double.parseDouble(props.getProperty("vectorCartographicGeneralizationLevel"));
                 }
 
+                if (props.containsKey("versionNumber")) {
+                    String versionNumber = props.getProperty("versionNumber");
+                    if (!versionNumber.equals(VERSION_NUMBER)) {
+                        // this might happen if the resources directory is in the user's
+                        // home directory but the application has been installed on a 
+                        // network drive without user write privelleges and the 
+                        // version has been updated there. If the user's resources directory
+                        // isn't updated, it may well not received the updates to 
+                        // plugin scripts. Replace the user directory with that from the 
+                        // application directory.
+                        String homeDir = System.getProperty("user.home");
+                        if ((new File(homeDir)).canWrite()) {
+                            String usersApplicationDirectory = homeDir + pathSep + "WhiteboxGAT";
+                            if (!(new File(usersApplicationDirectory)).exists()) {
+                                // copy the resources folders over to this user home directory
+                                FileUtils.copyDirectory(new File(applicationDirectory + pathSep + "resources"), new File(usersApplicationDirectory + pathSep + "resources"));
+                            }
+                            resourcesDirectory = usersApplicationDirectory + pathSep + "resources" + pathSep;
+                            logDirectory = usersApplicationDirectory + pathSep + "logs" + pathSep;
+                        }
+                    }
+                }
+
                 // retrieve the plugin usage information
-                String[] pluginNames = props.getProperty("pluginNames").split(",");
-                String[] pluginUsage = props.getProperty("pluginUsage").split(",");
-                String[] pluginLastUse = props.getProperty("toolLastUse").split(",");
-                String plugName;
-                DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss z");
-                Date lastUsed = null;
-//                for (int i = 0; i < plugInfo.size(); i++) {
-//                    plugName = plugInfo.get(i).getName();
-//                    for (int j = 0; j < pluginNames.length; j++) {
-//                        if (pluginNames[j].equals(plugName)) {
-//                            try {
-//                                lastUsed = df.parse(pluginLastUse[j]);
-//                            } catch (ParseException e) {
-//                            }
-//                            plugInfo.get(i).setLastUsed(lastUsed);
-//                            plugInfo.get(i).setNumTimesUsed(Integer.parseInt(pluginUsage[j]));
-//                        }
-//                    }
-//                }
+                pluginNames = props.getProperty("pluginNames").split(",");
+                pluginUsage = props.getProperty("pluginUsage").split(",");
+                pluginLastUse = props.getProperty("toolLastUse").split(",");
 
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "WhiteboxGui.getApplicationProperties", e);
+                LOGGER.log(Level.SEVERE, "WhiteboxGui.getApplicationProperties", e);
             }
 
         } else {
@@ -2144,6 +2222,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             return;
         }
         Properties props = new Properties();
+        props.setProperty("versionNumber", VERSION_NUMBER);
         props.setProperty("workingDirectory", workingDirectory);
         props.setProperty("splitterLoc1", Integer.toString(splitPane.getDividerLocation() - 2));
         props.setProperty("splitterToolboxLoc", Integer.toString(splitPane2.getDividerLocation() - 2)); //qlTabs.getSize().height));
@@ -2274,7 +2353,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                     Method method = util.getMethod("setWindowCanFullScreen", params);
                     method.invoke(util, this, true);
                 } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
-                    logger.log(Level.SEVERE, "WhiteboxGui.createGui", e);
+                    LOGGER.log(Level.SEVERE, "WhiteboxGui.createGui", e);
                 }
 
                 //this.getRootPane().putClientProperty("apple.awt.brushMetalLook", Boolean.TRUE);
@@ -2296,7 +2375,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             mapinfo.setDefaultFont(defaultFont);
             mapinfo.setMargin(defaultMapMargin);
             mapinfo.setPageVisible(isPageVisible);
-            
+
             MapArea ma = new MapArea(bundle.getString("MapArea").replace(" ", "") + "1");
             ma.setUpperLeftX(-32768);
             ma.setUpperLeftY(-32768);
@@ -2368,7 +2447,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             pack();
 //            restoreDefaults();
         } catch (SecurityException | IllegalArgumentException | InvocationTargetException e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.createGui", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.createGui", e);
             showFeedback(e.toString());
         }
     }
@@ -2460,7 +2539,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                         d.browse(new URI(linkName));
                     }
                 } catch (URISyntaxException | IOException e) {
-                    logger.log(Level.SEVERE, "WhiteboxGui.displayAnnouncement", e);
+                    LOGGER.log(Level.SEVERE, "WhiteboxGui.displayAnnouncement", e);
                     //System.err.println("WhiteboxGui.displayAnnouncement Error: " + e.toString());
                 }
             }
@@ -2648,19 +2727,13 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             mi.addActionListener(this);
             mi.setActionCommand("exportLayer");
             layersMenu.add(mi);
-                
+
             layersMenu.addSeparator();
-            
+
             menubar.add(layersMenu);
 
             // View menu
             viewMenu = new JMenu(bundle.getString("View"));
-
-            selectMenuItem = new JCheckBoxMenuItem(bundle.getString("SelectMapElement"),
-                    new ImageIcon(graphicsDirectory + "selectMap.png"));
-            viewMenu.add(selectMenuItem);
-            selectMenuItem.addActionListener(this);
-            selectMenuItem.setActionCommand("select");
 
             selectFeatureMenuItem = new JCheckBoxMenuItem(bundle.getString("SelectFeature"),
                     new ImageIcon(graphicsDirectory + "SelectFeature.png"));
@@ -2695,18 +2768,11 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             zoomToFullExtent.addActionListener(this);
             zoomToFullExtent.setActionCommand("zoomToFullExtent");
 
-            JMenuItem zoomToPage = new JMenuItem(bundle.getString("ZoomToPage"),
-                    new ImageIcon(graphicsDirectory + "ZoomToPage.png"));
-            viewMenu.add(zoomToPage);
-            zoomToPage.addActionListener(this);
-            zoomToPage.setActionCommand("zoomToPage");
-
             mi = new JMenuItem(bundle.getString("ZoomToSelection"));
             mi.addActionListener(this);
             mi.setActionCommand("zoomToSelection");
             viewMenu.add(mi);
 
-            selectMenuItem.setState(false);
             selectFeatureMenuItem.setState(false);
             zoomMenuItem.setState(false);
             zoomOutMenuItem.setState(false);
@@ -2747,6 +2813,19 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             viewMenu.add(nextExtent);
             nextExtent.addActionListener(this);
             nextExtent.setActionCommand("nextExtent");
+
+            selectMenuItem = new JCheckBoxMenuItem(bundle.getString("SelectMapElement"),
+                    new ImageIcon(graphicsDirectory + "selectMap.png"));
+            viewMenu.add(selectMenuItem);
+            selectMenuItem.addActionListener(this);
+            selectMenuItem.setActionCommand("select");
+            selectMenuItem.setState(false);
+
+            JMenuItem zoomToPage = new JMenuItem(bundle.getString("ZoomToPage"),
+                    new ImageIcon(graphicsDirectory + "ZoomToPage.png"));
+            viewMenu.add(zoomToPage);
+            zoomToPage.addActionListener(this);
+            zoomToPage.setActionCommand("zoomToPage");
 
             viewMenu.addSeparator();
             JMenuItem refresh = new JMenuItem(bundle.getString("RefreshMap"));
@@ -2944,7 +3023,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             ungroupMenu.addActionListener(this);
             ungroupMenu.setActionCommand("ungroupElements");
             cartoMenu.add(ungroupMenu);
-            
+
             JMenuItem selectMapElementsMenu = new JMenuItem(bundle.getString("SelectAllMapElements"));
             selectMapElementsMenu.addActionListener(e -> {
                 if (openMaps.get(activeMap).selectAllElements()) {
@@ -3025,9 +3104,8 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             deleteFeatureMenuItem.setEnabled(false);
 
             toolsMenu.add(editVectorMenu);
-            
-//            toolsMenu.addSeparator();
 
+//            toolsMenu.addSeparator();
             // Help menu
             helpMenu = new JMenu(bundle.getString("Help"));
             JMenuItem helpIndex = new JMenuItem(bundle.getString("Index"),
@@ -3080,7 +3158,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             loadMenuExtensions();
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.createMenu", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.createMenu", e);
             showFeedback(e.getMessage());
         }
     }
@@ -3432,9 +3510,6 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             toolbar.add(attributeTable);
 
             toolbar.addSeparator();
-            select = makeToggleToolBarButton("selectMap.png", "select",
-                    bundle.getString("SelectMapElement"), "Select");
-            toolbar.add(select);
             selectFeature = makeToggleToolBarButton("SelectFeature.png", "selectFeature",
                     bundle.getString("SelectFeature"), "Select Feature");
             toolbar.add(selectFeature);
@@ -3451,18 +3526,23 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             JButton zoomToFullExtent = makeToolBarButton("Globe.png", "zoomToFullExtent",
                     bundle.getString("ZoomToFullExtent"), "Zoom To Full Extent");
             toolbar.add(zoomToFullExtent);
+
+            JButton previousExtent = makeToolBarButton("back.png", "previousExtent",
+                    bundle.getString("PreviousExtent"), "Prev Extent");
+            toolbar.add(previousExtent);
+            JButton nextExtent = makeToolBarButton("forward.png", "nextExtent",
+                    bundle.getString("NextExtent"), "Next Extent");
+            nextExtent.setActionCommand("nextExtent");
+            toolbar.add(nextExtent);
+
+            select = makeToggleToolBarButton("selectMap.png", "select",
+                    bundle.getString("SelectMapElement"), "Select");
+            toolbar.add(select);
+
             JButton zoomToPage = makeToolBarButton("ZoomFullExtent3.png", "zoomToPage",
                     bundle.getString("ZoomToPage"), "Zoom To Page");
             toolbar.add(zoomToPage);
 
-            ButtonGroup viewButtonGroup = new ButtonGroup();
-            viewButtonGroup.add(select);
-            viewButtonGroup.add(selectFeature);
-            viewButtonGroup.add(pan);
-            viewButtonGroup.add(zoomOut);
-            viewButtonGroup.add(zoomIntoBox);
-            //select.setSelected(true);
-            //zoomIntoBox.setSelected(true);
             pan.setSelected(true);
             //openMaps.get(activeMap).deslectAllCartographicElements();
             //refreshMap(false);
@@ -3473,13 +3553,14 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             zoomOutMenuItem.setState(false);
             panMenuItem.setState(false);
 
-            JButton previousExtent = makeToolBarButton("back.png", "previousExtent",
-                    bundle.getString("PreviousExtent"), "Prev Extent");
-            toolbar.add(previousExtent);
-            JButton nextExtent = makeToolBarButton("forward.png", "nextExtent",
-                    bundle.getString("NextExtent"), "Next Extent");
-            nextExtent.setActionCommand("nextExtent");
-            toolbar.add(nextExtent);
+            ButtonGroup viewButtonGroup = new ButtonGroup();
+            viewButtonGroup.add(select);
+            viewButtonGroup.add(selectFeature);
+            viewButtonGroup.add(pan);
+            viewButtonGroup.add(zoomOut);
+            viewButtonGroup.add(zoomIntoBox);
+            //select.setSelected(true);
+            //zoomIntoBox.setSelected(true);
 
             toolbar.addSeparator();
 
@@ -3591,7 +3672,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             this.getContentPane().add(toolbar, BorderLayout.PAGE_START);
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.createToolbar", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.createToolbar", e);
             showFeedback(e.toString());
         }
 
@@ -3626,7 +3707,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
         } catch (Exception e) {
             button.setText(altText);
             showFeedback(e.getMessage());
-            logger.log(Level.WARNING, "WhiteboxGui.makeToolbarButton", e);
+            LOGGER.log(Level.WARNING, "WhiteboxGui.makeToolbarButton", e);
         }
 
         return button;
@@ -3647,7 +3728,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             button.setIcon(image);
         } catch (Exception e) {
             showFeedback(e.getMessage());
-            logger.log(Level.WARNING, "WhiteboxGui.makeToggleToolbarButton", e);
+            LOGGER.log(Level.WARNING, "WhiteboxGui.makeToggleToolbarButton", e);
         }
 
         return button;
@@ -3669,7 +3750,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             return tabs;
         } catch (Exception e) {
             showFeedback(e.toString());
-            logger.log(Level.SEVERE, "WhiteboxGui.createTabbedPane", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.createTabbedPane", e);
             return null;
         }
 
@@ -3834,7 +3915,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             scrollView.getVerticalScrollBar().setValue(pos);
         } catch (Exception e) {
             System.out.println(e.toString());
-            logger.log(Level.WARNING, "WhiteboxGui.updateLayersTab", e);
+            LOGGER.log(Level.WARNING, "WhiteboxGui.updateLayersTab", e);
         }
     }
 
@@ -4042,7 +4123,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                                             executeScriptFile(updateScript, args, false);
                                         });
                                         pm.add(mi);
-                                        
+
                                         pm.show((JComponent) e.getSource(), e.getX(), e.getY());
 
                                     }
@@ -4148,7 +4229,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 
             return splitPane2;
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.getToolbox", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.getToolbox", e);
             showFeedback(e.toString());
             return null;
         }
@@ -4198,10 +4279,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 }
 
                 searchString = searchString.replace("\"", "");
+                String rawString = searchString;
 
-                int count = 0;
-                boolean containsWord;
-
+                //int count = 0;
+                //boolean containsWord;
                 searchString = searchString.replace("-", " ");
                 searchString = searchString.replace(" the ", "");
                 searchString = searchString.replace(" a ", "");
@@ -4213,6 +4294,9 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 searchString = searchString.replace(" it ", "");
 
                 String[] words = searchString.split(" ");
+                int numWordsToMatch = words.length + quotedStrings.size();
+                int[][] searchCounts = new int[plugInfo.size()][3];
+
                 for (int i = 0; i < plugInfo.size(); i++) {
                     plugInfo.get(i).setSortMode(PluginInfo.SORT_MODE_NAMES);
                 }
@@ -4221,41 +4305,79 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                     descriptiveName = plugInfo.get(i).getDescriptiveName().toLowerCase().replace("-", " ");
                     shortName = plugInfo.get(i).getName().toLowerCase().replace("-", " ");
                     description = plugInfo.get(i).getDescription();
-                    containsWord = false;
-
+                    //containsWord = false;
+                    int countsFor = 0;
+                    int countsAgainst = 0;
+                    String descript = descriptiveName;
                     for (String word : words) {
-                        if (descriptiveName.contains(word)) {
-                            containsWord = true;
-                        }
-                        if (shortName.contains(word)) {
-                            containsWord = true;
-                        }
-                        if (description.contains(" " + word + " ")) {
-                            containsWord = true;
+                        if (descriptiveName.contains(word)
+                                || shortName.contains(word)) {
+                            //containsWord = true;
+                            countsFor += 2;
+                            descript = descript.replace(word, "");
+                        } else if (description.contains(" " + word + " ")) {
+                            countsFor++;
                         }
                     }
 
                     for (String word : quotedStrings) {
-                        if (descriptiveName.contains(word)) {
-                            containsWord = true;
-                        }
-                        if (shortName.contains(word)) {
-                            containsWord = true;
-                        }
-                        if (description.contains(" " + word + " ")) {
-                            containsWord = true;
+                        if (descriptiveName.contains(word)
+                                || shortName.contains(word)) {
+                            //containsWord = true;
+                            countsFor += 2;
+                            descript = descript.replace(word, "");
+                        } else if (description.contains(" " + word + " ")) {
+                            countsFor++;
                         }
                     }
-                    if (containsWord) {
-                        model.add(count, plugInfo.get(i).getDescriptiveName());
-                        count++;
-                    }
+                    countsAgainst = descript.split(" ").length;
+//                    if (containsWord) {
+//                        model.add(count, plugInfo.get(i).getDescriptiveName());
+//                        count++;
+//                    }
+                    searchCounts[i][0] = countsFor;
+                    searchCounts[i][1] = i;
+                    searchCounts[i][2] = countsAgainst;
+                }
 
+                Arrays.sort(searchCounts, (int[] entry1, int[] entry2) -> {
+                    final int countsFor1 = entry1[0];
+                    final int countsFor2 = entry2[0];
+                    final int countsAgainst1 = entry1[2];
+                    final int countsAgainst2 = entry2[2];
+                    if (countsFor1 > countsFor2) {
+                        return -1;
+                    } else if (countsFor1 == countsFor2) {
+                        if (countsAgainst1 < countsAgainst2) {
+                            return -1;
+                        } else if (countsAgainst1 > countsAgainst2) {
+                            return 1;
+                        } else {
+                            String str1 = plugInfo.get(entry1[1]).getDescriptiveName().toLowerCase();
+                            String str2 = plugInfo.get(entry2[1]).getDescriptiveName().toLowerCase();
+                            if (str1.equals(rawString)) {
+                                return -1;
+                            } else if (str2.equals(rawString)) {
+                                return 1;
+                            } else {
+                                return str1.compareTo(str2);
+                            }
+                        }
+                    } else {
+                        return 1;
+                    }
+                });
+
+                for (int i = plugInfo.size() - 1; i >= 0; i--) {
+                    if (searchCounts[i][0] > 0) {
+                        model.add(0, plugInfo.get(searchCounts[i][1]).getDescriptiveName()); // + " (" + searchCounts[i][0] + ", " + searchCounts[i][2] + ")");
+                    }
                 }
             }
+
             allTools.setModel(model);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "WhiteboxGui.searchForWords", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.searchForWords", e);
         }
     }
 
@@ -4426,19 +4548,19 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
     public void setReceiveAnnouncements(boolean receiveAnnouncements) {
         this.receiveAnnouncements = receiveAnnouncements;
     }
-    
+
     public double getRasterCartographicGeneralizationLevel() {
         return this.rasterCartographicGeneralizationLevel;
     }
-    
+
     public void setRasterCartographicGeneralizationLevel(double value) {
         this.rasterCartographicGeneralizationLevel = value;
     }
-    
+
     public double getVectorCartographicGeneralizationLevel() {
         return this.vectorCartographicGeneralizationLevel;
     }
-    
+
     public void setVectorCartographicGeneralizationLevel(double value) {
         this.vectorCartographicGeneralizationLevel = value;
     }
@@ -4481,7 +4603,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 //    }
     @Override
     public int showFeedback(String message) {
-        if (suppressReturnedData  || multiOperationsuppressReturnedData) {
+        if (suppressReturnedData || multiOperationsuppressReturnedData) {
             return - 1; // returns can be disruptive for scripts
         }
         JOptionPane.showMessageDialog(this, message);
@@ -4739,7 +4861,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 
             ExtensionFileFilter eff = new ExtensionFileFilter(filterDescription, extensions);
             filters.add(eff);
-            
+
             filterDescription = "Shapefiles (*.shp)";
             extensions = new String[]{"SHP"};
             eff = new ExtensionFileFilter(filterDescription, extensions);
@@ -4754,7 +4876,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             extensions = new String[]{"LAS"};
             eff = new ExtensionFileFilter(filterDescription, extensions);
             filters.add(eff);
-            
+
             for (InteroperableGeospatialDataFormat igdf : interopGeospatialDataFormat) {
                 if (igdf.getInteropPluginType() == InteropPluginType.importPlugin) {
                     filterDescription = igdf.getName() + " Files (";
@@ -5112,11 +5234,11 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             MapArea activeMapArea = openMaps.get(mapNum).getMapAreaByElementNum(mapAreaNum);
             activeMapArea.addLayer(mapLayer);
             //mapLayer.setOverlayNumber(activeMapArea.getNumLayers() - 1);
-            
-            if (mapLayer.getOverlayNumber() < 0) { 
+
+            if (mapLayer.getOverlayNumber() < 0) {
                 mapLayer.setOverlayNumber(openMaps.get(mapNum).getMapAreaByElementNum(mapAreaNum).getNumLayers() - 1);
             }
-            
+
             activeMapArea.setActiveLayer(activeMapArea.getNumLayers() - 1);
 
             String fileName = "";
@@ -5304,7 +5426,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 job.print(aset);
             } catch (PrinterException ex) {
                 showFeedback(messages.getString("PrintingError") + ex);
-                logger.log(Level.SEVERE, "WhiteboxGui.printMap", ex);
+                LOGGER.log(Level.SEVERE, "WhiteboxGui.printMap", ex);
                 /* The job did not successfully complete */
             }
         }
@@ -5383,10 +5505,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 String json = gson.toJson(openMaps.get(selectedMapAndLayer[0]));
                 out.println(json);
             } catch (java.io.IOException e) {
-                logger.log(Level.SEVERE, "WhiteboxGui.saveMap", e);
+                LOGGER.log(Level.SEVERE, "WhiteboxGui.saveMap", e);
                 //System.err.println("Error: " + e.getMessage());
             } catch (Exception e) { //Catch exception if any
-                logger.log(Level.SEVERE, "WhiteboxGui.saveMap", e);
+                LOGGER.log(Level.SEVERE, "WhiteboxGui.saveMap", e);
                 //System.err.println("Error: " + e.getMessage());
             } finally {
                 if (out != null || bw != null) {
@@ -5509,7 +5631,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                     showFeedback(messages.getString("MapFile")
                             + files[i].toString() + " "
                             + messages.getString("NotReadProperly"));
-                    logger.log(Level.SEVERE, "WhiteboxGui.openMap", e);
+                    LOGGER.log(Level.SEVERE, "WhiteboxGui.openMap", e);
                     return;
                 }
 
@@ -5556,7 +5678,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
         } catch (IOException | JsonSyntaxException e) {
             showFeedback(messages.getString("MapFile") + " "
                     + fileName + " " + messages.getString("NotReadProperly"));
-            logger.log(Level.SEVERE, "WhiteboxGui.openMap", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.openMap", e);
             return;
         }
 
@@ -5736,11 +5858,11 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
         selectedMapAndLayer[1] = -1;
         selectedMapAndLayer[2] = -1;
     }
-    
+
     public boolean isPageVisible() {
         return isPageVisible;
     }
-    
+
     public void setPageVisibility(boolean value) {
         for (int a = 0; a < openMaps.size(); a++) {
             openMaps.get(a).setPageVisible(value);
@@ -5773,7 +5895,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             selectedMapAndLayer[2] = -1;
         }
     }
-    
+
     public void setAsActiveMap(int mapIndex) {
         if (mapIndex >= 0 && mapIndex < openMaps.size()) {
             activeMap = mapIndex;
@@ -5788,7 +5910,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             selectedMapAndLayer[2] = -1;
         }
     }
-    
+
     public void setAsActiveMap(String mapName) {
         // find the map with this map title
         for (int i = 0; i < openMaps.size(); i++) {
@@ -6279,7 +6401,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             }
         }
     }
-    
+
     @Override
     public void zoomIn() {
         int mapNum;
@@ -6309,7 +6431,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             refreshMap(false);
         }
     }
-    
+
     @Override
     public void zoomOut() {
         int mapNum;
@@ -6541,7 +6663,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             if (ma.getLayer(layerOverlayNum).getLayerType() == MapLayerType.RASTER
                     || ma.getLayer(layerOverlayNum).getLayerType() == MapLayerType.VECTOR
                     || ma.getLayer(layerOverlayNum).getLayerType() == MapLayerType.LAS) {
-                
+
                 MapLayer layer = ma.getLayer(layerOverlayNum);
                 LayerProperties lp = new LayerProperties(this, false, layer, openMaps.get(mapNum));
                 lp.setSize(640, 420);
@@ -6773,12 +6895,12 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 //    }
     private void showAboutDialog() {
         AboutWhitebox about = new AboutWhitebox(this, true, graphicsDirectory,
-                versionName, versionNumber);
+                VERSION_NAME, VERSION_NUMBER);
     }
 
     private void callSplashScreen() {
-        String splashFile = graphicsDirectory + "WhiteboxLogo.png"; //"SplashScreen.png";
-        SplashWindow sw = new SplashWindow(splashFile, 2000, versionName);
+        String splashFile = graphicsDirectory + "WhiteboxLogo2.png";
+        SplashWindow sw = new SplashWindow(splashFile, 2000, VERSION_NAME);
         long t0, t1;
         t0 = System.currentTimeMillis();
         do {
@@ -6978,7 +7100,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             }
         } catch (Exception e) {
             showFeedback(messages.getString("Error") + e.getMessage());
-            logger.log(Level.SEVERE, "WhiteboxGui.deleteFeature", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.deleteFeature", e);
         }
     }
 
@@ -7006,7 +7128,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             }
         } catch (Exception e) {
             showFeedback(messages.getString("Error") + e.getMessage());
-            logger.log(Level.SEVERE, "WhiteboxGui.deleteFeature", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.deleteFeature", e);
         }
     }
 
@@ -7207,7 +7329,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 vcd.setVisible(true);
             } catch (IOException ioe) {
                 showFeedback(messages.getString("HelpNotRead"));
-                logger.log(Level.SEVERE, "WhiteboxGui.newHelp", ioe);
+                LOGGER.log(Level.SEVERE, "WhiteboxGui.newHelp", ioe);
                 return;
             }
 
@@ -7332,17 +7454,17 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
 
     @Override
     public void logException(String message, Exception e) {
-        logger.log(Level.SEVERE, "Whitebox " + versionNumber + ". Error\n" + message, e);
+        LOGGER.log(Level.SEVERE, "Whitebox " + VERSION_NUMBER + ". Error\n" + message, e);
     }
 
     @Override
     public void logThrowable(String message, Throwable t) {
-        logger.log(Level.SEVERE, "Whitebox " + versionNumber + ". Throwable\n" + message, t);
+        LOGGER.log(Level.SEVERE, "Whitebox " + VERSION_NUMBER + ". Throwable\n" + message, t);
     }
 
     @Override
     public void logMessage(Level level, String message) {
-        logger.log(level, "Whitebox " + versionNumber + ". Message\n" + message);
+        LOGGER.log(level, "Whitebox " + VERSION_NUMBER + ". Message\n" + message);
     }
 
     @Override
@@ -7376,7 +7498,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             }
         } catch (Exception e) {
             showFeedback(messages.getString("Error") + e.getMessage());
-            logger.log(Level.SEVERE, "WhiteboxGui.deleteFeature", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.deleteFeature", e);
         }
     }
 
@@ -7445,7 +7567,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
             }
         } catch (Exception e) {
             showFeedback(messages.getString("Error") + e.getMessage());
-            logger.log(Level.SEVERE, "WhiteboxGui.deleteFeature", e);
+            LOGGER.log(Level.SEVERE, "WhiteboxGui.deleteFeature", e);
         }
     }
 
@@ -7679,8 +7801,10 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
                 exportMapAsImage();
                 break;
             case "scripter":
+
                 Scripter scripter = new Scripter(this, false);
                 scripter.setVisible(true);
+
                 break;
             case "options":
                 SettingsDialog dlg = new SettingsDialog(this, false);
@@ -7873,7 +7997,7 @@ public class WhiteboxGui extends JFrame implements ThreadListener, ActionListene
     private void close() {
         setApplicationProperties();
 
-        for (Handler h : logger.getHandlers()) {
+        for (Handler h : LOGGER.getHandlers()) {
             h.close();   //must call h.close or a .LCK file will remain.
         }
 

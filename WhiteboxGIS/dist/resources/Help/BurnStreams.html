@@ -51,27 +51,27 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputDEM = wd + "DEM.dep"<br>
-                inputStreams = wd + "streams.shp"<br>
-                outputFile = wd + "output.dep"<br>
-                decrement = "10.0"<br>
-                distanceDecay = "1.0"<br>
-                args = [inputDEM, inputStreams, outputFile, decrement, distanceDecay]<br>
-                pluginHost.runPlugin("BurnStreams", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputDEM = wd + "DEM.dep"&#10;<br>
+                inputStreams = wd + "streams.shp"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                decrement = "10.0"&#10;<br>
+                distanceDecay = "1.0"&#10;<br>
+                args = [inputDEM, inputStreams, outputFile, decrement, distanceDecay]&#10;<br>
+                pluginHost.runPlugin("BurnStreams", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputDEM = wd + "DEM.dep"<br>
-                def inputStreams = wd + "streams.dep"<br>
-                def outputFile = wd + "output.dep"<br>
-                def decrement = "10.0"<br>
-                def distanceDecay = "1.0"<br>
-                String[] args = [inputDEM, inputStreams, outputFile, decrement, distanceDecay]<br>
-                pluginHost.runPlugin("BurnStreams", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputDEM = wd + "DEM.dep"&#10;<br>
+                def inputStreams = wd + "streams.dep"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def decrement = "10.0"&#10;<br>
+                def distanceDecay = "1.0"&#10;<br>
+                String[] args = [inputDEM, inputStreams, outputFile, decrement, distanceDecay]&#10;<br>
+                pluginHost.runPlugin("BurnStreams", args, false)&#10;<br>
             </code>
         </p>
 

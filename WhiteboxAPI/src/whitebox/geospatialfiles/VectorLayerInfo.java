@@ -123,7 +123,7 @@ public class VectorLayerInfo implements MapLayer {
         } else if (shapeType == ShapeType.POLYGON && (layerTitle.toLowerCase().contains("lake")
                 || layerTitle.toLowerCase().contains("water"))) {
             lineColour = new Color(51, 153, 255);
-            fillColour = new Color(153, 204, 255);
+            fillColour = new Color(230, 255, 255);//new Color(153, 204, 255);
         } else if (shapeType.getBaseType() == ShapeType.POLYLINE) {
             //lineColour = Color.RED; // new Color(153, 204, 255);
             Random generator = new Random();

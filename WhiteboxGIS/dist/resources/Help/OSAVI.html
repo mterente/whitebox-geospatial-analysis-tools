@@ -25,23 +25,23 @@ This tool calculates the optimized soil-adjusted vegetation index (OSAVI), as fi
 <p>The following is an example of a Python script that uses this tool:</p>
 <p style="background-color: rgb(240,240,240)">
     <code>
-        wd = pluginHost.getWorkingDirectory()<br>
-        nearIRFile = wd + "near infrared band.dep"<br>
-        redFile = wd + "red band.dep"<br>
-        outputFile = wd + "output.dep"<br>
-        args = [nearIRFile, redFile, outputFile]<br>
-        pluginHost.runPlugin("OSAVI", args, False)<br>
+        wd = pluginHost.getWorkingDirectory()&#10;<br>
+        nearIRFile = wd + "near infrared band.dep"&#10;<br>
+        redFile = wd + "red band.dep"&#10;<br>
+        outputFile = wd + "output.dep"&#10;<br>
+        args = [nearIRFile, redFile, outputFile]&#10;<br>
+        pluginHost.runPlugin("OSAVI", args, False)&#10;<br>
     </code>
 </p>
 <p>This is a Groovy script also using this tool:</p>
 <p style="background-color: rgb(240,240,240)">
     <code>
-        def wd = pluginHost.getWorkingDirectory()<br>
-        def nearIRFile = wd + "near infrared band.dep"<br>
-        def redFile = wd + "red band.dep"<br>
-        def outputFile = wd + "output.dep"<br>
-        String[] args = [nearIRFile, redFile, outputFile]<br>
-        pluginHost.runPlugin("OSAVI", args, false)<br>
+        def wd = pluginHost.getWorkingDirectory()&#10;<br>
+        def nearIRFile = wd + "near infrared band.dep"&#10;<br>
+        def redFile = wd + "red band.dep"&#10;<br>
+        def outputFile = wd + "output.dep"&#10;<br>
+        String[] args = [nearIRFile, redFile, outputFile]&#10;<br>
+        pluginHost.runPlugin("OSAVI", args, false)&#10;<br>
     </code>
 </p>
 

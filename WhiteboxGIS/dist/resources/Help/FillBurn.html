@@ -42,23 +42,23 @@ Processes and Landforms</i>, 41(5): 658-668. DOI: 10.1002/esp.3888</li>
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                DEMFile = wd + "DEM.dep"<br>
-                streamsFile = wd + "streams.shp"<br>
-                outputFile = wd + "output.dep"<br>
-                args = [DEMFile, streamsFile, outputFile]<br>
-                pluginHost.runPlugin("FillBurn", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                DEMFile = wd + "DEM.dep"&#10;<br>
+                streamsFile = wd + "streams.shp"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                args = [DEMFile, streamsFile, outputFile]&#10;<br>
+                pluginHost.runPlugin("FillBurn", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def DEMFile = wd + "DEM.dep"<br>
-                def streamsFile = wd + "streams.shp"<br>
-                def outputFile = wd + "output.dep"<br>
-                String[] args = [DEMFile, outputFile, outputFile]<br>
-                pluginHost.runPlugin("FillBurn", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def DEMFile = wd + "DEM.dep"&#10;<br>
+                def streamsFile = wd + "streams.shp"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                String[] args = [DEMFile, outputFile, outputFile]&#10;<br>
+                pluginHost.runPlugin("FillBurn", args, false)&#10;<br>
             </code>
         </p>
         

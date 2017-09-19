@@ -156,19 +156,19 @@ public class WriteFunctionMemoryInsertion implements WhiteboxPlugin {
     public void run() {
         amIActive = true;
 
-        String inputHeaderRed = null;
-        String inputHeaderGreen = null;
-        String inputHeaderBlue = null;
-        String outputHeader = null;
+        String inputHeaderRed;
+        String inputHeaderGreen;
+        String inputHeaderBlue;
+        String outputHeader;
 
         if (args.length <= 0) {
             showFeedback("Plugin parameters have not been set.");
             return;
         }
 
-        inputHeaderBlue = args[0];
+        inputHeaderRed = args[0];
         inputHeaderGreen = args[1];
-        inputHeaderRed = args[2];
+        inputHeaderBlue = args[2];
         outputHeader = args[3];
 
         // check to see that the inputHeader and outputHeader are not null.
@@ -187,9 +187,9 @@ public class WriteFunctionMemoryInsertion implements WhiteboxPlugin {
             double z;
             float progress = 0;
             
-            if (inputHeaderRed.toLowerCase().contains("not specified")) {
-                inputHeaderRed = inputHeaderGreen;
-                inputHeaderGreen = inputHeaderBlue;
+            if (inputHeaderBlue.toLowerCase().contains("not specified")) {
+                inputHeaderBlue = inputHeaderGreen;
+                //inputHeaderGreen = inputHeaderBlue;
             }
 
             WhiteboxRasterInfo red = new WhiteboxRasterInfo(inputHeaderRed);

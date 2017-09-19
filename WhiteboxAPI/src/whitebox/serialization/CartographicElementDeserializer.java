@@ -273,6 +273,23 @@ public class CartographicElementDeserializer implements JsonDeserializer<Cartogr
                     font = gson.fromJson(jo.get("labelFont"), fontType);
                     ms.setLabelFont(font);
                 }
+                if (jo.has("scaleStyle")) {
+                    String style = jo.getAsJsonPrimitive("scaleStyle").getAsString();
+                    switch (style) {
+                        case "COMPLEX":
+                            ms.setScaleStyle(MapScale.ScaleStyle.COMPLEX);
+                            break;
+                        case "SIMPLE":
+                            ms.setScaleStyle(MapScale.ScaleStyle.SIMPLE);
+                            break;
+                        case "COMPACT":
+                            ms.setScaleStyle(MapScale.ScaleStyle.COMPACT);
+                            break;
+                        default:
+                            ms.setScaleStyle(MapScale.ScaleStyle.STANDARD);
+                                 
+                    }
+                }
                 
                 return ms;
                 

@@ -45,30 +45,32 @@
         <p>The following is an example of a Python script using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                dataset = "3-arcsecond"<br>
-                startingLat = "42"<br>
-                endingLat = "45"<br>
-                startingLon = "-81"<br>
-                endingLon = "-77"<br>
-                fillHoles = "true"<br>
-                mosaicTiles = "true"<br>
-                masaicName = pluginHost.getWorkingDirectory() + "output.dep"<br>
-                args = [dataset, startingLat, endingLat, startingLon, endingLon, fillHoles, mosaicTiles, mosaicName]<br>
-                pluginHost.runPlugin("RetrieveSRTMData", args, False)<br>
+                dataset = "3-arcsecond"&#10;<br>
+                startingLat = "42"&#10;<br>
+                endingLat = "45"&#10;<br>
+                startingLon = "-81"&#10;<br>
+                endingLon = "-77"&#10;<br>
+                fillHoles = "true"&#10;<br>
+                fixElevations = "true"&#10;<br>
+                mosaicTiles = "true"&#10;<br>
+                masaicName = pluginHost.getWorkingDirectory() + "output.dep"&#10;<br>
+                args = [dataset, startingLat, endingLat, startingLon, endingLon, fillHoles, fixElevations, mosaicTiles, mosaicName]&#10;<br>
+                pluginHost.runPlugin("RetrieveSRTMData", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240);">
             <code>
-                def dataset = "3-arcsecond"<br>
-                def startingLat = "48"<br>
-                def endingLat = "49"<br>
-                def startingLon = "16"<br>
-                def endingLon = "17"<br>
-                def fillHoles = "true"<br>
-                def mosaicTiles = "false"<br>
-                String[] args = [dataset, startingLat, endingLat, startingLon, endingLon, fillHoles, mosaicTiles]<br>
-                pluginHost.runPlugin("RetrieveSRTMData", args, false)<br>
+                def dataset = "3-arcsecond"&#10;<br>
+                def startingLat = "48"&#10;<br>
+                def endingLat = "49"&#10;<br>
+                def startingLon = "16"&#10;<br>
+                def endingLon = "17"&#10;<br>
+                def fillHoles = "true"&#10;<br>
+                def fixElevations = "true"&#10;<br>
+                def mosaicTiles = "false"&#10;<br>
+                String[] args = [dataset, startingLat, endingLat, startingLon, endingLon, fillHoles, fixElevations, mosaicTiles]&#10;<br>
+                pluginHost.runPlugin("RetrieveSRTMData", args, false)&#10;<br>
             </code>
         </p>
 

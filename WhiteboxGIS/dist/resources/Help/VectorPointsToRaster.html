@@ -38,31 +38,31 @@
         <p>The following is an example of a Python script that uses this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                wd = pluginHost.getWorkingDirectory()<br>
-                inputFile = wd + "input.shp"<br>
-                outputFile = wd + "output.dep"<br>
-                fieldName = "INCOME"<br>
-                assignement = "minimum"<br>
-                backgroundVal = "NoData"<br>
-                cellSize = "10.0"<br>
-                baseFile = "not specified"<br>
-                args = [inputFile, outputFile, fieldName, assignment, backgroundVal, cellSize, baseFile]<br>
-                pluginHost.runPlugin("VectorPointsToRaster", args, False)<br>
+                wd = pluginHost.getWorkingDirectory()&#10;<br>
+                inputFile = wd + "input.shp"&#10;<br>
+                outputFile = wd + "output.dep"&#10;<br>
+                fieldName = "INCOME"&#10;<br>
+                assignement = "minimum"&#10;<br>
+                backgroundVal = "NoData"&#10;<br>
+                cellSize = "10.0"&#10;<br>
+                baseFile = "not specified"&#10;<br>
+                args = [inputFile, outputFile, fieldName, assignment, backgroundVal, cellSize, baseFile]&#10;<br>
+                pluginHost.runPlugin("VectorPointsToRaster", args, False)&#10;<br>
             </code>
         </p>
         <p>This is a Groovy script also using this tool:</p>
         <p style="background-color: rgb(240,240,240)">
             <code>
-                def wd = pluginHost.getWorkingDirectory()<br>
-                def inputFile = wd + "input.shp"<br>
-                def outputFile = wd + "output.dep"<br>
-                def fieldName = "not specified"<br>
-                def assignement = "first"<br>
-                def backgroundVal = "0.0"<br>
-                def cellSize = "not specified"<br>
-                def baseFile = wd + "base.dep"<br>
-                String[] args = [inputFile, outputFile, fieldName, assignment, backgroundVal, cellSize, baseFile]<br>
-                pluginHost.runPlugin("VectorPointsToRaster", args, false)<br>
+                def wd = pluginHost.getWorkingDirectory()&#10;<br>
+                def inputFile = wd + "input.shp"&#10;<br>
+                def outputFile = wd + "output.dep"&#10;<br>
+                def fieldName = "not specified"&#10;<br>
+                def assignement = "first"&#10;<br>
+                def backgroundVal = "0.0"&#10;<br>
+                def cellSize = "not specified"&#10;<br>
+                def baseFile = wd + "base.dep"&#10;<br>
+                String[] args = [inputFile, outputFile, fieldName, assignment, backgroundVal, cellSize, baseFile]&#10;<br>
+                pluginHost.runPlugin("VectorPointsToRaster", args, false)&#10;<br>
             </code>
         </p>
 
